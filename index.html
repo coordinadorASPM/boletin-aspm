@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Boletín diario ASPM</title>
+<meta name="description" content="Subvenciones, legislación, actividades del sector e investigación sobre Phelan-McDermid, actualizado cada mañana.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f8f5; --surface:#ffffff; --ink:#1c2420; --muted:#5b6660; --line:#dfe4de;
+  --accent:#1f7a4d; --accent-soft:#e3f2e9; --warn:#a14a0b; --warn-soft:#fdeedd;
+  --danger:#a3262a; --danger-soft:#fbe4e4; --new:#1d5fa8; --new-soft:#e2edf9;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121614; --surface:#1a201d; --ink:#e7ece8; --muted:#9aa6a0; --line:#2c3531;
+    --accent:#5cc28f; --accent-soft:#1e3328; --warn:#f0a35e; --warn-soft:#3a2a1a;
+    --danger:#f08a8d; --danger-soft:#3b1f21; --new:#7fb2ee; --new-soft:#1c2a3b;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --surface:#1a201d; --ink:#e7ece8; --muted:#9aa6a0; --line:#2c3531;
+  --accent:#5cc28f; --accent-soft:#1e3328; --warn:#f0a35e; --warn-soft:#3a2a1a;
+  --danger:#f08a8d; --danger-soft:#3b1f21; --new:#7fb2ee; --new-soft:#1c2a3b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);background:var(--surface)}
+header .wrap{padding-top:28px;padding-bottom:20px}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-family:"Source Serif 4",Georgia,serif;font-size:32px;line-height:1.15;margin:6px 0 4px}
+.sub{color:var(--muted);margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:14px;font-size:14px;color:var(--muted)}
+.meta select{font:inherit;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.banner{margin:16px 0 0;padding:10px 14px;border-radius:8px;font-size:14px}
+.banner.stale{background:var(--danger-soft);color:var(--danger);font-weight:600}
+nav.toc{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:thin}
+nav.toc a{white-space:nowrap;text-decoration:none;color:var(--ink);font-size:13px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+nav.toc a .n{color:var(--muted);margin-left:4px}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:20px 0 4px}
+.tools input[type=search]{flex:1 1 240px;font:inherit;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.tools label{font-size:14px;color:var(--muted);display:flex;gap:6px;align-items:center}
+section{margin:28px 0}
+h2{font-family:"Source Serif 4",Georgia,serif;font-size:22px;margin:0 0 4px}
+.sec-desc{color:var(--muted);margin:0 0 12px;font-size:14px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.box ul{margin:0;padding-left:18px}
+.box li{margin:6px 0}
+.plazos table{width:100%;border-collapse:collapse;font-size:14px}
+.plazos td{padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
+.plazos tr:first-child td{border-top:0}
+.plazos .d{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
+.plazos .soon{color:var(--danger)}
+.cards{display:grid;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card h3{font-size:16px;margin:0 0 4px;line-height:1.35}
+.card h3 a{color:var(--ink);text-decoration:none}
+.card h3 a:hover{text-decoration:underline}
+.card .who{font-size:13px;color:var(--muted);margin-bottom:8px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.tag{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:500}
+.tag.new{background:var(--new-soft);color:var(--new);font-weight:600}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.card p{margin:0 0 8px}
+.card .aspm{font-size:14px;border-left:3px solid var(--accent);padding:2px 0 2px 10px;color:var(--ink)}
+.card .aspm b{color:var(--accent)}
+.empty{color:var(--muted);font-style:italic}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:20px 0 40px;color:var(--muted);font-size:13px}
+@media (max-width:600px){h1{font-size:26px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="kicker">Asociación Síndrome Phelan-McDermid · uso interno</div>
+    <h1>Boletín diario de novedades</h1>
+    <p class="sub">Subvenciones, legislación, sector, sociedades médicas, entidades Phelan-McDermid e investigación.</p>
+    <div class="meta">
+      <span id="fecha">Cargando…</span>
+      <label>Edición: <select id="archivo" aria-label="Ver edición anterior"></select></label>
+    </div>
+    <div id="banner"></div>
+  </div>
+</header>
+<nav class="toc" aria-label="Secciones"><div class="wrap" id="toc"></div></nav>
+<main class="wrap">
+  <div class="tools">
+    <input type="search" id="q" placeholder="Buscar (p. ej. IRPF, ERDERA, autismo, Valencia)…" aria-label="Buscar">
+    <label><input type="checkbox" id="solonuevos"> Solo lo nuevo de hoy</label>
+  </div>
+  <div id="contenido"></div>
+</main>
+<footer>
+  <div class="wrap">
+    Recopilado automáticamente cada mañana a partir de fuentes públicas. Verifica siempre plazos y requisitos en la fuente oficial antes de actuar.
+    <span id="pie"></span>
+  </div>
+</footer>
+
+<script src="datos/indice.js"></script>
+<script src="datos/ultima.js"></script>
+<script>
+const SECCIONES = [
+  {id:"destacado", titulo:"Lo más importante hoy"},
+  {id:"plazos", titulo:"Próximos plazos"},
+  {id:"subvenciones_publicas", titulo:"Subvenciones públicas", desc:"Estatales, autonómicas y de la Unión Europea."},
+  {id:"subvenciones_privadas", titulo:"Subvenciones privadas", desc:"Fundaciones, empresas, obras sociales y premios."},
+  {id:"legislacion", titulo:"Novedades legislativas", desc:"Enfermedades raras y discapacidad: España, comunidades autónomas y UE."},
+  {id:"entidades", titulo:"Qué mueven entidades similares", desc:"FEDER, EURORDIS, asociaciones de EERR y de autismo."},
+  {id:"sociedades_medicas", titulo:"Sociedades médicas", desc:"SEN, SENEP, AEP, SEMERGEN, semFYC y otras."},
+  {id:"phelan_internacional", titulo:"Phelan-McDermid en el mundo", desc:"Actividad de las entidades PMS de otros países."},
+  {id:"investigacion", titulo:"Investigación: SHANK3, 22q13, Phelan-McDermid", desc:"Ensayos, publicaciones y noticias científicas."}
+];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = iso => { const d = new Date(iso + "T12:00:00"); return isNaN(d) ? iso : d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"}); };
+const isoDe = s => (String(s||"").match(/\d{4}-\d{2}-\d{2}/)||[])[0];
+const hoyISO = () => new Date().toISOString().slice(0,10);
+const diasEntre = (a,b) => Math.round((new Date(b+"T12:00:00") - new Date(a+"T12:00:00"))/86400000);
+
+let ED = window.EDICION;
+
+function tarjeta(it){
+  const tags = [];
+  if (it.nuevo) tags.push('<span class="tag new">Nuevo</span>');
+  (it.etiquetas||[]).forEach(t => tags.push(`<span class="tag">${esc(t)}</span>`));
+  if (it.plazo) tags.push(`<span class="tag warn">Plazo: ${esc(it.plazo)}</span>`);
+  else if (it.fecha) tags.push(`<span class="tag">${esc(it.fecha)}</span>`);
+  if (it.importe) tags.push(`<span class="tag">${esc(it.importe)}</span>`);
+  const titulo = it.url ? `<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.titulo)}</a>` : esc(it.titulo);
+  return `<article class="card" data-nuevo="${it.nuevo?1:0}" data-texto="${esc((it.titulo+" "+(it.entidad||"")+" "+(it.resumen||"")+" "+(it.etiquetas||[]).join(" ")).toLowerCase())}">
+    <h3>${titulo}</h3>
+    ${it.entidad ? `<div class="who">${esc(it.entidad)}</div>` : ""}
+    <div class="tags">${tags.join("")}</div>
+    <p>${esc(it.resumen)}</p>
+    ${it.para_aspm ? `<div class="aspm"><b>Para la ASPM:</b> ${esc(it.para_aspm)}</div>` : ""}
+  </article>`;
+}
+
+function plazosProximos(){
+  const hoy = hoyISO(), filas = [];
+  ["subvenciones_publicas","subvenciones_privadas","sociedades_medicas","entidades","legislacion"].forEach(k => {
+    (ED.secciones[k]||[]).forEach(it => {
+      const d = isoDe(it.plazo);
+      if (d && d >= hoy && diasEntre(hoy,d) <= 45) filas.push({d, it});
+    });
+  });
+  filas.sort((a,b) => a.d.localeCompare(b.d));
+  if (!filas.length) return '<p class="empty">No hay plazos con fecha en los próximos 45 días.</p>';
+  return `<div class="box plazos"><table>${filas.map(({d,it}) => {
+    const n = diasEntre(hoy,d);
+    return `<tr><td class="d ${n<=10?"soon":""}">${esc(d)}<br><small>${n===0?"hoy":"en "+n+" días"}</small></td><td>${it.url?`<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.titulo)}</a>`:esc(it.titulo)}<br><small>${esc(it.entidad||"")}</small></td></tr>`;
+  }).join("")}</table></div>`;
+}
+
+function pintar(){
+  if (!ED){ document.getElementById("contenido").innerHTML = '<p class="empty">No se ha podido cargar la edición.</p>'; return; }
+  document.getElementById("fecha").textContent = "Edición del " + fmt(ED.fecha);
+  const retraso = diasEntre(ED.fecha, hoyISO());
+  const esUltima = !window.INDICE || window.INDICE[0] === ED.fecha;
+  document.getElementById("banner").innerHTML = (esUltima && retraso >= 2)
+    ? `<div class="banner stale">Aviso: el boletín no se actualiza desde hace ${retraso} días (última edición: ${esc(ED.fecha)}). La tarea automática de las 9:00 no se está ejecutando: revisa que el PC y la app de Claude estén encendidos.</div>` : "";
+  let html = "", toc = "";
+  SECCIONES.forEach(s => {
+    let cuerpo, n = "";
+    if (s.id === "destacado"){
+      const d = ED.destacados||[];
+      cuerpo = d.length ? `<div class="box"><ul>${d.map(x => `<li>${esc(x.texto)}${x.url?` <a href="${esc(x.url)}" target="_blank" rel="noopener">Fuente</a>`:""}</li>`).join("")}</ul></div>` : '<p class="empty">Sin destacados hoy.</p>';
+    } else if (s.id === "plazos"){
+      cuerpo = plazosProximos();
+    } else {
+      const items = ED.secciones[s.id]||[];
+      const nuevos = items.filter(i => i.nuevo).length;
+      n = items.length ? `<span class="n">${items.length}${nuevos?` · ${nuevos} nuevos`:""}</span>` : "";
+      cuerpo = items.length ? `<div class="cards">${items.map(tarjeta).join("")}</div>` : '<p class="empty">Sin novedades en esta sección.</p>';
+    }
+    toc += `<a href="#${s.id}">${esc(s.titulo)}${n}</a>`;
+    html += `<section id="${s.id}"><h2>${esc(s.titulo)}</h2>${s.desc?`<p class="sec-desc">${esc(s.desc)}</p>`:""}${cuerpo}</section>`;
+  });
+  document.getElementById("contenido").innerHTML = html;
+  document.getElementById("toc").innerHTML = toc;
+  document.getElementById("pie").textContent = ED.generado ? " Generado: " + ED.generado + "." : "";
+  filtrar();
+}
+
+function filtrar(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const soloN = document.getElementById("solonuevos").checked;
+  document.querySelectorAll(".card").forEach(c => {
+    const ok = (!q || c.dataset.texto.includes(q)) && (!soloN || c.dataset.nuevo === "1");
+    c.style.display = ok ? "" : "none";
+  });
+}
+document.getElementById("q").addEventListener("input", filtrar);
+document.getElementById("solonuevos").addEventListener("change", filtrar);
+
+const sel = document.getElementById("archivo");
+(window.INDICE || (ED ? [ED.fecha] : [])).forEach((f,i) => {
+  const o = document.createElement("option"); o.value = f; o.textContent = f + (i===0 ? " (última)" : ""); sel.appendChild(o);
+});
+sel.addEventListener("change", () => {
+  const f = sel.value;
+  if (window.INDICE && f === window.INDICE[0]){ ED = window.EDICION_ULTIMA; pintar(); return; }
+  const s = document.createElement("script");
+  s.src = "datos/ediciones/" + f + ".js";
+  s.onload = () => { ED = window.EDICION; pintar(); };
+  document.body.appendChild(s);
+});
+window.EDICION_ULTIMA = ED;
+pintar();
+</script>
+</body>
+</html>
