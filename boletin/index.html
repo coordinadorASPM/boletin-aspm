@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Boletín diario ASPM</title>
+<meta name="description" content="Subvenciones, legislación, entidades del sector, sociedades médicas, Phelan-McDermid en el mundo e investigación, cada mañana.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f6f1; --surface:#ffffff; --surface-2:#eef3ec; --ink:#1d2a21; --muted:#56655a; --line:#d9e3d6;
+  --brand:#1a692d; --brand-deep:#004b23; --brand-bright:#38b000; --brand-soft:#e4f1e0; --lime:#a8d144;
+  --ok:#1a692d; --ok-soft:#dff0db; --no:#a3262a; --no-soft:#f8e1e1; --warn:#9a5b00; --warn-soft:#fbeed8;
+  --info:#0b5f8a; --info-soft:#e0eff7; --focus:#38b000;
+  --shadow:0 1px 2px rgba(0,40,20,.06),0 2px 10px rgba(0,40,20,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#101612; --surface:#18201b; --surface-2:#1f2a23; --ink:#e6eee7; --muted:#9db0a2; --line:#2c3a31;
+    --brand:#5cc27a; --brand-deep:#8fdca3; --brand-bright:#6fd23e; --brand-soft:#1f3527; --lime:#b8dc62;
+    --ok:#6fd08a; --ok-soft:#1d3526; --no:#f09a9d; --no-soft:#3a1f21; --warn:#f0b35e; --warn-soft:#382a17;
+    --info:#7cc2ea; --info-soft:#17303d; --focus:#6fd23e; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101612; --surface:#18201b; --surface-2:#1f2a23; --ink:#e6eee7; --muted:#9db0a2; --line:#2c3a31;
+  --brand:#5cc27a; --brand-deep:#8fdca3; --brand-bright:#6fd23e; --brand-soft:#1f3527; --lime:#b8dc62;
+  --ok:#6fd08a; --ok-soft:#1d3526; --no:#f09a9d; --no-soft:#3a1f21; --warn:#f0b35e; --warn-soft:#382a17;
+  --info:#7cc2ea; --info-soft:#17303d; --focus:#6fd23e; --shadow:none;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Manrope,system-ui,sans-serif}
+a{color:var(--brand)}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px}
+h1,h2,h3{font-family:Montserrat,system-ui,sans-serif;text-wrap:balance}
+
+/* Cabecera */
+.top{background:var(--surface);border-bottom:4px solid var(--brand)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding-block:14px}
+.logo{background:#fff;border-radius:10px;padding:6px 10px;display:flex}
+.logo img{height:44px;width:auto;display:block}
+.titulo{flex:1 1 260px}
+.titulo h1{font-size:22px;margin:0;color:var(--brand-deep);letter-spacing:-.01em}
+.titulo p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.acc-top{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--brand)}
+.btn.primario{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primario:hover{background:var(--brand-deep)}
+.btn.ok{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+.btn.no{background:var(--no-soft);border-color:transparent;color:var(--no)}
+.btn.sutil{border-color:transparent;background:transparent;color:var(--muted);padding-inline:8px}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn svg{width:16px;height:16px;flex:none}
+
+.aviso{margin:14px 0 0;padding:10px 14px;border-radius:10px;font-size:14px}
+.aviso.rojo{background:var(--no-soft);color:var(--no);font-weight:600}
+.aviso.info{background:var(--info-soft);color:var(--info)}
+
+/* Pestañas de vista */
+.vistas{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.vistas .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+.vista{border:0;background:transparent;border-radius:8px;padding:8px 14px;font-weight:700;font-family:Montserrat,sans-serif;font-size:14px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.vista[aria-selected="true"]{background:var(--brand);color:#fff}
+.vista .n{font-family:Manrope,sans-serif;font-weight:600;margin-left:6px;opacity:.85;font-variant-numeric:tabular-nums}
+
+/* Barra de filtros */
+.filtros{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 6px}
+.filtros input[type=search]{flex:1 1 240px;min-width:0;padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+.temas{display:flex;flex-wrap:wrap;gap:6px}
+.tema{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink)}
+.tema[aria-pressed="true"]{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-deep)}
+#archivoSel{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+
+/* Plazos */
+.plazos{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--warn);border-radius:12px;padding:12px 16px;margin:16px 0}
+.plazos h2{font-size:16px;margin:0 0 6px;color:var(--warn)}
+.plazos ul{list-style:none;margin:0;padding:0}
+.plazos li{display:flex;gap:12px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
+.plazos li:first-child{border-top:0}
+.plazos .d{flex:none;width:92px;font-weight:700;font-variant-numeric:tabular-nums}
+.plazos .d small{display:block;font-weight:500;color:var(--muted)}
+.plazos .urgente{color:var(--no)}
+
+/* Secciones por tema */
+.bloque{margin:28px 0}
+.bloque>h2{font-size:21px;margin:0 0 2px;color:var(--brand-deep);display:flex;align-items:baseline;gap:10px}
+.bloque>h2 .n{font-family:Manrope,sans-serif;font-size:14px;color:var(--muted);font-weight:600}
+.subgrupo{margin:14px 0 6px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tarjetas{display:grid;gap:12px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.card.es-ok{border-color:var(--ok)}
+.card.es-no{opacity:.85}
+.card h3{font-size:16px;line-height:1.35;margin:0 0 2px}
+.card .who{font-size:13px;color:var(--muted);margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.chip{font-size:12px;padding:2px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);font-weight:600}
+.chip.nuevo{background:var(--brand-bright);color:#fff}
+.chip.abierta{background:var(--ok-soft);color:var(--ok)}
+.chip.proxima{background:var(--info-soft);color:var(--info)}
+.chip.plazo{background:var(--warn-soft);color:var(--warn)}
+.chip.vencido{background:var(--no-soft);color:var(--no)}
+.card p{margin:0 0 8px}
+.card .aspm{font-size:14px;background:var(--brand-soft);border-radius:8px;padding:8px 12px;margin:0 0 10px}
+.card .aspm b{color:var(--brand-deep)}
+.acciones{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.acciones .sep{flex:1}
+.valora{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);display:grid;gap:8px}
+.valora .fila{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.estado-val{font-size:13px;font-weight:700}
+.estado-val.ok{color:var(--ok)} .estado-val.no{color:var(--no)}
+.valora textarea{width:100%;min-height:58px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);resize:vertical}
+.valora .guardado{font-size:12px;color:var(--muted)}
+
+/* Cotejo */
+.cotejo{margin-top:10px;background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:14px}
+.cotejo h4{margin:0 0 6px;font-family:Montserrat,sans-serif;font-size:14px}
+.cotejo ul{margin:4px 0 8px;padding-left:18px}
+.encaje{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:700;font-size:13px}
+.encaje.alto{background:var(--ok-soft);color:var(--ok)} .encaje.medio{background:var(--warn-soft);color:var(--warn)}
+.encaje.bajo,.encaje.no_elegible{background:var(--no-soft);color:var(--no)}
+.pensando{color:var(--muted);font-style:italic}
+
+/* Panel documento base */
+dialog{border:0;border-radius:16px;padding:0;max-width:640px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(0,20,10,.45)}
+.dlg{padding:20px 22px;display:grid;gap:12px}
+.dlg h2{margin:0;font-size:19px;color:var(--brand-deep)}
+.dlg textarea{width:100%;min-height:160px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.dlg .pie{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.muted{color:var(--muted);font-size:14px}
+
+.vacio{color:var(--muted);font-style:italic;padding:8px 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;display:flex;gap:12px;align-items:center;font-size:14px;z-index:50;max-width:calc(100% - 32px)}
+.toast button{background:transparent;border:0;color:var(--lime);font-weight:700;cursor:pointer}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-block:20px 40px;color:var(--muted);font-size:13px}
+@media (max-width:600px){.titulo h1{font-size:19px}.logo img{height:36px}.plazos .d{width:78px}}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .2s}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="https://22q13.org.es" target="_blank" rel="noopener" aria-label="Web de la ASPM"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></a>
+    <div class="titulo">
+      <h1>Boletín diario de novedades</h1>
+      <p id="fecha">Cargando…</p>
+    </div>
+    <div class="acc-top">
+      <a class="btn" href="../certificados/" id="lnkCert" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Certificados
+      </a>
+      <button class="btn sutil" id="btnSalir" hidden type="button">Salir</button>
+      <button class="btn" id="btnDocBase" hidden type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+        <span id="btnDocBaseTxt">Documento base</span>
+      </button>
+    </div>
+  </div>
+  <div class="wrap"><div id="avisos"></div></div>
+</header>
+
+<nav class="vistas" aria-label="Vistas"><div class="wrap" role="tablist" id="vistas"></div></nav>
+
+<main class="wrap">
+  <div class="filtros">
+    <input type="search" id="q" placeholder="Buscar: IRPF, ERDERA, autismo, Valencia…" aria-label="Buscar">
+    <select id="archivoSel" aria-label="Edición" hidden></select>
+  </div>
+  <div class="temas" id="temas" role="group" aria-label="Filtrar por tema"></div>
+  <div id="contenido"></div>
+</main>
+
+<footer><div class="wrap">
+  Recopilado cada mañana a partir de fuentes públicas. Comprueba siempre plazos y requisitos en la convocatoria oficial.
+  <span id="pie"></span>
+</div></footer>
+
+<dialog id="dlgDoc">
+  <form class="dlg" method="dialog" id="formDoc">
+    <h2>Documento base para convocatorias</h2>
+    <p class="muted">Sube el «Documento base para convocatorias — ASPM». En Google Drive: <b>Archivo → Descargar → Microsoft Word (.docx)</b>. También puedes pegar el texto. Se guarda solo para ti; se usa para cotejar las bases y preparar borradores de solicitud.</p>
+    <p class="muted" id="docEstado">No hay documento cargado.</p>
+    <input type="file" id="docArchivo" accept=".docx,.txt,.md">
+    <textarea id="docTexto" placeholder="…o pega aquí el texto del documento base"></textarea>
+    <div class="pie">
+      <button class="btn sutil" value="cancel" type="submit">Cerrar</button>
+      <button class="btn primario" id="docGuardar" type="button">Guardar documento</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="bloqueo" class="wrap" hidden><p class="vacio">Comprobando el acceso…</p></div>
+
+<script src="../datos/items.js"></script>
+<script>
+"use strict";
+/* Dos modos:
+   - "claude": dentro de la página privada de Claude. Solo se usa para cotejar bases y generar borradores.
+   - "web":    en GitHub Pages, tras el acceso con Supabase. Aquí se valoran las fichas (solo el rol coordinadora). */
+const MODO = window.claude?.use ? "claude" : "web";
+const SB_URL = "https://wvghcsshumbqhoecsjep.supabase.co";
+const SB_KEY = "sb_publishable_KROMQrcTW7pyPSVpqOpyiw_Rd6hK2YT"; // clave pública (la misma que certificados)
+const CLAUDE_URL = "https://claude.ai/artifact/WdqoVkPF5Z4icNt8JwCHSo";
+if (MODO === "web") { document.querySelectorAll("header,nav.vistas,main,footer").forEach(e => e.hidden = true); document.getElementById("bloqueo").hidden = false; }
+const B = window.BOLETIN || {ediciones:[], items:[]};
+const TEMAS = [
+  {id:"subvenciones", titulo:"Subvenciones", grupos:[["publica_ue","Públicas · Unión Europea"],["publica_estatal","Públicas · Estatales"],["publica_autonomica","Públicas · Autonómicas y locales"],["privada","Privadas · Fundaciones y empresas"]]},
+  {id:"legislacion", titulo:"Novedades legislativas", grupos:[["ue","Unión Europea"],["espana","Legislación España"],["autonomica","Legislación autonómica"]]},
+  {id:"sector", titulo:"Entidades similares", grupos:[["federaciones","FEDER, EURORDIS y federaciones"],["asociaciones","Asociaciones de enfermedades raras"],["autismo","Entidades de autismo"]]},
+  {id:"sociedades", titulo:"Sociedades médicas", grupos:[]},
+  {id:"phelan", titulo:"Phelan-McDermid en el mundo", grupos:[]},
+  {id:"investigacion", titulo:"Investigación: SHANK3, 22q13, Phelan-McDermid", grupos:[]}
+];
+const ESTADOS = {abierta:"Abierta", proxima:"Próxima", cerrada:"Cerrada", resuelta:"Resuelta"};
+const ICO = {
+  link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v7H3V3h7"/></svg>',
+  pdf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  lupa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
+  doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>'
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const isoDe = s => (String(s||"").match(/\d{4}-\d{2}-\d{2}/)||[])[0];
+const hoyISO = () => { const d = new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
+const dias = (a,b) => Math.round((new Date(b+"T12:00:00") - new Date(a+"T12:00:00"))/86400000);
+const fmtLargo = iso => { const d = new Date(iso+"T12:00:00"); return isNaN(d) ? iso : d.toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"}); };
+const fmtCorto = iso => { const d = new Date(iso+"T12:00:00"); return isNaN(d) ? iso : d.toLocaleDateString("es-ES",{day:"numeric",month:"short"}); };
+const ULTIMA = B.ediciones[0] || null;
+const POR_ID = Object.fromEntries(B.items.map(i => [i.id, i]));
+
+/* ---------- Estado ---------- */
+const st = { vista:"hoy", tema:null, q:"", archivo: B.ediciones[1] || ULTIMA, val:{}, cotejos:{}, conValoracion:false, db:null, uid:null, sample:null, downloads:null, docBase:null, sb:null, ficha:null };
+try { const v = localStorage.getItem("boletin.vista"); if (v) st.vista = v; } catch(e) {}
+// Enlace directo a una ficha (#c-<id>), p. ej. desde el botón «Cotejar» de la web
+function leerHash(){ const m = /^#c-(i[0-9a-f]+)$/.exec(location.hash); if (m && POR_ID[m[1]]){ st.ficha = m[1]; st.vista = "ficha"; } }
+leerHash();
+window.addEventListener("hashchange", () => { leerHash(); pintar(); });
+
+function decision(id){ return st.val[id]?.decision || null; }
+function vistaItems(v){
+  const it = B.items;
+  if (v === "hoy") return it.filter(i => i.primera_edicion === ULTIMA && decision(i.id) !== "no");
+  if (v === "pendientes") return it.filter(i => i.primera_edicion !== ULTIMA && !decision(i.id));
+  if (v === "seguimiento") return it.filter(i => decision(i.id) === "ok");
+  if (v === "descartados") return it.filter(i => decision(i.id) === "no");
+  if (v === "archivo") return it.filter(i => i.primera_edicion === st.archivo);
+  if (v === "anteriores") return it.filter(i => i.primera_edicion !== ULTIMA);
+  if (v === "ficha") return it.filter(i => i.id === st.ficha);
+  return [];
+}
+function vistasDisponibles(){
+  const vs = st.conValoracion
+    ? [["hoy","Hoy"],["pendientes","Sin valorar"],["seguimiento","Me interesan"],["descartados","Descartados"],["archivo","Archivo"]]
+    : [["hoy","Hoy"],["anteriores","Ediciones anteriores"],["archivo","Archivo"]];
+  if (st.ficha) vs.unshift(["ficha","Ficha abierta"]);
+  return vs;
+}
+
+/* ---------- Pintado ---------- */
+function chipsDe(i){
+  const c = [];
+  if (i.primera_edicion === ULTIMA) c.push('<span class="chip nuevo">Nuevo</span>');
+  if (i.estado && ESTADOS[i.estado]) c.push(`<span class="chip ${esc(i.estado)}">${ESTADOS[i.estado]}</span>`);
+  const d = isoDe(i.plazo);
+  if (i.plazo){
+    const venc = d && d < hoyISO();
+    c.push(`<span class="chip ${venc?"vencido":"plazo"}">${venc?"Plazo vencido":"Plazo"}: ${esc(i.plazo)}</span>`);
+  } else if (i.fecha) c.push(`<span class="chip">${esc(i.fecha)}</span>`);
+  if (i.importe) c.push(`<span class="chip">${esc(i.importe)}</span>`);
+  (i.etiquetas||[]).slice(0,3).forEach(t => c.push(`<span class="chip">${esc(t)}</span>`));
+  return c.join("");
+}
+function tarjeta(i){
+  const d = st.val[i.id];
+  const esSub = i.seccion === "subvenciones";
+  const abiertaOProx = esSub && (i.estado === "abierta" || i.estado === "proxima" || !i.estado);
+  const acciones = [];
+  if (i.url) acciones.push(`<a class="btn" href="${esc(i.url)}" target="_blank" rel="noopener">${ICO.link}Ver fuente</a>`);
+  if (esSub && i.url_bases) acciones.push(`<a class="btn primario" href="${esc(i.url_bases)}" target="_blank" rel="noopener">${ICO.pdf}Descargar bases</a>`);
+  else if (abiertaOProx) acciones.push(`<span class="muted">Bases: aún sin enlace directo</span>`);
+  if (esSub && abiertaOProx && MODO === "claude" && st.sample) acciones.push(`<button class="btn" type="button" data-acc="cotejar" data-id="${i.id}">${ICO.lupa}Cotejar con documento base</button>`);
+  if (esSub && abiertaOProx && MODO === "web" && st.conValoracion) acciones.push(`<a class="btn" href="${CLAUDE_URL}#c-${i.id}" target="_blank" rel="noopener" title="Se abre en Claude, donde está tu documento base">${ICO.lupa}Cotejar y generar borrador</a>`);
+  let valora = "";
+  if (st.conValoracion){
+    const estado = d ? `<span class="estado-val ${d.decision}">${d.decision==="ok"?"✓ Te interesa":"✕ Descartado"}</span>` : "";
+    valora = `<div class="valora">
+      <div class="fila">
+        <button class="btn ok" type="button" data-acc="ok" data-id="${i.id}" ${d?.decision==="ok"?"disabled":""}>${ICO.check}Me interesa</button>
+        <button class="btn no" type="button" data-acc="no" data-id="${i.id}" ${d?.decision==="no"?"disabled":""}>${ICO.x}Descartar</button>
+        ${d ? `<button class="btn sutil" type="button" data-acc="reset" data-id="${i.id}">Quitar valoración</button>` : ""}
+        <span class="sep"></span>${estado}
+      </div>
+      <textarea id="nota-${i.id}" data-nota="${i.id}" placeholder="Nota opcional: ¿por qué te interesa o no? (me ayuda a afinar lo que te traigo)">${esc(d?.nota||"")}</textarea>
+      <div class="fila"><button class="btn" type="button" data-acc="nota" data-id="${i.id}">Guardar nota</button><span class="guardado" id="g-${i.id}"></span></div>
+    </div>`;
+  }
+  const cot = st.cotejos[i.id];
+  return `<article class="card ${d?"es-"+d.decision:""}" id="c-${i.id}">
+    <h3>${esc(i.titulo)}</h3>
+    ${i.entidad ? `<div class="who">${esc(i.entidad)}</div>` : ""}
+    <div class="chips">${chipsDe(i)}</div>
+    ${i.resumen ? `<p>${esc(i.resumen)}</p>` : ""}
+    ${i.para_aspm ? `<div class="aspm"><b>Para la ASPM:</b> ${esc(i.para_aspm)}</div>` : ""}
+    <div class="acciones">${acciones.join("")}</div>
+    <div id="cot-${i.id}">${cot ? pintaCotejo(i, cot) : ""}</div>
+    ${valora}
+  </article>`;
+}
+function plazosHtml(){
+  const hoy = hoyISO();
+  const base = B.items.filter(i => decision(i.id) !== "no" && (i.primera_edicion === ULTIMA || decision(i.id) === "ok" || !st.conValoracion));
+  const f = base.map(i => ({i, d: isoDe(i.plazo)})).filter(x => x.d && x.d >= hoy && dias(hoy, x.d) <= 45).sort((a,b) => a.d.localeCompare(b.d));
+  if (!f.length) return "";
+  return `<section class="plazos" aria-label="Próximos plazos"><h2>Próximos plazos (45 días)</h2><ul>${f.map(({i,d}) => {
+    const n = dias(hoy, d);
+    return `<li><span class="d ${n<=10?"urgente":""}">${fmtCorto(d)}<small>${n===0?"hoy":"en "+n+" días"}</small></span><span><a href="#c-${i.id}">${esc(i.titulo)}</a><br><small class="muted">${esc(i.entidad||"")}</small></span></li>`;
+  }).join("")}</ul></section>`;
+}
+function pintar(){
+  // Conserva notas a medio escribir y el foco al repintar
+  const borradores = {};
+  document.querySelectorAll("textarea[data-nota]").forEach(t => { if (t.value !== (st.val[t.dataset.nota]?.nota || "")) borradores[t.id] = t.value; });
+  const foco = document.activeElement?.id, selIni = document.activeElement?.selectionStart;
+  pintarDentro();
+  for (const [k, v] of Object.entries(borradores)){ const t = document.getElementById(k); if (t) t.value = v; }
+  if (foco){ const f = document.getElementById(foco); if (f && f !== document.activeElement){ f.focus(); if (selIni != null && f.setSelectionRange) try { f.setSelectionRange(selIni, selIni); } catch(e) {} } }
+}
+function pintarDentro(){
+  // Pestañas
+  const vs = vistasDisponibles();
+  if (!vs.some(v => v[0] === st.vista)) st.vista = "hoy";
+  $("#vistas").innerHTML = vs.map(([id,t]) => {
+    const n = id === "archivo" ? "" : `<span class="n">${vistaItems(id).length}</span>`;
+    return `<button class="vista" role="tab" type="button" data-vista="${id}" aria-selected="${st.vista===id}">${t}${n}</button>`;
+  }).join("");
+  // Archivo
+  const sel = $("#archivoSel");
+  sel.hidden = st.vista !== "archivo";
+  if (!sel.options.length) sel.innerHTML = B.ediciones.map(f => `<option value="${f}">${fmtLargo(f)}</option>`).join("");
+  sel.value = st.archivo;
+  // Filtro
+  const q = st.q.trim().toLowerCase();
+  let items = vistaItems(st.vista);
+  if (q) items = items.filter(i => [i.titulo,i.entidad,i.resumen,i.para_aspm,(i.etiquetas||[]).join(" ")].join(" ").toLowerCase().includes(q));
+  // Temas
+  $("#temas").innerHTML = TEMAS.map(t => {
+    const n = items.filter(i => i.seccion === t.id).length;
+    return `<button class="tema" type="button" data-tema="${t.id}" aria-pressed="${st.tema===t.id}">${esc(t.titulo.split(":")[0])} · ${n}</button>`;
+  }).join("");
+  if (st.tema) items = items.filter(i => i.seccion === st.tema);
+  // Contenido
+  let html = st.vista === "hoy" && !q ? plazosHtml() : "";
+  if (st.vista === "descartados" && items.length) html += `<p class="muted">Lo que descartas queda aquí por si cambias de idea. Tus notas me sirven para no traerte cosas parecidas.</p>`;
+  for (const t of TEMAS){
+    const del = items.filter(i => i.seccion === t.id);
+    if (!del.length) continue;
+    const orden = (a,b) => (isoDe(a.plazo)||isoDe(a.fecha)||"9999").localeCompare(isoDe(b.plazo)||isoDe(b.fecha)||"9999");
+    let cuerpo = "";
+    const grupos = t.grupos.length ? [...t.grupos, [null,"Otros"]] : [[undefined,""]];
+    for (const [g, gt] of grupos){
+      const sub = t.grupos.length ? del.filter(i => g === null ? !t.grupos.some(x => x[0] === i.grupo) : i.grupo === g) : del;
+      if (!sub.length) continue;
+      cuerpo += (gt ? `<h3 class="subgrupo">${esc(gt)} · ${sub.length}</h3>` : "") + `<div class="tarjetas">${sub.sort(orden).map(tarjeta).join("")}</div>`;
+    }
+    html += `<section class="bloque" id="t-${t.id}"><h2>${esc(t.titulo)} <span class="n">${del.length}</span></h2>${cuerpo}</section>`;
+  }
+  if (!items.length){
+    const vacios = {hoy:"Hoy no hay novedades nuevas (o ya las has valorado todas).", pendientes:"No tienes nada pendiente de valorar.", seguimiento:"Aún no has marcado nada como «Me interesa».", descartados:"No has descartado nada todavía.", archivo:"No hay fichas en esta edición.", anteriores:"No hay ediciones anteriores."};
+    html += `<p class="vacio">${q||st.tema ? "Nada coincide con el filtro." : vacios[st.vista]}</p>`;
+  }
+  $("#contenido").innerHTML = html;
+}
+function cabecera(){
+  $("#fecha").textContent = ULTIMA ? "Edición del " + fmtLargo(ULTIMA) : "Sin ediciones todavía";
+  const av = [];
+  const retraso = ULTIMA ? dias(ULTIMA, hoyISO()) : 0;
+  if (retraso >= 2) av.push(`<div class="aviso rojo">Aviso: el boletín no se actualiza desde hace ${retraso} días (última edición: ${fmtLargo(ULTIMA)}). La tarea automática de cada mañana no se está ejecutando: revisa que el PC y la app de Claude estén encendidos.</div>`);
+  if (MODO === "claude") av.push(`<div class="aviso info">Esta página de Claude sirve para <b>cotejar bases y generar borradores</b>. Las fichas se valoran en la web del boletín: <a href="https://coordinadoraspm.github.io/boletin-aspm/boletin/" target="_blank" rel="noopener">coordinadoraspm.github.io/boletin-aspm</a>.</div>`);
+  $("#avisos").innerHTML = av.join("");
+  $("#pie").textContent = B.actualizado ? " Actualizado: " + B.actualizado + "." : "";
+}
+
+/* ---------- Eventos ---------- */
+document.addEventListener("click", ev => {
+  const v = ev.target.closest("[data-vista]");
+  if (v){ st.vista = v.dataset.vista; try { localStorage.setItem("boletin.vista", st.vista); } catch(e) {} pintar(); return; }
+  const t = ev.target.closest("[data-tema]");
+  if (t){ st.tema = st.tema === t.dataset.tema ? null : t.dataset.tema; pintar(); return; }
+  const a = ev.target.closest("[data-acc]");
+  if (!a) return;
+  const id = a.dataset.id, acc = a.dataset.acc;
+  if (acc === "ok" || acc === "no") valorar(id, acc);
+  else if (acc === "reset") quitarValoracion(id);
+  else if (acc === "nota") guardarNota(id);
+  else if (acc === "cotejar") cotejar(id);
+  else if (acc === "borrador") generarBorrador(id, a);
+});
+$("#q").addEventListener("input", e => { st.q = e.target.value; pintar(); });
+$("#archivoSel").addEventListener("change", e => { st.archivo = e.target.value; pintar(); });
+
+let toastT;
+function toast(msg, deshacer){
+  document.querySelector(".toast")?.remove(); clearTimeout(toastT);
+  const d = document.createElement("div"); d.className = "toast"; d.setAttribute("role","status");
+  d.textContent = msg;
+  if (deshacer){ const b = document.createElement("button"); b.type="button"; b.textContent = "Deshacer"; b.onclick = () => { d.remove(); deshacer(); }; d.appendChild(b); }
+  document.body.appendChild(d); toastT = setTimeout(() => d.remove(), 6000);
+}
+
+/* ---------- Valoraciones (Supabase: public.boletin_valoraciones, solo rol coordinadora) ---------- */
+async function guardarVal(id, doc){
+  const i = POR_ID[id];
+  const { error } = await st.sb.from("boletin_valoraciones").upsert({
+    item_id:id, decision:doc.decision, nota:doc.nota || null, titulo:i.titulo, seccion:i.seccion, grupo:i.grupo || null,
+    entidad:i.entidad || null, estado:i.estado || null, primera_edicion:i.primera_edicion, actualizado:new Date().toISOString()
+  });
+  if (error) throw error;
+}
+async function borrarVal(id){
+  const { error } = await st.sb.from("boletin_valoraciones").delete().eq("item_id", id);
+  if (error) throw error;
+}
+async function valorar(id, dec){
+  const i = POR_ID[id]; if (!i || !st.sb) return;
+  const nota = document.getElementById("nota-"+id)?.value.trim() || st.val[id]?.nota || "";
+  const previo = st.val[id] ? {...st.val[id]} : null;
+  const doc = {decision:dec, nota, fecha:new Date().toISOString()};
+  st.val[id] = doc; pintar();
+  try { await guardarVal(id, doc); }
+  catch(e){ if (previo) st.val[id] = previo; else delete st.val[id]; pintar(); toast("No se ha podido guardar la valoración. Inténtalo de nuevo."); return; }
+  toast(dec === "ok" ? "Guardado en «Me interesan»." : "Movido a «Descartados».", async () => {
+    if (previo){ st.val[id] = previo; pintar(); await guardarVal(id, previo).catch(()=>{}); }
+    else { delete st.val[id]; pintar(); await borrarVal(id).catch(()=>{}); }
+  });
+}
+async function quitarValoracion(id){
+  if (!st.sb) return;
+  const previo = st.val[id]; delete st.val[id]; pintar();
+  try { await borrarVal(id); toast("Valoración quitada."); }
+  catch(e){ st.val[id] = previo; pintar(); toast("No se ha podido quitar la valoración."); }
+}
+async function guardarNota(id){
+  if (!POR_ID[id] || !st.sb) return;
+  const nota = document.getElementById("nota-"+id)?.value.trim() || "";
+  const g = document.getElementById("g-"+id);
+  const doc = {decision: st.val[id]?.decision || null, nota, fecha:new Date().toISOString()};
+  try { await guardarVal(id, doc); st.val[id] = doc; if (g) g.textContent = "Nota guardada."; }
+  catch(e){ if (g) g.textContent = "No se ha podido guardar la nota."; }
+}
+
+/* ---------- Documento base (privado: data/users/<uid>/perfil) ---------- */
+function refrescaDocEstado(){
+  const d = st.docBase;
+  $("#docEstado").textContent = d?.texto ? `Documento cargado el ${new Date(d.fecha).toLocaleDateString("es-ES")} (${d.texto.split(/\s+/).length.toLocaleString("es-ES")} palabras${d.nombre ? ", " + d.nombre : ""}).` : "No hay documento cargado.";
+  $("#btnDocBaseTxt").textContent = d?.texto ? "Documento base ✓" : "Cargar documento base";
+}
+function cargaScript(src){ return new Promise((ok, ko) => { if (document.querySelector(`script[src="${src}"]`)) return ok(); const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = ko; document.head.appendChild(s); }); }
+$("#btnDocBase").addEventListener("click", () => { refrescaDocEstado(); $("#dlgDoc").showModal(); });
+$("#docGuardar").addEventListener("click", async () => {
+  const f = $("#docArchivo").files[0];
+  let texto = $("#docTexto").value.trim(), nombre = null;
+  const est = $("#docEstado");
+  try {
+    if (f){
+      nombre = f.name;
+      if (/\.docx$/i.test(f.name)){
+        est.textContent = "Leyendo el documento…";
+        await cargaScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js");
+        const r = await window.mammoth.extractRawText({arrayBuffer: await f.arrayBuffer()});
+        texto = r.value.trim();
+      } else texto = (await f.text()).trim();
+    }
+    if (!texto){ est.textContent = "Elige un archivo .docx o pega el texto."; return; }
+    if (texto.length > 200000){ texto = texto.slice(0, 200000); }
+    const doc = {texto, nombre, fecha:new Date().toISOString()};
+    await st.db.doc(`data/users/${st.uid}/perfil`).set(doc);
+    st.docBase = doc; refrescaDocEstado(); est.textContent += " Guardado.";
+    $("#docArchivo").value = ""; $("#docTexto").value = "";
+  } catch(e){ est.textContent = "No se ha podido leer o guardar el documento. Prueba a pegar el texto."; }
+});
+
+/* ---------- Cotejo con Claude ---------- */
+function datosConvocatoria(i){
+  return JSON.stringify({titulo:i.titulo, entidad:i.entidad, estado:i.estado, plazo:i.plazo, importe:i.importe, resumen:i.resumen, notas_para_aspm:i.para_aspm, enlace_bases:i.url_bases||i.url, requisitos_extraidos_de_las_bases:i.requisitos||"(no se han extraído todavía: usa el resumen y marca lo que haya que comprobar en las bases)"}, null, 1);
+}
+const REGLA_DATOS = "IMPORTANTE: no escribas datos personales (nombres de personas, DNI/NIE, teléfonos o correos personales, cuentas bancarias, datos de salud, de socios o de menores). Donde haga falta uno, escribe [COMPLETAR: qué dato]. Responde en español.";
+function pintaCotejo(i, c){
+  if (c.pensando) return `<div class="cotejo"><span class="pensando">${esc(c.pensando)}</span></div>`;
+  if (c.error) return `<div class="cotejo">${esc(c.error)}</div>`;
+  const r = c.resultado || {};
+  const lista = (t, arr) => arr?.length ? `<h4>${t}</h4><ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const et = {alto:"Encaje alto", medio:"Encaje medio", bajo:"Encaje bajo", no_elegible:"No elegible"}[r.encaje] || "Resultado";
+  return `<div class="cotejo">
+    <h4><span class="encaje ${esc(r.encaje)}">${et}</span></h4>
+    <p>${esc(r.conclusion)}</p>
+    ${r.proyecto_recomendado ? `<h4>Proyecto que podríais presentar</h4><p>${esc(r.proyecto_recomendado)}</p>` : ""}
+    ${lista("Cumple", r.cumple)}${lista("No cumple o dudoso", r.no_cumple)}${lista("Falta preparar", r.pendiente)}
+    <div class="acciones">
+      ${st.downloads && r.encaje !== "no_elegible" ? `<button class="btn primario" type="button" data-acc="borrador" data-id="${i.id}">${ICO.doc}Generar borrador de solicitud (.docx)</button>` : ""}
+      <button class="btn sutil" type="button" data-acc="cotejar" data-id="${i.id}">Volver a cotejar</button>
+      <span class="muted" id="b-${i.id}">${c.fecha ? "Cotejado el " + new Date(c.fecha).toLocaleDateString("es-ES") : ""}</span>
+    </div>
+  </div>`;
+}
+function repintaCotejo(id){ const el = document.getElementById("cot-"+id); if (el) el.innerHTML = pintaCotejo(POR_ID[id], st.cotejos[id]); }
+function errorSample(e){
+  const m = {not_granted:"No has permitido que la página use Claude.", rate_limited:"Demasiadas consultas seguidas. Espera un poco y vuelve a intentarlo.", session_expired:"Tu sesión ha caducado: vuelve a iniciar sesión en Claude.", prompt_too_large:"El documento base es demasiado largo para cotejarlo entero. Recórtalo y vuelve a cargarlo.", invalid_json:"La respuesta no ha salido bien. Vuelve a intentarlo."};
+  return m[e?.code] || "No se ha podido completar. Vuelve a intentarlo.";
+}
+async function cotejar(id){
+  const i = POR_ID[id];
+  if (!st.docBase?.texto){ refrescaDocEstado(); $("#dlgDoc").showModal(); return; }
+  st.cotejos[id] = {pensando:"Leyendo las bases y el documento base… (puede tardar un minuto)"}; repintaCotejo(id);
+  const prompt = `Eres técnico/a de subvenciones de la Asociación Síndrome Phelan-McDermid (ASPM), una asociación española de pacientes de enfermedad rara. Coteja la CONVOCATORIA con el DOCUMENTO BASE de la asociación y decide si la ASPM puede presentar algún proyecto concreto.
+
+${REGLA_DATOS}
+
+Responde SOLO con un objeto JSON:
+{"encaje":"alto|medio|bajo|no_elegible","conclusion":"2-3 frases","proyecto_recomendado":"qué proyecto o programa del documento base encaja y por qué (o null)","cumple":["requisito que sí cumple…"],"no_cumple":["requisito que no cumple o que hay que comprobar…"],"pendiente":["documento o dato que falta preparar…"]}
+
+CONVOCATORIA:
+${datosConvocatoria(i)}
+
+DOCUMENTO BASE DE LA ASPM:
+${st.docBase.texto.slice(0, 150000)}`;
+  try {
+    const r = await st.sample.json(prompt, {modelTier:"default", cache:false});
+    const c = {resultado:r, fecha:new Date().toISOString()};
+    st.cotejos[id] = c; repintaCotejo(id);
+    st.db.doc(`data/users/${st.uid}/cotejo-${id}`).set(c).catch(()=>{});
+  } catch(e){ st.cotejos[id] = {error: errorSample(e)}; repintaCotejo(id); }
+}
+async function generarBorrador(id, boton){
+  const i = POR_ID[id], c = st.cotejos[id];
+  const info = document.getElementById("b-"+id);
+  boton.disabled = true; if (info) info.textContent = "Redactando el borrador… (1-2 minutos)";
+  const campos = i.requisitos?.formulario?.length ? i.requisitos.formulario : null;
+  const prompt = `Redacta el BORRADOR de la solicitud de la ASPM para esta convocatoria, usando SOLO información del DOCUMENTO BASE (no inventes cifras, datos ni actividades; si algo no está, escribe [COMPLETAR: …]).
+${campos ? "Sigue exactamente los apartados del formulario oficial: " + JSON.stringify(campos) : "Si no se conocen los apartados del formulario oficial, usa: Datos de la entidad; Denominación del proyecto; Justificación y necesidad; Objetivos; Personas destinatarias; Actividades; Calendario; Recursos humanos y materiales; Presupuesto desglosado; Evaluación e indicadores; Sostenibilidad; Difusión."}
+
+${REGLA_DATOS}
+
+Responde SOLO con JSON: {"titulo":"Solicitud — …","apartados":[{"titulo":"…","texto":"párrafos separados por \\n"}],"pendiente":["lo que la coordinadora debe completar o comprobar"]}
+
+CONVOCATORIA:
+${datosConvocatoria(i)}
+
+COTEJO PREVIO:
+${JSON.stringify(c?.resultado || {})}
+
+DOCUMENTO BASE DE LA ASPM:
+${st.docBase.texto.slice(0, 150000)}`;
+  try {
+    const r = await st.sample.json(prompt, {modelTier:"default", cache:false});
+    if (info) info.textContent = "Creando el archivo…";
+    await cargaScript("https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js");
+    const D = window.docx;
+    const P = (t, o={}) => new D.Paragraph({children:[new D.TextRun({text:t, ...o})], spacing:{after:120}});
+    const hijos = [
+      new D.Paragraph({text: r.titulo || ("Solicitud — " + i.titulo), heading: D.HeadingLevel.TITLE}),
+      P("Convocatoria: " + i.titulo + (i.entidad ? " (" + i.entidad + ")" : ""), {italics:true}),
+      P("Borrador generado automáticamente a partir del Documento base de la ASPM. Revísalo con las bases oficiales antes de presentarlo.", {italics:true, color:"9A5B00"})
+    ];
+    for (const a of (r.apartados||[])){
+      hijos.push(new D.Paragraph({text:String(a.titulo||""), heading:D.HeadingLevel.HEADING_1}));
+      String(a.texto||"").split(/\n+/).filter(Boolean).forEach(p => hijos.push(P(p)));
+    }
+    if (r.pendiente?.length){
+      hijos.push(new D.Paragraph({text:"Pendiente de completar o comprobar", heading:D.HeadingLevel.HEADING_1}));
+      r.pendiente.forEach(p => hijos.push(new D.Paragraph({text:String(p), bullet:{level:0}})));
+    }
+    const blob = await D.Packer.toBlob(new D.Document({creator:"Boletín ASPM", styles:{default:{document:{run:{font:"Calibri", size:22}}}}, sections:[{children:hijos}]}));
+    const nombre = ("Borrador solicitud - " + i.titulo).replace(/[\\/:*?"<>|]+/g, " ").slice(0, 120) + ".docx";
+    await st.downloads.save({filename:nombre, data:blob});
+    if (info) info.textContent = "Borrador descargado.";
+  } catch(e){
+    if (info) info.textContent = e?.code === "declined" ? "Descarga cancelada." : (e?.code ? errorSample(e) : "No se ha podido generar el archivo.");
+  } finally { boton.disabled = false; }
+}
+
+/* ---------- Arranque ---------- */
+async function arrancarWeb(){
+  const bloqueo = $("#bloqueo p");
+  try { await cargaScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"); }
+  catch(e){ bloqueo.textContent = "No se ha podido conectar. Revisa la conexión y recarga la página."; return; }
+  // Misma configuración que certificados/: la sesión se comparte dentro de la pestaña
+  const sb = window.supabase.createClient(SB_URL, SB_KEY, {auth:{storage:window.sessionStorage, persistSession:true, autoRefreshToken:true}});
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session){ location.replace("../?ir=boletin"); return; }
+  const { data:perfil } = await sb.from("perfiles").select("rol").eq("id", session.user.id).maybeSingle();
+  if (!perfil){ await sb.auth.signOut(); location.replace("../?msg=sin-acceso"); return; }
+  if (perfil.rol !== "coordinadora"){ location.replace("../certificados/"); return; }
+  st.sb = sb; st.conValoracion = true;
+  const { data:vals, error } = await sb.from("boletin_valoraciones").select("item_id,decision,nota,actualizado");
+  if (error) toast("No se han podido cargar tus valoraciones.");
+  (vals || []).forEach(v => { st.val[v.item_id] = {decision:v.decision, nota:v.nota || "", fecha:v.actualizado}; });
+  sb.auth.onAuthStateChange(ev => { if (ev === "SIGNED_OUT") location.replace("../"); });
+  $("#lnkCert").hidden = false; $("#btnSalir").hidden = false;
+  $("#btnSalir").addEventListener("click", async () => { await sb.auth.signOut(); location.replace("../"); });
+  $("#bloqueo").hidden = true;
+  document.querySelectorAll("header,nav.vistas,main,footer").forEach(e => e.hidden = false);
+  cabecera(); pintar();
+}
+if (MODO === "web"){ arrancarWeb(); }
+else (async () => {
+  cabecera(); pintar();
+  const [db, user, sample, downloads] = await Promise.all(["db","user","sample","downloads"].map(n => window.claude.use(n).catch(() => null)));
+  if (!db) return;
+  st.db = db; st.sample = sample; st.downloads = downloads;
+  st.uid = user ? await user.id() : null;
+  cabecera(); pintar();
+  if (st.uid && sample){
+    $("#btnDocBase").hidden = false;
+    const p = await db.doc(`data/users/${st.uid}/perfil`).get().catch(() => null);
+    if (p?.exists) st.docBase = p.data();
+    refrescaDocEstado();
+    const cs = await db.collection(`data/users/${st.uid}`).get().catch(() => null);
+    cs?.docs.forEach(d => { if (d.id.startsWith("cotejo-")) st.cotejos[d.id.slice(7)] = d.data(); });
+    pintar();
+  }
+})();
+</script>
+</body>
+</html>
