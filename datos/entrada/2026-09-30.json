@@ -1,0 +1,185 @@
+{
+    "items":  [
+                  {
+                      "seccion":  "legislacion",
+                      "grupo":  "espana",
+                      "titulo":  "Decretos ley de vivienda: bonificación fiscal a inquilinos con discapacidad, pendiente de convalidar",
+                      "entidad":  "Consejo de Ministros / Congreso de los Diputados",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Aprobados el 29 de septiembre de 2026; convalidación prevista en pleno extraordinario el 2 de octubre",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "en tramitación",
+                                        "discapacidad",
+                                        "vivienda"
+                                    ],
+                      "resumen":  "El Gobierno aprobó dos reales decretos-ley de vivienda que incluyen bonificaciones fiscales para inquilinos con rentas de hasta unos 30.000 euros, con mención específica a personas con discapacidad. Están en vigor desde su publicación en el BOE, pero el Congreso debe convalidarlos (votación prevista el 2 de octubre).",
+                      "para_aspm":  "Si se convalida, útil para el servicio de información y orientación a familias que viven de alquiler.",
+                      "url":  "https://tododisca.es/discapacidad/decreto-vivienda-espana-inquilinos-discapacidad-podran-acceder-nuevos-beneficios-fiscales/",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "sector",
+                      "grupo":  "asociaciones",
+                      "titulo":  "Kilómetros por la cura: reto deportivo que convierte kilómetros en donaciones",
+                      "entidad":  "Asociación Conquistando Escalones",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Publicado el 24 de septiembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "captación de fondos",
+                                        "reto deportivo",
+                                        "investigación"
+                                    ],
+                      "resumen":  "Cada participante crea un perfil en una plataforma propia, vincula los kilómetros que recorre con cualquier deporte (andar, correr, nadar, bici) y sus contactos donan a través de ese perfil. Lo recaudado va a investigación; la entidad lleva más de 600.000 euros destinados a una red de seis equipos.",
+                      "para_aspm":  "Modelo para estirar Run Like a Hero todo el año con perfiles individuales y kilómetros de cualquier deporte, no solo el día de la carrera.",
+                      "url":  "https://www.enfermedades-raras.org/movimiento-asociativo/actualidad-asociativa/kilometros-por-la-cura-el-reto-deportivo-que-convierte-cada-kilometro-en-investigacion",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "sector",
+                      "grupo":  "asociaciones",
+                      "titulo":  "Ciclo de tres videoconferencias sobre avances en la enfermedad de Pompe",
+                      "entidad":  "Asociación Española de Enfermos de Pompe",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "6 de octubre, 22 de octubre y 4 de noviembre de 2026 (online)",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "formación online",
+                                        "familias",
+                                        "ensayos clínicos"
+                                    ],
+                      "resumen":  "Tres sesiones online con especialistas para pacientes, familias, cuidadores y profesionales: ejercicio y rehabilitación, nuevos ensayos clínicos y consenso de abordaje integral.",
+                      "para_aspm":  "Formato ligero para mantener a los socios al día entre conferencias bienales (p. ej., una sesión sobre ensayos en PMS).",
+                      "url":  "https://www.enfermedades-raras.org/movimiento-asociativo/actualidad-asociativa/la-asociacion-espanola-de-enfermos-de-pompe-organiza-un-ciclo-de-videoconferencias-sobre-los-ultimos-avances-en-la-enfermedad",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Jornada «De la recerca al pacient: nous camins en malalties minoritàries»",
+                      "entidad":  "ICMAB-CSIC y proyecto europeo Nano4Rare, con participación de FEDER",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "8 de octubre de 2026, Barcelona",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "jornada",
+                                        "investigación",
+                                        "asociaciones de pacientes"
+                                    ],
+                      "resumen":  "Jornada que junta pacientes, familias, asociaciones, profesionales e investigadores para conectar la investigación con las necesidades reales; incluye una sesión sobre el papel de las asociaciones en la investigación.",
+                      "para_aspm":  "Ocasión de hacer contactos con investigadores en Barcelona; la inscripción no está publicada en la noticia y hay que pedirla al ICMAB.",
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/acercamos-la-voz-de-las-personas-con-enfermedades-raras-la-jornada-de-la-recerca-al-pacient",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "sector",
+                      "grupo":  "autismo",
+                      "titulo":  "Checklist Itinera: autodiagnóstico de inclusión del alumnado autista en los centros educativos",
+                      "entidad":  "Autismo España",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Presentado el 30 de septiembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "educación",
+                                        "recurso gratuito",
+                                        "inclusión"
+                                    ],
+                      "resumen":  "Herramienta gratuita y descargable (15 páginas y cuadernillo de trabajo) para que los colegios evalúen su inclusión en seis dimensiones: cultura, accesibilidad cognitiva y sensorial, familias, ajustes curriculares, participación social y competencia docente.",
+                      "para_aspm":  "Recurso para enviar a las familias del servicio de orientación que tengan problemas con la escolarización.",
+                      "url":  "https://autismo.org.es/actualidad/noticias/presentacion-checklist-itinera/",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "investigacion",
+                      "grupo":  null,
+                      "titulo":  "Diagnóstico prenatal y posnatal del PMS: 15 casos de un hospital materno-infantil de China",
+                      "entidad":  "Journal of Clinical Medicine (Hospital Materno-Infantil de Fujian, China)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "2026-09-14",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "serie de casos",
+                                        "diagnóstico prenatal",
+                                        "genotipo-fenotipo"
+                                    ],
+                      "resumen":  "Un hospital de referencia describe 15 casos de Phelan-McDermid detectados antes o después del nacimiento y revisa la literatura. Concluye que SHANK3 es el gen central: los problemas del sistema nervioso se asocian sobre todo a la pérdida de SHANK3, y las deleciones más grandes se relacionan con más órganos afectados. Es un estudio pequeño y de un solo centro.",
+                      "para_aspm":  "Útil para orientar a familias con diagnóstico prenatal y reforzar el mensaje de que el tamaño de la deleción influye, pero no lo explica todo.",
+                      "url":  "https://pubmed.ncbi.nlm.nih.gov/42795903/",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "investigacion",
+                      "grupo":  null,
+                      "titulo":  "En ratones sin Shank3, la percepción del propio cuerpo parece funcionar de otra manera",
+                      "entidad":  "Oxford Open Neuroscience (centros de investigación de Japón)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "2026-09-21",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "estudio en ratones",
+                                        "percepción sensorial"
+                                    ],
+                      "resumen":  "Con una versión para ratones de la \u0027ilusión de la mano de goma\u0027 (aquí, una cola de goma), los ratones normales reaccionaban como si la cola falsa fuera suya, pero los ratones sin Shank3 no. Sugiere que la integración de sensaciones para formar la imagen del propio cuerpo está alterada. Es investigación básica, sin aplicación directa todavía.",
+                      "para_aspm":  null,
+                      "url":  "https://pubmed.ncbi.nlm.nih.gov/42798835/",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "investigacion",
+                      "grupo":  null,
+                      "titulo":  "La EMA autoriza el ensayo HOPE-2 de vafidemstat en adultos con PMS, en España",
+                      "entidad":  "Oryzon Genomics / Agencia Europea de Medicamentos",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "2026-09-28",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "ensayo fase 2a",
+                                        "anuncio de empresa",
+                                        "España"
+                                    ],
+                      "resumen":  "La agencia europea ha autorizado un ensayo fase 2a de vafidemstat en 12 adultos con Phelan-McDermid, en un único hospital de España, sin grupo placebo. Su objetivo principal es comprobar la seguridad durante 12 semanas (ampliables a 24); también medirá irritabilidad, agresividad y conductas repetitivas. Todavía no hay fecha de inicio ni resultados.",
+                      "para_aspm":  "Es el primer ensayo en PMS con sede en España: conviene contactar con la empresa para saber el hospital, los criterios de inclusión y cómo informar a los socios adultos.",
+                      "url":  "https://www.globenewswire.com/news-release/2026/09/28/3369840/0/en/oryzon-receives-european-medicines-agency-approval-to-initiate-the-hope-2-phase-ii-study-of-vafidemstat-for-the-treatment-of-phelan-mcdermid-syndrome-pms.html",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  }
+              ],
+    "actualizaciones":  [
+                            {
+                                "id":  "if9d5d0168551",
+                                "fecha":  "Aprobado en comisión SANT el 28-09-2026 (33 a favor, 3 en contra, 5 abstenciones); pendiente del pleno",
+                                "etiquetas":  [
+                                                  "En tramitación",
+                                                  "Aprobado en comisión"
+                                              ],
+                                "resumen":  "Pide una propuesta legislativa vinculante que cubra todo el recorrido del paciente con enfermedad rara. Actualización 28-09: la comisión SANT lo aprobó; pide diagnóstico en un año desde la primera consulta, un comité europeo de cribado neonatal, compras conjuntas de medicamentos y reforzar las Redes Europeas de Referencia. Pasa al pleno.",
+                                "url":  "https://diariofarma.com/2026/09/28/sant-pide-a-bruselas-un-reglamento-europeo-especifico-sobre-enfermedades-raras"
+                            },
+                            {
+                                "id":  "ie45eae9adb51",
+                                "fecha":  "Adoptado por el Consejo el 28-09-2026; falta el voto final del Parlamento",
+                                "etiquetas":  [
+                                                  "En tramitación",
+                                                  "Adoptado por el Consejo"
+                                              ],
+                                "resumen":  "Hasta 11 años de exclusividad para medicamentos huérfanos que supongan un avance terapéutico. Los planes pediátricos pasan a basarse en el mecanismo de acción. Actualización 28-09: el Consejo de la UE adoptó formalmente el reglamento y la directiva; quedan el voto del Parlamento y la publicación en el Diario Oficial.",
+                                "url":  "https://www.consilium.europa.eu/en/press/press-releases/2026/09/28/pharma-package-council-adopts-new-rules-for-a-fairer-and-more-competitive-eu-pharmaceutical-sector/"
+                            }
+                        ]
+}
