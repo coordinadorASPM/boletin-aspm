@@ -74,6 +74,43 @@
     $('#acceso').hidden = true;
     $('#app').hidden = false;
     vigilarInactividad();
+    if (p.debe_cambiar_clave) return pedirClaveNueva();
+    await continuarEntrada();
+  }
+
+  // Primera entrada con la contraseña provisional: hay que elegir una propia antes de ver nada
+  function pedirClaveNueva() {
+    $('#app').innerHTML = `<main class="acceso"><form class="tarjeta-acceso" id="formNueva" autocomplete="off">
+      <div class="logo"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></div>
+      <h1>Elige tu contraseña</h1>
+      <p class="sub">Es tu primera entrada. Sustituye la contraseña provisional por una tuya (mínimo 10 caracteres).</p>
+      <div class="error" id="errNueva" role="alert" hidden></div>
+      <input type="text" autocomplete="username" value="${esc(S.yo.email)}" hidden readonly>
+      <div class="campo"><label for="n1">Nueva contraseña</label><input type="password" id="n1" autocomplete="new-password" minlength="10" required></div>
+      <div class="campo"><label for="n2">Repítela</label><input type="password" id="n2" autocomplete="new-password" minlength="10" required></div>
+      <button class="btn primario grande" style="width:100%" type="submit" id="btnNueva">Guardar y entrar</button>
+      <p class="nota-seg"><button class="btn sutil" type="button" id="btnSalirNueva">Salir</button></p>
+    </form></main>`;
+    $('#btnSalirNueva').onclick = () => salir();
+    $('#n1').focus();
+    $('#formNueva').onsubmit = async ev => {
+      ev.preventDefault();
+      const a = $('#n1').value, b = $('#n2').value, err = $('#errNueva');
+      const fallo = m => { err.textContent = m; err.hidden = false; };
+      if (a.length < 10) return fallo('La contraseña debe tener al menos 10 caracteres.');
+      if (a !== b) return fallo('Las dos contraseñas no coinciden.');
+      if (/^(\d)\1*$|^(0?123456789?0?|12345678|password|contraseña)/i.test(a)) return fallo('Esa contraseña es demasiado fácil. Elige otra.');
+      $('#btnNueva').disabled = true;
+      const { error } = await sb.auth.updateUser({ password: a });
+      if (error) { $('#btnNueva').disabled = false; return fallo('No se ha podido guardar: ' + error.message); }
+      await sb.rpc('clave_cambiada');
+      S.yo.debe_cambiar_clave = false;
+      aviso('Contraseña guardada.');
+      await continuarEntrada();
+    };
+  }
+
+  async function continuarEntrada() {
     await cargarTodo();
     const m = /#c=([0-9a-f-]{36})/.exec(location.hash);
     if (m) abrir(m[1]); else { S.vista = 'pendientes'; pintar(); }
@@ -101,7 +138,7 @@
   /* =================== Datos =================== */
   async function cargarTodo() {
     const [p, a, c] = await Promise.all([
-      sb.from('perfiles').select('id,email,rol,firma_path'),
+      sb.from('perfiles').select('id,email,rol,firma_path,debe_cambiar_clave'),
       sb.from('ajustes').select('*').eq('id', 1).maybeSingle(),
       sb.from('certificados').select('*').order('creado', { ascending: false })
     ]);
@@ -518,6 +555,7 @@
       if (a.length < 10) return aviso('La contraseña debe tener al menos 10 caracteres.');
       if (a !== b) return aviso('Las dos contraseñas no coinciden.');
       const { error } = await sb.auth.updateUser({ password: a });
+      if (!error) await sb.rpc('clave_cambiada');
       $('#c1').value = $('#c2').value = '';
       aviso(error ? 'No se ha podido cambiar: ' + error.message : 'Contraseña cambiada.');
     };
