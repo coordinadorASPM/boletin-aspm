@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Certificados ASPM</title>
+<link rel="icon" href="../img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f6f1; --surface:#ffffff; --surface-2:#eef3ec; --ink:#1d2a21; --muted:#56655a; --line:#d9e3d6;
+  --brand:#1a692d; --brand-deep:#004b23; --brand-bright:#38b000; --brand-soft:#e4f1e0; --lime:#a8d144;
+  --ok:#1a692d; --ok-soft:#dff0db; --no:#a3262a; --no-soft:#f8e1e1; --warn:#9a5b00; --warn-soft:#fbeed8;
+  --info:#0b5f8a; --info-soft:#e0eff7; --focus:#38b000;
+  --shadow:0 1px 2px rgba(0,40,20,.06),0 2px 10px rgba(0,40,20,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101612; --surface:#18201b; --surface-2:#1f2a23; --ink:#e6eee7; --muted:#9db0a2; --line:#2c3a31;
+    --brand:#5cc27a; --brand-deep:#8fdca3; --brand-bright:#6fd23e; --brand-soft:#1f3527; --lime:#b8dc62;
+    --ok:#6fd08a; --ok-soft:#1d3526; --no:#f09a9d; --no-soft:#3a1f21; --warn:#f0b35e; --warn-soft:#382a17;
+    --info:#7cc2ea; --info-soft:#17303d; --focus:#6fd23e; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101612; --surface:#18201b; --surface-2:#1f2a23; --ink:#e6eee7; --muted:#9db0a2; --line:#2c3a31;
+  --brand:#5cc27a; --brand-deep:#8fdca3; --brand-bright:#6fd23e; --brand-soft:#1f3527; --lime:#b8dc62;
+  --ok:#6fd08a; --ok-soft:#1d3526; --no:#f09a9d; --no-soft:#3a1f21; --warn:#f0b35e; --warn-soft:#382a17;
+  --info:#7cc2ea; --info-soft:#17303d; --focus:#6fd23e; --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Manrope,system-ui,sans-serif;min-height:100vh}
+a{color:var(--brand)}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px}
+h1,h2,h3{font-family:Montserrat,system-ui,sans-serif;text-wrap:balance}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:var(--brand)}
+.btn.primario{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primario:hover{background:var(--brand-deep);border-color:var(--brand-deep)}
+:root[data-theme="dark"] .btn.primario,:root:not([data-theme="light"]) .btn.primario{color:#fff}
+.btn.grande{padding:12px 22px;font-size:15px}
+.btn.no{background:var(--no-soft);border-color:transparent;color:var(--no)}
+.btn.sutil{border-color:transparent;background:transparent;color:var(--muted);padding-inline:8px}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn svg{width:16px;height:16px;flex:none}
+
+/* Acceso */
+.acceso{min-height:100vh;display:grid;place-items:center;padding:24px 16px}
+.tarjeta-acceso{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--brand);border-radius:14px;padding:28px 24px;box-shadow:var(--shadow)}
+.tarjeta-acceso .logo{background:#fff;border-radius:10px;padding:8px 12px;display:flex;justify-content:center;margin-bottom:18px}
+.tarjeta-acceso .logo img{height:46px;width:auto}
+.tarjeta-acceso h1{font-size:19px;margin:0 0 4px;color:var(--brand-deep);text-align:center}
+.tarjeta-acceso p.sub{margin:0 0 20px;color:var(--muted);font-size:13.5px;text-align:center}
+.campo{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.campo label,.campo .et{font-weight:600;font-size:13.5px}
+.campo .ayuda{font-size:12.5px;color:var(--muted);font-weight:500}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=url],select,textarea{
+  width:100%;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;font-size:15px}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px var(--brand-soft)}
+textarea{min-height:90px;resize:vertical}
+.error{background:var(--no-soft);color:var(--no);border-radius:10px;padding:9px 12px;font-size:13.5px;font-weight:600;margin-bottom:14px}
+.nota-seg{margin-top:16px;font-size:12px;color:var(--muted);text-align:center}
+
+/* Cabecera de la herramienta */
+.top{background:var(--surface);border-bottom:4px solid var(--brand)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding-block:14px}
+.top .logo{background:#fff;border-radius:10px;padding:6px 10px;display:flex}
+.top .logo img{height:40px;width:auto;display:block}
+.titulo{flex:1 1 220px}
+.titulo h1{font-size:21px;margin:0;color:var(--brand-deep);letter-spacing:-.01em}
+.titulo p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.quien{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+
+.vistas{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.vistas .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+.vista{border:0;background:transparent;border-radius:8px;padding:8px 14px;font-weight:700;font-family:Montserrat,sans-serif;font-size:14px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.vista:hover{background:var(--surface-2);color:var(--ink)}
+.vista[aria-current="page"]{background:var(--brand);color:#fff}
+.vista .n{display:inline-block;min-width:20px;margin-left:6px;padding:0 6px;border-radius:999px;background:var(--no);color:#fff;font-family:Manrope,sans-serif;font-size:12px;line-height:20px;text-align:center}
+
+main.contenido{padding-block:22px 60px}
+.aviso{margin:0 0 16px;padding:11px 14px;border-radius:10px;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.aviso.rojo{background:var(--no-soft);color:var(--no);font-weight:600}
+.aviso.info{background:var(--info-soft);color:var(--info)}
+.aviso.ambar{background:var(--warn-soft);color:var(--warn);font-weight:600}
+.aviso.verde{background:var(--ok-soft);color:var(--ok);font-weight:600}
+.aviso .btn{margin-left:auto}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.panel h2{font-size:17px;margin:0 0 4px;color:var(--brand-deep)}
+.panel h3{font-size:14.5px;margin:18px 0 10px}
+.panel>p.sub{margin:0 0 16px;color:var(--muted);font-size:14px}
+
+/* Lista */
+.lista{display:flex;flex-direction:column;gap:10px}
+.fila{display:grid;grid-template-columns:auto 1fr auto;gap:6px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;width:100%}
+.fila:hover{border-color:var(--brand)}
+.fila .num{font-family:Montserrat,sans-serif;font-weight:800;color:var(--brand);min-width:34px;font-variant-numeric:tabular-nums}
+.fila .don{font-weight:700}
+.fila .meta{color:var(--muted);font-size:13px}
+.fila .imp{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.estado{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.estado.pendiente{background:var(--warn-soft);color:var(--warn)}
+.estado.firmado{background:var(--info-soft);color:var(--info)}
+.estado.archivado{background:var(--ok-soft);color:var(--ok)}
+.estado.anulado{background:var(--surface-2);color:var(--muted);text-decoration:line-through}
+.vacio{text-align:center;color:var(--muted);padding:34px 10px}
+.buscador{margin-bottom:12px}
+
+/* Formulario */
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.rejilla .ancho{grid-column:1/-1}
+.opciones{display:flex;gap:10px;flex-wrap:wrap}
+.opcion{flex:1 1 200px;display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:var(--surface)}
+.opcion:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
+.opcion input{margin-top:4px;accent-color:var(--brand)}
+.opcion b{display:block}
+.opcion span{font-size:13px;color:var(--muted)}
+.letra{font-size:13px;color:var(--muted);margin-top:4px;font-style:italic}
+.vista-previa{background:var(--surface-2);border-radius:12px;padding:16px 18px;font-size:14px;line-height:1.65}
+.vista-previa p{margin:0 0 10px}
+.vista-previa .cert{text-align:center;font-weight:800;font-family:Montserrat,sans-serif;margin:10px 0}
+.acciones{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.plegable summary{cursor:pointer;font-weight:700;font-size:14.5px;margin:6px 0 12px}
+
+/* Detalle */
+.detalle{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;align-items:start}
+.datos{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px;margin:0}
+.datos dt{color:var(--muted);font-weight:600}
+.datos dd{margin:0;word-break:break-word}
+.firmantes{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.firmante{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.firmante .ico{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none;font-weight:800;font-size:14px}
+.firmante.hecho .ico{background:var(--ok-soft);color:var(--ok)}
+.firmante.falta .ico{background:var(--warn-soft);color:var(--warn)}
+.firmante small{display:block;color:var(--muted);font-size:12.5px}
+.visor{width:100%;aspect-ratio:1/1.414;border:1px solid var(--line);border-radius:12px;background:#fff}
+.firmar-caja{border:2px solid var(--brand);background:var(--brand-soft);border-radius:14px;padding:16px;margin-top:16px}
+.firmar-caja p{margin:0 0 12px;font-size:14px}
+
+/* Firma */
+.lienzo-caja{border:1px dashed var(--muted);border-radius:12px;background:#fff;position:relative;touch-action:none}
+.lienzo-caja canvas{display:block;width:100%;height:180px;cursor:crosshair}
+.lienzo-caja .guia{position:absolute;left:24px;right:24px;bottom:40px;border-bottom:1px solid #c9d3c6;pointer-events:none}
+.firma-actual{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;justify-content:center;min-height:90px;align-items:center}
+.firma-actual img{max-height:80px;max-width:100%}
+.pestanas-firma{display:flex;gap:6px;margin-bottom:10px}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:600;font-size:14px;z-index:50;box-shadow:0 6px 24px rgba(0,0,0,.2);max-width:calc(100% - 32px);text-align:center}
+
+dialog{border:0;border-radius:14px;padding:22px;max-width:440px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(10,20,14,.45)}
+dialog h3{margin:0 0 8px;font-size:17px}
+dialog p{margin:0 0 16px;font-size:14.5px}
+
+@media (max-width:760px){
+  .rejilla{grid-template-columns:1fr}
+  .detalle{grid-template-columns:1fr}
+  .fila{grid-template-columns:1fr auto}
+  .fila .num{display:none}
+  .titulo h1{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- Lo único visible sin iniciar sesión -->
+<main id="acceso" class="acceso" hidden>
+  <form class="tarjeta-acceso" id="formAcceso" autocomplete="on">
+    <div class="logo"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></div>
+    <h1>Acceso restringido</h1>
+    <p class="sub">Área privada de la asociación</p>
+    <div class="error" id="errAcceso" role="alert" hidden></div>
+    <div class="campo">
+      <label for="email">Correo</label>
+      <input type="email" id="email" autocomplete="username" required>
+    </div>
+    <div class="campo">
+      <label for="clave">Contraseña</label>
+      <input type="password" id="clave" autocomplete="current-password" required>
+    </div>
+    <button class="btn primario grande" style="width:100%" type="submit" id="btnEntrar">Entrar</button>
+    <p class="nota-seg">¿Has olvidado la contraseña? Pide a la coordinación que te la restablezca.</p>
+  </form>
+</main>
+
+<div id="app" hidden></div>
+<dialog id="dlg"><h3 id="dlgT"></h3><p id="dlgP"></p><div class="acciones" style="margin:0;justify-content:flex-end"><button class="btn" id="dlgNo" type="button">Cancelar</button><button class="btn primario" id="dlgSi" type="button">Confirmar</button></div></dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="pdf.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
