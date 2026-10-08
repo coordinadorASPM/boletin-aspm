@@ -355,6 +355,11 @@
         <div class="campo"><label for="f_nif">NIF / CIF *</label><input type="text" id="f_nif" required value="${esc(v.nif)}" autocomplete="off"><span class="ayuda" id="nifAyuda"></span></div>
         <div class="campo"><label for="f_domicilio">Domicilio *</label><input type="text" id="f_domicilio" required value="${esc(v.domicilio)}"></div>
       </div>
+      <div class="campo"><span class="et">Tipo de donante *</span>
+        <div class="opciones">
+          <label class="opcion"><input type="radio" name="tipo_donante" value="PF" ${v.tipo_donante === 'PF' ? 'checked' : ''}><span><b>Persona física (PF)</b><span>Particular, con DNI o NIE</span></span></label>
+          <label class="opcion"><input type="radio" name="tipo_donante" value="PJ" ${v.tipo_donante === 'PJ' ? 'checked' : ''}><span><b>Persona jurídica (PJ)</b><span>Empresa, fundación, asociación… con CIF</span></span></label>
+        </div><span class="ayuda" id="tdAyuda"></span></div>
 
       <h3>Donación</h3>
       <div class="campo"><span class="et">Tipo de donación *</span>
@@ -396,7 +401,7 @@
     const f = $('#formCert');
     const leer = () => ({
       donante: $('#f_donante').value.trim(), nif: $('#f_nif').value.trim().toUpperCase().replace(/\s+/g, ''),
-      domicilio: $('#f_domicilio').value.trim(), tipo: f.tipo.value,
+      domicilio: $('#f_domicilio').value.trim(), tipo: f.tipo.value, tipo_donante: f.tipo_donante.value || null,
       importe: parseFloat($('#f_importe').value), fecha_donacion: $('#f_fdon').value,
       ejercicio: parseInt($('#f_fdon').value.slice(0, 4), 10) || null, fecha_emision: $('#f_femi').value,
       firma_secretaria: $('#f_fsec').checked, firma_presidenta: $('#f_fpre').checked,
@@ -416,6 +421,15 @@
     };
     $('#f_fdon').addEventListener('change', actualizar);
     f.addEventListener('input', actualizar);
+    // PF/PJ: se propone según el NIF (DNI/NIE → PF; CIF → PJ). Se puede cambiar a mano.
+    let tdManual = !!v.tipo_donante;
+    f.querySelectorAll('[name=tipo_donante]').forEach(r => r.addEventListener('change', () => { tdManual = true; $('#tdAyuda').textContent = ''; }));
+    $('#f_nif').addEventListener('input', () => {
+      if (tdManual) return;
+      const td = tipoPorNif($('#f_nif').value.trim().toUpperCase().replace(/\s+/g, ''));
+      f.querySelectorAll('[name=tipo_donante]').forEach(r => { r.checked = r.value === td; });
+      $('#tdAyuda').textContent = td ? 'Marcado según el NIF. Cámbialo si no es correcto.' : '';
+    });
     actualizar();
     if (ed) $('#btnVolver').onclick = () => abrir(ed.id);
 
@@ -463,10 +477,18 @@
 
   function validar(d) {
     if (!d.donante || !d.nif || !d.domicilio) return 'Faltan datos del donante (nombre, NIF y domicilio).';
+    if (!d.tipo_donante) return 'Indica si el donante es persona física (PF) o jurídica (PJ).';
     if (!(d.importe > 0)) return 'El importe tiene que ser mayor que 0.';
     if (!d.fecha_donacion) return 'Falta la fecha de la donación.';
     if (!d.fecha_emision) return 'Falta la fecha del certificado.';
     if (!d.firma_secretaria && !d.firma_presidenta) return 'Marca al menos una firmante.';
+    return '';
+  }
+
+  // DNI (8 cifras + letra) o NIE (X/Y/Z…) → persona física; CIF (empieza por letra de entidad) → persona jurídica
+  function tipoPorNif(n) {
+    if (/^\d{7,8}-?[A-Z]$/.test(n) || /^[XYZKLM]\d{7}-?[A-Z]$/.test(n)) return 'PF';
+    if (/^[ABCDEFGHJNPQRSUVW]-?\d{7}[0-9A-J]?/.test(n)) return 'PJ';
     return '';
   }
 
@@ -502,7 +524,7 @@
         <p class="sub"><span class="estado ${c.estado}">${ESTADO[c.estado]}</span></p>
         <dl class="datos">
           <dt>Donante</dt><dd>${esc(c.donante)}</dd>
-          <dt>NIF / CIF</dt><dd>${esc(c.nif)}</dd>
+          <dt>NIF / CIF</dt><dd>${esc(c.nif)}${c.tipo_donante ? ' · ' + (c.tipo_donante === 'PF' ? 'persona física (PF)' : 'persona jurídica (PJ)') : ''}</dd>
           <dt>Domicilio</dt><dd>${esc(c.domicilio)}</dd>
           <dt>${c.tipo === 'especie' ? 'Valoración' : 'Importe'}</dt><dd><b>${euros(c.importe)}</b> · ${c.tipo === 'especie' ? 'en especie' : 'económica'}</dd>
           <dt>Fecha donación</dt><dd>${fechaCorta(c.fecha_donacion)}</dd>
