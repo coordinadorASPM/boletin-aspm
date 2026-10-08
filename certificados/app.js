@@ -189,12 +189,12 @@
     S.yo = S.perfiles.find(x => x.id === S.yo.id) || S.yo;
   }
 
-  // Orden de firma: primero la presidenta; la secretaria, cuando la presidenta ya ha firmado
-  const esperaPresidenta = c => c.firma_presidenta && !c.firmado_presidenta;
+  // Orden de firma: primero la secretaria; la presidenta, cuando la secretaria ya ha firmado
+  const esperaSecretaria = c => c.firma_secretaria && !c.firmado_secretaria;
   function faltaMiFirma(c) {
     if (c.estado !== 'pendiente' || !firmante()) return false;
-    return S.yo.rol === 'presidenta' ? esperaPresidenta(c)
-                                     : c.firma_secretaria && !c.firmado_secretaria && !esperaPresidenta(c);
+    return S.yo.rol === 'secretaria' ? esperaSecretaria(c)
+                                     : c.firma_presidenta && !c.firmado_presidenta && !esperaSecretaria(c);
   }
 
   async function logo() {
@@ -369,10 +369,10 @@
       </div>
 
       <h3>Quién firma</h3>
-      <p class="sub" style="margin:-4px 0 10px;font-size:13.5px;color:var(--muted)">Si firman las dos, primero la presidenta y después la secretaria, que recibe el aviso cuando la presidenta ya ha firmado.</p>
+      <p class="sub" style="margin:-4px 0 10px;font-size:13.5px;color:var(--muted)">Si firman las dos, primero la secretaria y después la presidenta, que recibe el aviso cuando la secretaria ya ha firmado.</p>
       <div class="opciones">
-        <label class="opcion"><input type="checkbox" id="f_fpre" ${v.firma_presidenta ? 'checked' : ''}><span><b>1. Presidenta</b><span>Firma primero</span></span></label>
-        <label class="opcion"><input type="checkbox" id="f_fsec" ${v.firma_secretaria ? 'checked' : ''}><span><b>2. Secretaria</b><span>Certifica y firma después</span></span></label>
+        <label class="opcion"><input type="checkbox" id="f_fsec" ${v.firma_secretaria ? 'checked' : ''}><span><b>1. Secretaria</b><span>Certifica y firma primero</span></span></label>
+        <label class="opcion"><input type="checkbox" id="f_fpre" ${v.firma_presidenta ? 'checked' : ''}><span><b>2. Presidenta</b><span>Firma después</span></span></label>
       </div>
 
       <details class="plegable" ${ed ? 'open' : ''} style="margin-top:18px"><summary>Datos para la hoja de ingresos (opcional)</summary>
@@ -489,8 +489,8 @@
     const c = S.certs.find(x => x.id === S.detalle);
     if (!c) { el.innerHTML = '<div class="panel vacio">Este certificado no existe o no tienes acceso.</div>'; return; }
     const filasFirma = [];
-    if (c.firma_presidenta) filasFirma.push(['Presidenta', c.firmado_presidenta, 'Pendiente de firma (firma primero)']);
-    if (c.firma_secretaria) filasFirma.push(['Secretaria', c.firmado_secretaria, esperaPresidenta(c) ? 'Firmará cuando lo haya firmado la presidenta' : 'Pendiente de firma']);
+    if (c.firma_secretaria) filasFirma.push(['Secretaria', c.firmado_secretaria, 'Pendiente de firma (firma primero)']);
+    if (c.firma_presidenta) filasFirma.push(['Presidenta', c.firmado_presidenta, esperaSecretaria(c) ? 'Firmará cuando lo haya firmado la secretaria' : 'Pendiente de firma']);
     const puedoFirmar = faltaMiFirma(c);
     const completo = c.estado === 'firmado' || c.estado === 'archivado';
     const sinFirmas = !c.firmado_presidenta && !c.firmado_secretaria;
@@ -513,8 +513,8 @@
           ${c.drive_url ? `<dt>Drive</dt><dd><a href="${esc(c.drive_url)}" target="_blank" rel="noopener">Abrir el PDF archivado</a></dd>` : ''}
         </dl>
         <div class="firmantes">${filasFirma.map(([cargo, cuando, falta]) => `<div class="firmante ${cuando ? 'hecho' : 'falta'}"><span class="ico">${cuando ? '✓' : '…'}</span><span><b>${cargo}</b><small>${cuando ? 'Firmado el ' + new Date(cuando).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : (c.estado === 'pendiente' ? falta : 'Sin firmar')}</small></span></div>`).join('')}</div>
-        ${S.yo.rol === 'secretaria' && c.estado === 'pendiente' && c.firma_secretaria && !c.firmado_secretaria && esperaPresidenta(c)
-          ? '<div class="aviso info" style="margin-top:14px">Primero lo firma la presidenta. Te llegará un aviso por correo cuando lo haya hecho.</div>' : ''}
+        ${S.yo.rol === 'presidenta' && c.estado === 'pendiente' && c.firma_presidenta && !c.firmado_presidenta && esperaSecretaria(c)
+          ? '<div class="aviso info" style="margin-top:14px">Primero lo firma la secretaria. Te llegará un aviso por correo cuando lo haya hecho.</div>' : ''}
 
         ${puedoFirmar ? `<div class="firmar-caja">
           <h3 style="margin-top:0">Firmar con certificado digital</h3>
@@ -561,9 +561,9 @@
         // Le toca a la siguiente firmante: se le avisa ahora
         try {
           const r = await google('avisar', { id: data.id });
-          aviso('Firmado. ' + (r.enviados ? 'Se ha avisado por correo a la secretaria para que firme.' : 'Falta la otra firma.'));
+          aviso('Firmado. ' + (r.enviados ? 'Se ha avisado por correo a la presidenta para que firme.' : 'Falta la otra firma.'));
         } catch (e) {
-          aviso('Firmado, pero no se ha podido avisar a la secretaria: ' + e.message + ' La coordinación puede reenviar el aviso.');
+          aviso('Firmado, pero no se ha podido avisar a la presidenta: ' + e.message + ' La coordinación puede reenviar el aviso.');
         }
       }
       abrir(c.id);
@@ -616,7 +616,7 @@
     on('#btnDescargar', async () => descargarBytes(await pdfDe(c), nombrePdf(c)));
     on('#btnReavisar', async b => {
       b.disabled = true;
-      try { const r = await google('avisar', { id: c.id }); aviso(r.enviados ? 'Aviso reenviado a ' + (esperaPresidenta(c) ? 'la presidenta' : 'la secretaria') + '.' : 'No había nadie a quien avisar.'); }
+      try { const r = await google('avisar', { id: c.id }); aviso(r.enviados ? 'Aviso reenviado a ' + (esperaSecretaria(c) ? 'la secretaria' : 'la presidenta') + '.' : 'No había nadie a quien avisar.'); }
       catch (e) { aviso(e.message); }
       b.disabled = false;
     });
