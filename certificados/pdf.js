@@ -99,7 +99,7 @@
       ],
       cuerpo: [
         'Que ha recibido de ' + c.donante + ' con NIF: ' + c.nif + ', y domicilio en ' + c.domicilio + ' ' + donacion + '.',
-        'Dicha donación ha sido recibida el ' + fechaLarga(c.fecha_donacion) + ', en el ejercicio ' + c.ejercicio + '.',
+        'Dicha donación ha sido recibida el ' + fechaLarga(c.fecha_donacion) + '.',
         'Y, agradeciéndole su generosidad, para que así conste, firmo el presente documento en ' +
           (aj.lugar || 'Boadilla del Monte') + ', a ' + fechaLarga(c.fecha_emision) + '.',
         'La siguiente donación, es de carácter irrevocable, sin perjuicio de lo establecido en las normas imperativas ' +

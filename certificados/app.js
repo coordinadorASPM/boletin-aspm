@@ -365,7 +365,6 @@
       <div class="rejilla">
         <div class="campo"><label for="f_importe" id="lblImporte">Importe (€) *</label><input type="number" id="f_importe" min="0.01" step="0.01" inputmode="decimal" required value="${v.importe || ''}"><div class="letra" id="enLetra"></div></div>
         <div class="campo"><label for="f_fdon">Fecha de la donación *</label><input type="date" id="f_fdon" required value="${esc(v.fecha_donacion)}"></div>
-        <div class="campo"><label for="f_ejer">Ejercicio *</label><input type="number" id="f_ejer" min="2000" max="2100" required value="${esc(v.ejercicio)}"><span class="ayuda">Se rellena con el año de la donación.</span></div>
         <div class="campo"><label for="f_femi">Fecha del certificado *</label><input type="date" id="f_femi" required value="${esc(v.fecha_emision)}"><span class="ayuda">La que aparece en «firmo el presente documento…».</span></div>
       </div>
 
@@ -399,7 +398,7 @@
       donante: $('#f_donante').value.trim(), nif: $('#f_nif').value.trim().toUpperCase().replace(/\s+/g, ''),
       domicilio: $('#f_domicilio').value.trim(), tipo: f.tipo.value,
       importe: parseFloat($('#f_importe').value), fecha_donacion: $('#f_fdon').value,
-      ejercicio: parseInt($('#f_ejer').value, 10), fecha_emision: $('#f_femi').value,
+      ejercicio: parseInt($('#f_fdon').value.slice(0, 4), 10) || null, fecha_emision: $('#f_femi').value,
       firma_secretaria: $('#f_fsec').checked, firma_presidenta: $('#f_fpre').checked,
       cuenta: $('#f_cuenta').value.trim() || null, partida: $('#f_partida').value.trim() || null,
       proyecto: $('#f_proyecto').value.trim() || null, observaciones: $('#f_obs').value.trim() || null
@@ -415,7 +414,7 @@
       const t = window.CertPDF.textos(ph, S.ajustes);
       $('#previa').innerHTML = `<p>${t.encabezado.map(x => x.b ? '<b>' + esc(x.t) + '</b>' : esc(x.t)).join('')}</p><p class="cert">CERTIFICA</p>${t.cuerpo.map(p => '<p>' + esc(p) + '</p>').join('')}`;
     };
-    $('#f_fdon').addEventListener('change', () => { const a = $('#f_fdon').value.slice(0, 4); if (a) $('#f_ejer').value = a; actualizar(); });
+    $('#f_fdon').addEventListener('change', actualizar);
     f.addEventListener('input', actualizar);
     actualizar();
     if (ed) $('#btnVolver').onclick = () => abrir(ed.id);
@@ -466,7 +465,7 @@
     if (!d.donante || !d.nif || !d.domicilio) return 'Faltan datos del donante (nombre, NIF y domicilio).';
     if (!(d.importe > 0)) return 'El importe tiene que ser mayor que 0.';
     if (!d.fecha_donacion) return 'Falta la fecha de la donación.';
-    if (!d.ejercicio || !d.fecha_emision) return 'Faltan el ejercicio o la fecha del certificado.';
+    if (!d.fecha_emision) return 'Falta la fecha del certificado.';
     if (!d.firma_secretaria && !d.firma_presidenta) return 'Marca al menos una firmante.';
     return '';
   }
@@ -506,7 +505,7 @@
           <dt>NIF / CIF</dt><dd>${esc(c.nif)}</dd>
           <dt>Domicilio</dt><dd>${esc(c.domicilio)}</dd>
           <dt>${c.tipo === 'especie' ? 'Valoración' : 'Importe'}</dt><dd><b>${euros(c.importe)}</b> · ${c.tipo === 'especie' ? 'en especie' : 'económica'}</dd>
-          <dt>Fecha donación</dt><dd>${fechaCorta(c.fecha_donacion)} (ejercicio ${esc(c.ejercicio)})</dd>
+          <dt>Fecha donación</dt><dd>${fechaCorta(c.fecha_donacion)}</dd>
           <dt>Fecha certificado</dt><dd>${fechaCorta(c.fecha_emision)}</dd>
           ${c.partida ? `<dt>Partida</dt><dd>${esc(c.partida)}</dd>` : ''}
           ${c.proyecto ? `<dt>Proyecto</dt><dd>${esc(c.proyecto)}</dd>` : ''}
