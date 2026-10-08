@@ -171,11 +171,13 @@
   /**
    * c: certificado · aj: ajustes · firmas: { presidenta: Uint8Array|null, secretaria: Uint8Array|null }
    * logo: Uint8Array (PNG) · borrador: true añade la marca de agua
+   * paraFirmar: versión limpia para firmar con certificado digital (sin marca de agua ni «Pendiente de firma»)
    */
-  async function generar({ c, aj, firmas, logo, borrador }) {
+  async function generar({ c, aj, firmas, logo, borrador, paraFirmar }) {
     const { PDFDocument, StandardFonts, rgb, degrees } = window.PDFLib;
     const doc = await PDFDocument.create();
     doc.setTitle('Certificado de donación' + (c.numero ? ' n.º ' + c.numero : ''));
+    if (c.id) doc.setKeywords([marca(c.id)]);
     doc.setAuthor('Asociación Síndrome Phelan-McDermid');
     doc.setCreator('Herramienta de certificados ASPM');
     const page = doc.addPage([595.28, 841.89]);
@@ -234,7 +236,7 @@
       page.drawText(bq.cargo, { x, y: yNombre - 15, size: SIZE, font: f.r, color: tinta });
       if (bq.cuando) {
         page.drawText('Firmado electrónicamente el ' + fechaHora(bq.cuando), { x, y: yNombre - 29, size: 6.5, font: f.r, color: gris });
-      } else {
+      } else if (!paraFirmar) {
         page.drawText('Pendiente de firma', { x, y: yNombre - 29, size: 6.5, font: f.r, color: gris });
       }
     }
@@ -246,13 +248,41 @@
     dibujarParrafo(page, [{ t: aviso }], f, { x: 48, y: yPie, size: 6.2, ancho: W - 96, interlineado: 7.6, justificar: true, color: tinta });
     page.drawText('1', { x: W / 2 - 2, y: 22, size: 8, font: f.r, color: tinta });
 
-    if (borrador) {
+    if (borrador && !paraFirmar) {
       page.drawText('BORRADOR · PENDIENTE DE FIRMA', {
         x: 110, y: 260, size: 38, font: f.b, color: rgb(0.1, 0.41, 0.18), opacity: 0.1, rotate: degrees(40)
       });
     }
-    return doc.save();
+    // Sin flujos de objetos: el PDF queda legible por dentro y los programas de firma lo amplían sin rehacerlo
+    return doc.save({ useObjectStreams: !paraFirmar });
   }
 
-  window.CertPDF = { generar, textos, importeEnLetra, importeNum, fechaLarga, AVISO_LEGAL };
+  /* ---------- PDF firmados con certificado digital ---------- */
+  // Marca interna que identifica el certificado dentro del PDF (va en las palabras clave)
+  const marca = id => 'aspm-cert-' + id;
+
+  // ¿Este PDF es el de ese certificado? Busca la marca tal cual o en UTF-16 (como la escribe pdf-lib)
+  function llevaMarca(bytes, id) {
+    const m = marca(id);
+    const txt = latin1(bytes).toLowerCase();
+    const hex = Array.from(m, ch => '00' + ch.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+    return txt.includes(m) || txt.includes(hex);
+  }
+
+  // Número de firmas digitales que contiene (cada una lleva su /ByteRange)
+  function contarFirmas(bytes) {
+    return (latin1(bytes).match(/\/ByteRange\s*\[/g) || []).length;
+  }
+
+  function esPdf(bytes) {
+    return latin1(bytes.subarray(0, 1024)).includes('%PDF-');
+  }
+
+  function latin1(bytes) {
+    let s = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return s;
+  }
+
+  window.CertPDF = { generar, textos, importeEnLetra, importeNum, fechaLarga, AVISO_LEGAL, llevaMarca, contarFirmas, esPdf };
 })();

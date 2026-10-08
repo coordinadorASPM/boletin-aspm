@@ -189,10 +189,12 @@
     S.yo = S.perfiles.find(x => x.id === S.yo.id) || S.yo;
   }
 
+  // Orden de firma: primero la presidenta; la secretaria, cuando la presidenta ya ha firmado
+  const esperaPresidenta = c => c.firma_presidenta && !c.firmado_presidenta;
   function faltaMiFirma(c) {
     if (c.estado !== 'pendiente' || !firmante()) return false;
-    return S.yo.rol === 'presidenta' ? c.firma_presidenta && !c.firmado_presidenta
-                                     : c.firma_secretaria && !c.firmado_secretaria;
+    return S.yo.rol === 'presidenta' ? esperaPresidenta(c)
+                                     : c.firma_secretaria && !c.firmado_secretaria && !esperaPresidenta(c);
   }
 
   async function logo() {
@@ -207,14 +209,40 @@
     return new Uint8Array(await data.arrayBuffer());
   }
 
-  async function pdfDe(c) {
+  // PDF guardado con firma digital (almacén privado «certificados»)
+  async function bytesPdfFirmado(path) {
+    const { data, error } = await sb.storage.from('certificados').download(path);
+    if (error) throw new Error('No se ha podido leer el PDF firmado');
+    return new Uint8Array(await data.arrayBuffer());
+  }
+
+  // Si ya hay firma digital, el PDF es el guardado (no se puede rehacer sin romper la firma).
+  // paraFirmar: versión limpia para descargar y firmar con certificado digital.
+  async function pdfDe(c, paraFirmar) {
+    if (c.pdf_path) return bytesPdfFirmado(c.pdf_path);
     const completo = c.estado === 'firmado' || c.estado === 'archivado';
     const [lg, fp, fs] = await Promise.all([
       logo(),
       c.firmado_presidenta ? bytesFirma(c.firma_presidenta_path) : null,
       c.firmado_secretaria ? bytesFirma(c.firma_secretaria_path) : null
     ]);
-    return window.CertPDF.generar({ c, aj: S.ajustes, firmas: { presidenta: fp, secretaria: fs }, logo: lg, borrador: !completo });
+    return window.CertPDF.generar({ c, aj: S.ajustes, firmas: { presidenta: fp, secretaria: fs }, logo: lg, borrador: !completo, paraFirmar });
+  }
+
+  const firmasHechas = c => (c.firmado_presidenta ? 1 : 0) + (c.firmado_secretaria ? 1 : 0);
+  const nombrePdf = (c, pre) => (pre || '') + (c.numero ? c.numero + '.' : '') + 'Certificado donación ' + c.donante.replace(/[\\/:*?"<>|]/g, ' ') + '.pdf';
+  function descargarBytes(bytes, nombre) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+    a.download = nombre; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+  // Lo que había cuando la firmante descargó el PDF: si cambia antes de subirlo, hay que volver a descargarlo
+  const claveBase = id => 'aspm-base-' + id;
+  function guardarBase(c) { try { sessionStorage.setItem(claveBase(c.id), JSON.stringify({ path: c.pdf_path || null, previas: firmasHechas(c) })); } catch (e) {} }
+  function leerBase(c) {
+    try { const b = JSON.parse(sessionStorage.getItem(claveBase(c.id))); if (b) return b; } catch (e) {}
+    return { path: c.pdf_path || null, previas: firmasHechas(c) };
   }
 
   function aBase64(bytes) {
@@ -266,7 +294,6 @@
 
     const cont = $('#cont');
     const avisos = [];
-    if (firmante() && !S.yo.firma_path) avisos.push(`<div class="aviso ambar">Aún no has guardado tu firma. La necesitas para firmar con un clic. <button class="btn" data-ir="perfil" type="button">Guardar mi firma</button></div>`);
     if (firmante() && pendMias && S.vista !== 'pendientes' && S.vista !== 'detalle') avisos.push(`<div class="aviso ambar">Tienes ${pendMias} certificado${pendMias > 1 ? 's' : ''} pendiente${pendMias > 1 ? 's' : ''} de firmar. <button class="btn" data-ir="pendientes" type="button">Ver</button></div>`);
     if (gestiona() && !S.ajustes.apps_script_url) avisos.push(`<div class="aviso rojo">Falta conectar Google: sin eso no se envían los correos ni se archiva en Drive. <button class="btn" data-ir="ajustes" type="button">Ir a Ajustes</button></div>`);
     if (gestiona() && sinArchivar) avisos.push(`<div class="aviso rojo">${sinArchivar} certificado${sinArchivar > 1 ? 's' : ''} firmado${sinArchivar > 1 ? 's' : ''} sin archivar en Drive. Ábrelo y pulsa «Archivar ahora».</div>`);
@@ -343,9 +370,10 @@
       </div>
 
       <h3>Quién firma</h3>
+      <p class="sub" style="margin:-4px 0 10px;font-size:13.5px;color:var(--muted)">Si firman las dos, primero la presidenta y después la secretaria, que recibe el aviso cuando la presidenta ya ha firmado.</p>
       <div class="opciones">
-        <label class="opcion"><input type="checkbox" id="f_fsec" ${v.firma_secretaria ? 'checked' : ''}><span><b>Secretaria</b><span>Certifica y firma</span></span></label>
-        <label class="opcion"><input type="checkbox" id="f_fpre" ${v.firma_presidenta ? 'checked' : ''}><span><b>Presidenta</b><span>Firma el certificado</span></span></label>
+        <label class="opcion"><input type="checkbox" id="f_fpre" ${v.firma_presidenta ? 'checked' : ''}><span><b>1. Presidenta</b><span>Firma primero</span></span></label>
+        <label class="opcion"><input type="checkbox" id="f_fsec" ${v.firma_secretaria ? 'checked' : ''}><span><b>2. Secretaria</b><span>Certifica y firma después</span></span></label>
       </div>
 
       <details class="plegable" ${ed ? 'open' : ''} style="margin-top:18px"><summary>Datos para la hoja de ingresos (opcional)</summary>
@@ -418,7 +446,7 @@
           id = data.id;
           try {
             const r = await google('avisar', { id });
-            aviso('Certificado creado. Aviso enviado a ' + r.enviados + ' firmante' + (r.enviados === 1 ? '' : 's') + '.');
+            aviso(r.enviados ? 'Certificado creado. Aviso enviado a ' + (d.firma_presidenta ? 'la presidenta' : 'la secretaria') + '.' : 'Certificado creado, pero no se ha enviado ningún aviso.');
           } catch (e) {
             aviso('Certificado creado, pero no se ha podido enviar el correo: ' + e.message);
           }
@@ -462,8 +490,8 @@
     const c = S.certs.find(x => x.id === S.detalle);
     if (!c) { el.innerHTML = '<div class="panel vacio">Este certificado no existe o no tienes acceso.</div>'; return; }
     const filasFirma = [];
-    if (c.firma_secretaria) filasFirma.push(['Secretaria', c.firmado_secretaria]);
-    if (c.firma_presidenta) filasFirma.push(['Presidenta', c.firmado_presidenta]);
+    if (c.firma_presidenta) filasFirma.push(['Presidenta', c.firmado_presidenta, 'Pendiente de firma (firma primero)']);
+    if (c.firma_secretaria) filasFirma.push(['Secretaria', c.firmado_secretaria, esperaPresidenta(c) ? 'Firmará cuando lo haya firmado la presidenta' : 'Pendiente de firma']);
     const puedoFirmar = faltaMiFirma(c);
     const completo = c.estado === 'firmado' || c.estado === 'archivado';
     const sinFirmas = !c.firmado_presidenta && !c.firmado_secretaria;
@@ -485,12 +513,21 @@
           ${c.observaciones ? `<dt>Observaciones</dt><dd>${esc(c.observaciones)}</dd>` : ''}
           ${c.drive_url ? `<dt>Drive</dt><dd><a href="${esc(c.drive_url)}" target="_blank" rel="noopener">Abrir el PDF archivado</a></dd>` : ''}
         </dl>
-        <div class="firmantes">${filasFirma.map(([cargo, cuando]) => `<div class="firmante ${cuando ? 'hecho' : 'falta'}"><span class="ico">${cuando ? '✓' : '…'}</span><span><b>${cargo}</b><small>${cuando ? 'Firmado el ' + new Date(cuando).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : 'Pendiente de firma'}</small></span></div>`).join('')}</div>
+        <div class="firmantes">${filasFirma.map(([cargo, cuando, falta]) => `<div class="firmante ${cuando ? 'hecho' : 'falta'}"><span class="ico">${cuando ? '✓' : '…'}</span><span><b>${cargo}</b><small>${cuando ? 'Firmado el ' + new Date(cuando).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : (c.estado === 'pendiente' ? falta : 'Sin firmar')}</small></span></div>`).join('')}</div>
+        ${S.yo.rol === 'secretaria' && c.estado === 'pendiente' && c.firma_secretaria && !c.firmado_secretaria && esperaPresidenta(c)
+          ? '<div class="aviso info" style="margin-top:14px">Primero lo firma la presidenta. Te llegará un aviso por correo cuando lo haya hecho.</div>' : ''}
 
         ${puedoFirmar ? `<div class="firmar-caja">
-          ${S.yo.firma_path
-            ? `<p>Revisa el certificado de la derecha. Al firmar, se añadirá tu firma guardada y la fecha y hora de hoy.</p><button class="btn primario grande" type="button" id="btnFirmar">Firmar con un clic</button>`
-            : `<p>Para firmar, primero guarda tu firma en «Mi perfil».</p><button class="btn primario" type="button" data-ir="perfil">Guardar mi firma</button>`}
+          <h3 style="margin-top:0">Firmar con certificado digital</h3>
+          <ol class="pasos">
+            <li><button class="btn primario" type="button" id="btnBajarFirmar">Descargar PDF para firmar</button></li>
+            <li>Fírmalo en tu ordenador con tu certificado digital (AutoFirma o Adobe Acrobat) y guárdalo.</li>
+            <li><label class="btn primario" for="pdfFirmado">Subir PDF firmado</label><input type="file" id="pdfFirmado" accept="application/pdf,.pdf" hidden></li>
+          </ol>
+          ${c.pdf_path ? '<p class="nota">Este certificado ya lleva una firma digital: descarga el PDF y añade la tuya encima.</p>'
+            : S.yo.firma_path
+              ? `<details class="plegable"><summary>O firmar con tu firma guardada (imagen)</summary><p>Se añadirá tu firma guardada y la fecha y hora de hoy.</p><button class="btn" type="button" id="btnFirmar">Firmar con un clic</button></details>`
+              : ''}
         </div>` : ''}
 
         <div class="acciones">
@@ -500,7 +537,7 @@
           ${gestiona() && c.estado === 'pendiente' && sinFirmas ? '<button class="btn" type="button" id="btnEditar">Corregir datos</button><button class="btn no" type="button" id="btnAnular">Anular</button>' : ''}
         </div>
       </section>
-      <section class="panel"><h2 style="margin-bottom:12px">${completo ? 'Certificado firmado' : 'Vista previa (borrador)'}</h2><iframe class="visor" id="visor" title="Vista previa del certificado"></iframe></section>
+      <section class="panel"><h2 style="margin-bottom:12px">${completo ? 'Certificado firmado' : c.pdf_path ? 'PDF con firma digital (falta otra firma)' : 'Vista previa (borrador)'}</h2><iframe class="visor" id="visor" title="Vista previa del certificado"></iframe></section>
     </div>`;
 
     $('#btnAtras').onclick = () => { S.vista = firmante() ? 'pendientes' : 'todos'; history.replaceState(null, '', location.pathname); pintar(); };
@@ -514,27 +551,73 @@
       b.disabled = true; b.textContent = 'Firmando…';
       const { data, error } = await sb.rpc('firmar', { p_id: c.id });
       if (error) { b.disabled = false; b.textContent = 'Firmar con un clic'; return aviso(error.message); }
+      await trasFirmar(data);
+    });
+    async function trasFirmar(data) {
       await cargarTodo();
       if (data.estado === 'firmado') {
         aviso('Firmado. Ya están todas las firmas: archivando en Drive…');
         await archivar(data.id, true);
       } else {
-        aviso('Firmado. Falta la otra firma.');
+        // Le toca a la siguiente firmante: se le avisa ahora
+        try {
+          const r = await google('avisar', { id: data.id });
+          aviso('Firmado. ' + (r.enviados ? 'Se ha avisado por correo a la secretaria para que firme.' : 'Falta la otra firma.'));
+        } catch (e) {
+          aviso('Firmado, pero no se ha podido avisar a la secretaria: ' + e.message + ' La coordinación puede reenviar el aviso.');
+        }
       }
       abrir(c.id);
+    }
+
+    on('#btnBajarFirmar', async b => {
+      b.disabled = true;
+      try {
+        await cargarTodo();
+        const actual = S.certs.find(x => x.id === c.id) || c;
+        const bytes = await pdfDe(actual, true);
+        guardarBase(actual);
+        descargarBytes(bytes, nombrePdf(actual, 'Para firmar - '));
+        aviso('Descargado. Fírmalo con tu certificado digital y súbelo con «Subir PDF firmado».');
+      } catch (e) { aviso('No se ha podido descargar: ' + e.message); }
+      b.disabled = false;
     });
+
+    const entradaPdf = $('#pdfFirmado');
+    if (entradaPdf) entradaPdf.onchange = async () => {
+      const file = entradaPdf.files[0];
+      entradaPdf.value = '';
+      if (!file) return;
+      const etiqueta = $('label[for="pdfFirmado"]');
+      try {
+        if (file.size > 15 * 1024 * 1024) throw new Error('El archivo pesa más de 15 MB.');
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        if (!window.CertPDF.esPdf(bytes)) throw new Error('Ese archivo no es un PDF.');
+        const antes = c.pdf_path ? window.CertPDF.contarFirmas(await bytesPdfFirmado(c.pdf_path)) : 0;
+        if (window.CertPDF.contarFirmas(bytes) <= antes) {
+          throw new Error('Ese PDF no lleva tu firma digital. Fírmalo con tu certificado (AutoFirma o Acrobat), guárdalo y súbelo de nuevo.');
+        }
+        if (!window.CertPDF.llevaMarca(bytes, c.id) &&
+            !await confirmar('¿Es el PDF correcto?', `No reconozco este archivo como el certificado de ${c.donante} por ${euros(c.importe)}. Súbelo solo si estás segura de que es el de este certificado.`)) return;
+        etiqueta.textContent = 'Subiendo…';
+        const base = leerBase(c);
+        const ruta = c.id + '/' + Date.now() + '-' + S.yo.rol + '.pdf';
+        const up = await sb.storage.from('certificados').upload(ruta, new Blob([bytes], { type: 'application/pdf' }), { contentType: 'application/pdf' });
+        if (up.error) throw up.error;
+        const { data, error } = await sb.rpc('firmar_pdf', { p_id: c.id, p_path: ruta, p_base: base.path, p_previas: base.previas });
+        if (error) throw error;
+        try { sessionStorage.removeItem(claveBase(c.id)); } catch (e) {}
+        await trasFirmar(data);
+      } catch (e) {
+        etiqueta.textContent = 'Subir PDF firmado';
+        aviso(e.message);
+      }
+    };
     on('#btnArchivar', async b => { b.disabled = true; b.textContent = 'Archivando…'; await archivar(c.id); await cargarTodo(); abrir(c.id); });
-    on('#btnDescargar', async () => {
-      const bytes = await pdfDe(c);
-      const nombre = (c.numero ? c.numero + '.' : '') + 'Certificado donación ' + c.donante.replace(/[\\/:*?"<>|]/g, ' ') + '.pdf';
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-      a.download = nombre; a.click();
-      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-    });
+    on('#btnDescargar', async () => descargarBytes(await pdfDe(c), nombrePdf(c)));
     on('#btnReavisar', async b => {
       b.disabled = true;
-      try { const r = await google('avisar', { id: c.id }); aviso('Aviso enviado a ' + r.enviados + ' firmante' + (r.enviados === 1 ? '' : 's') + '.'); }
+      try { const r = await google('avisar', { id: c.id }); aviso(r.enviados ? 'Aviso reenviado a ' + (esperaPresidenta(c) ? 'la presidenta' : 'la secretaria') + '.' : 'No había nadie a quien avisar.'); }
       catch (e) { aviso(e.message); }
       b.disabled = false;
     });
