@@ -9,8 +9,13 @@
   const INACTIVIDAD_MIN = 30;
   const PARTIDAS = ['7201001 DONACION', '7201007 ACC.SOL.'];
 
+  const URL_WEB = 'https://coordinadoraspm.github.io/boletin-aspm/certificados/';
+  // Si se llega desde el enlace del correo de recuperación, hay que pedir contraseña nueva
+  // (se mira antes de crear el cliente, que limpia el enlace al leerlo)
+  let RECUPERANDO = /type=recovery/.test(location.hash);
+
   // La sesión vive solo en esta pestaña: al cerrarla hay que volver a entrar
-  const sb = window.supabase.createClient(SB_URL, SB_KEY, {
+  const sb =window.supabase.createClient(SB_URL, SB_KEY, {
     auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true }
   });
 
@@ -38,13 +43,44 @@
 
   /* =================== Acceso =================== */
   async function arrancar() {
+    if (/error_code=|error=/.test(location.hash) && /type=recovery|otp_expired|access_denied/.test(location.hash)) {
+      history.replaceState(null, '', location.pathname);
+      return mostrarOlvido('El enlace ha caducado o ya se usó. Pide uno nuevo.');
+    }
     const { data } = await sb.auth.getSession();
     if (data.session) await entrar();
+    else if (location.hash === '#olvido') mostrarOlvido();
     else mostrarAcceso();
   }
 
+  function mostrarOlvido(err) {
+    $('#app').hidden = true; $('#acceso').hidden = true; $('#olvido').hidden = false;
+    $('#okOlvido').hidden = true;
+    $('#errOlvido').hidden = !err; $('#errOlvido').textContent = err || '';
+    $('#emailOlvido').value = $('#email').value;
+    $('#emailOlvido').focus();
+  }
+  $('#btnOlvido').onclick = () => mostrarOlvido();
+  $('#btnVolverAcceso').onclick = () => { history.replaceState(null, '', location.pathname); mostrarAcceso(); };
+  $('#formOlvido').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const btn = $('#btnEnviarOlvido');
+    btn.disabled = true; btn.textContent = 'Enviando…';
+    const { error } = await sb.auth.resetPasswordForEmail($('#emailOlvido').value.trim(), { redirectTo: URL_WEB });
+    btn.disabled = false; btn.textContent = 'Enviar enlace';
+    if (error && /rate|seconds|limit/i.test(error.message)) {
+      $('#errOlvido').textContent = 'Has pedido demasiados enlaces seguidos. Espera unos minutos y vuelve a probar.';
+      $('#errOlvido').hidden = false; return;
+    }
+    // Mismo mensaje exista o no la cuenta, para no revelar qué correos tienen acceso
+    $('#errOlvido').hidden = true;
+    $('#okOlvido').textContent = 'Si ese correo tiene acceso, en unos minutos te llegará un enlace para poner una contraseña nueva.';
+    $('#okOlvido').hidden = false;
+  });
+
   function mostrarAcceso(msg) {
     $('#app').hidden = true; $('#app').innerHTML = '';
+    $('#olvido').hidden = true;
     $('#acceso').hidden = false;
     const e = $('#errAcceso');
     e.hidden = !msg; e.textContent = msg || '';
@@ -71,10 +107,10 @@
       return mostrarAcceso('Esta cuenta no tiene acceso a la herramienta.');
     }
     S.yo = p;
-    $('#acceso').hidden = true;
+    $('#acceso').hidden = true; $('#olvido').hidden = true;
     $('#app').hidden = false;
     vigilarInactividad();
-    if (p.debe_cambiar_clave) return pedirClaveNueva();
+    if (p.debe_cambiar_clave || RECUPERANDO) return pedirClaveNueva();
     await continuarEntrada();
   }
 
@@ -83,7 +119,7 @@
     $('#app').innerHTML = `<main class="acceso"><form class="tarjeta-acceso" id="formNueva" autocomplete="off">
       <div class="logo"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></div>
       <h1>Elige tu contraseña</h1>
-      <p class="sub">Es tu primera entrada. Sustituye la contraseña provisional por una tuya (mínimo 10 caracteres).</p>
+      <p class="sub">${RECUPERANDO ? 'Pon tu contraseña nueva' : 'Sustituye la contraseña provisional por una tuya'} (mínimo 10 caracteres).</p>
       <div class="error" id="errNueva" role="alert" hidden></div>
       <input type="text" autocomplete="username" value="${esc(S.yo.email)}" hidden readonly>
       <div class="campo"><label for="n1">Nueva contraseña</label><input type="password" id="n1" autocomplete="new-password" minlength="10" required></div>
@@ -105,6 +141,8 @@
       if (error) { $('#btnNueva').disabled = false; return fallo('No se ha podido guardar: ' + error.message); }
       await sb.rpc('clave_cambiada');
       S.yo.debe_cambiar_clave = false;
+      RECUPERANDO = false;
+      history.replaceState(null, '', location.pathname);
       aviso('Contraseña guardada.');
       await continuarEntrada();
     };
@@ -133,7 +171,10 @@
     reiniciar();
   }
 
-  sb.auth.onAuthStateChange(ev => { if (ev === 'SIGNED_OUT' && S.yo) { S.yo = null; mostrarAcceso(); } });
+  sb.auth.onAuthStateChange(ev => {
+    if (ev === 'PASSWORD_RECOVERY') RECUPERANDO = true;
+    if (ev === 'SIGNED_OUT' && S.yo) { S.yo = null; mostrarAcceso(); }
+  });
 
   /* =================== Datos =================== */
   async function cargarTodo() {
@@ -658,9 +699,19 @@
       <div class="campo"><label for="a_gs">URL del script de Google</label><input type="url" id="a_gs" value="${esc(a.apps_script_url)}" placeholder="https://script.google.com/macros/s/…/exec"></div>
       <div class="acciones"><button class="btn primario" type="submit">Guardar ajustes</button><button class="btn" type="button" id="btnProbar">Probar conexión con Google</button></div>
       <h3>Cuentas con acceso (${S.perfiles.length} de 4)</h3>
-      <div class="lista">${S.perfiles.map(p => `<div class="firmante hecho"><span class="ico">✓</span><span><b>${esc(ROL[p.rol])}</b><small>${esc(p.email)}${(p.rol === 'presidenta' || p.rol === 'secretaria') ? (p.firma_path ? ' · firma guardada' : ' · sin firma todavía') : ''}</small></span></div>`).join('')}</div>
-      <p class="sub" style="margin-top:10px">Las cuentas se dan de alta o de baja desde Supabase (ver instrucciones).</p>
+      <div class="lista">${S.perfiles.map(p => `<div class="firmante hecho" style="flex-wrap:wrap"><span class="ico">✓</span><span style="flex:1 1 200px"><b>${esc(ROL[p.rol])}</b><small>${esc(p.email)}${(p.rol === 'presidenta' || p.rol === 'secretaria') ? (p.firma_path ? ' · firma guardada' : ' · sin firma todavía') : ''}${p.debe_cambiar_clave ? ' · aún con contraseña provisional' : ''}</small></span>
+        ${S.yo.rol === 'coordinadora' ? `<button class="btn" type="button" data-clave="${esc(p.email)}">Poner contraseña provisional</button>` : ''}</div>`).join('')}</div>
+      <p class="sub" style="margin-top:10px">${S.yo.rol === 'coordinadora' ? 'Si alguien olvida su contraseña, ponle una provisional y díselo en persona o por teléfono: al entrar tendrá que cambiarla. ' : ''}Para dar de alta o de baja cuentas, ver las instrucciones.</p>
     </form>`;
+    el.querySelectorAll('[data-clave]').forEach(b => b.onclick = async () => {
+      const email = b.dataset.clave;
+      const clave = await pedirTexto('Contraseña provisional', 'Para ' + email + '. Mínimo 8 caracteres. Al entrar tendrá que cambiarla por una suya.');
+      if (!clave) return;
+      if (clave.length < 8) return aviso('La contraseña provisional debe tener al menos 8 caracteres.');
+      const { error } = await sb.rpc('restablecer_clave', { p_email: email, p_clave: clave });
+      if (error) return aviso(/restablecer_clave/.test(error.message) ? 'Falta activar esta función en Supabase (ver instrucciones).' : error.message);
+      await cargarTodo(); pintar(); aviso('Contraseña provisional puesta para ' + email + '.');
+    });
     $('#formAj').onsubmit = async ev => {
       ev.preventDefault();
       const d = {
@@ -699,7 +750,22 @@
     });
   }
 
+  function pedirTexto(titulo, texto) {
+    return new Promise(res => {
+      const d = $('#dlg');
+      $('#dlgT').textContent = titulo;
+      $('#dlgP').innerHTML = esc(texto) + '<input type="text" id="dlgIn" autocomplete="off" style="margin-top:12px">';
+      const fin = v => { d.close(); res(v); };
+      $('#dlgSi').onclick = () => fin($('#dlgIn').value);
+      $('#dlgNo').onclick = () => fin(null);
+      d.oncancel = () => res(null);
+      d.showModal();
+      $('#dlgIn').focus();
+    });
+  }
+
   window.addEventListener('hashchange', () => {
+    if (location.hash === '#olvido' && !S.yo) return mostrarOlvido();
     const m = /#c=([0-9a-f-]{36})/.exec(location.hash);
     if (m && S.yo && S.detalle !== m[1]) abrir(m[1]);
   });

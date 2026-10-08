@@ -190,7 +190,24 @@ dialog p{margin:0 0 16px;font-size:14.5px}
       <input type="password" id="clave" autocomplete="current-password" required>
     </div>
     <button class="btn primario grande" style="width:100%" type="submit" id="btnEntrar">Entrar</button>
-    <p class="nota-seg">¿Has olvidado la contraseña? Pide a la coordinación que te la restablezca.</p>
+    <p class="nota-seg"><button class="btn sutil" type="button" id="btnOlvido">¿Has olvidado tu contraseña?</button></p>
+  </form>
+</main>
+
+<main id="olvido" class="acceso" hidden>
+  <form class="tarjeta-acceso" id="formOlvido">
+    <div class="logo"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></div>
+    <h1>Recuperar contraseña</h1>
+    <p class="sub">Escribe tu correo y te enviaremos un enlace para poner una contraseña nueva.</p>
+    <div class="aviso verde" id="okOlvido" role="status" hidden></div>
+    <div class="error" id="errOlvido" role="alert" hidden></div>
+    <div class="campo">
+      <label for="emailOlvido">Correo</label>
+      <input type="email" id="emailOlvido" autocomplete="username" required>
+    </div>
+    <button class="btn primario grande" style="width:100%" type="submit" id="btnEnviarOlvido">Enviar enlace</button>
+    <p class="nota-seg"><button class="btn sutil" type="button" id="btnVolverAcceso">← Volver a entrar</button></p>
+    <p class="nota-seg">Si no te llega en unos minutos, mira en «Spam» o pide a la coordinación que te ponga una contraseña provisional.</p>
   </form>
 </main>
 
