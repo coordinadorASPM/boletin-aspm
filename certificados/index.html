@@ -114,6 +114,24 @@ main.contenido{padding-block:22px 60px}
 .estado.firmado{background:var(--info-soft);color:var(--info)}
 .estado.archivado{background:var(--ok-soft);color:var(--ok)}
 .estado.anulado{background:var(--surface-2);color:var(--muted);text-decoration:line-through}
+.estado.revision{background:var(--brand-soft);color:var(--brand-deep)}
+
+/* Documentos y actas */
+.apilado{display:flex;flex-direction:column;gap:0}
+.editor{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.editor .barra{display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--surface-2);border-bottom:1px solid var(--line);position:sticky;top:52px;z-index:5}
+.editor .barra .btn{padding:5px 11px;font-size:13px}
+.editor .hoja{min-height:420px;max-height:70vh;overflow-y:auto;padding:22px 26px;background:#fff;color:#1a1a1a;font:14.5px/1.6 Arial,Helvetica,sans-serif;outline:none}
+.editor .hoja:focus{box-shadow:inset 0 0 0 2px var(--brand-soft)}
+.editor .hoja h2{font:700 17px/1.4 Arial,Helvetica,sans-serif;margin:16px 0 6px}
+.editor .hoja h3{font:700 15px/1.4 Arial,Helvetica,sans-serif;margin:12px 0 4px}
+.editor .hoja p{margin:0 0 9px}
+.editor .hoja ul,.editor .hoja ol{margin:0 0 9px;padding-left:24px}
+.diff{background:var(--surface-2);border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.6;margin:8px 0 14px;max-height:60vh;overflow-y:auto}
+.diff p{margin:0 0 8px;color:var(--muted)}
+.diff p.cambio{color:var(--ink)}
+.diff del{background:var(--no-soft);color:var(--no);text-decoration:line-through}
+.diff ins{background:var(--ok-soft);color:var(--ok);text-decoration:none;font-weight:600}
 .vacio{text-align:center;color:var(--muted);padding:34px 10px}
 .buscador{margin-bottom:12px}
 
@@ -220,7 +238,8 @@ dialog p{margin:0 0 16px;font-size:14.5px}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-<script src="pdf.js?v=202610081437"></script>
-<script src="app.js?v=202610081437"></script>
+<script src="pdf.js?v=202610141200"></script>
+<script src="doc-pdf.js?v=202610141200"></script>
+<script src="app.js?v=202610141200"></script>
 </body>
 </html>

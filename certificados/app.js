@@ -32,7 +32,18 @@
     anulado: 'Anulado'
   };
 
-  const S = { yo: null, perfiles: [], ajustes: {}, certs: [], vista: 'pendientes', detalle: null, logo: null, busca: '' };
+  // Documentos y actas
+  const ESTADO_DOC = {
+    revision: 'En revisión',
+    pendiente: 'Pendiente de firma',
+    firmado: 'Firmado · falta archivar',
+    archivado: 'Firmado y archivado',
+    anulado: 'Anulado'
+  };
+  const REVISORAS = ['coordinadora', 'secretaria', 'presidenta'];   // orden de revisión del acta
+  const ROL_ART = { coordinadora: 'la coordinadora', secretaria: 'la secretaria', presidenta: 'la presidenta' };
+
+  const S = { yo: null, perfiles: [], ajustes: {}, certs: [], docs: [], vista: 'pendientes', detalle: null, logo: null, busca: '', buscaDoc: '', editor: null };
   const $ = (sel, raiz) => (raiz || document).querySelector(sel);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   const gestiona = () => S.yo && (S.yo.rol === 'coordinadora' || S.yo.rol === 'trabajadora_social');
@@ -151,12 +162,13 @@
   async function continuarEntrada() {
     await cargarTodo();
     const m = /#c=([0-9a-f-]{36})/.exec(location.hash);
-    if (m) abrir(m[1]); else { S.vista = 'pendientes'; pintar(); }
+    const md = /#d=([0-9a-f-]{36})/.exec(location.hash);
+    if (m) abrir(m[1]); else if (md) abrirDoc(md[1]); else { S.vista = 'pendientes'; pintar(); }
   }
 
   async function salir(msg) {
     await sb.auth.signOut();
-    S.yo = null; S.certs = []; S.perfiles = []; S.ajustes = {};
+    S.yo = null; S.certs = []; S.docs = []; S.perfiles = []; S.ajustes = {}; S.editor = null;
     history.replaceState(null, '', location.pathname);
     mostrarAcceso(msg);
   }
@@ -165,7 +177,11 @@
   function vigilarInactividad() {
     const reiniciar = () => {
       clearTimeout(temporizador);
-      temporizador = setTimeout(() => salir('Sesión cerrada por inactividad.'), INACTIVIDAD_MIN * 60000);
+      temporizador = setTimeout(async () => {
+        // Si había un acta a medio corregir, se guarda antes de cerrar la sesión
+        if (S.editor && S.editor.sucio) { try { await S.editor.guardar(); } catch (e) {} }
+        salir('Sesión cerrada por inactividad.' + (S.editor ? ' Tus cambios en el acta se han guardado.' : ''));
+      }, INACTIVIDAD_MIN * 60000);
     };
     ['click', 'keydown', 'pointermove', 'scroll'].forEach(e => document.addEventListener(e, reiniciar, { passive: true }));
     reiniciar();
@@ -178,14 +194,16 @@
 
   /* =================== Datos =================== */
   async function cargarTodo() {
-    const [p, a, c] = await Promise.all([
+    const [p, a, c, d] = await Promise.all([
       sb.from('perfiles').select('id,email,rol,firma_path,debe_cambiar_clave'),
       sb.from('ajustes').select('*').eq('id', 1).maybeSingle(),
-      sb.from('certificados').select('*').order('creado', { ascending: false })
+      sb.from('certificados').select('*').order('creado', { ascending: false }),
+      sb.from('documentos').select('*').order('creado', { ascending: false })
     ]);
     S.perfiles = p.data || [];
     S.ajustes = a.data || {};
     S.certs = c.data || [];
+    S.docs = d.data || [];
     S.yo = S.perfiles.find(x => x.id === S.yo.id) || S.yo;
   }
 
@@ -196,6 +214,8 @@
     return S.yo.rol === 'secretaria' ? esperaSecretaria(c)
                                      : c.firma_presidenta && !c.firmado_presidenta && !esperaSecretaria(c);
   }
+  // Documentos: me toca revisar el acta o firmar (mismo orden de firma que los certificados)
+  const faltaMiDoc = d => (d.estado === 'revision' && d.revisa === S.yo.rol) || faltaMiFirma(d);
 
   async function logo() {
     if (!S.logo) S.logo = new Uint8Array(await (await fetch('../img/logo.png')).arrayBuffer());
@@ -267,21 +287,24 @@
 
   /* =================== Pintado general =================== */
   function pintar() {
-    const pendMias = S.certs.filter(faltaMiFirma).length;
-    const pendTodas = S.certs.filter(c => c.estado === 'pendiente').length;
-    const sinArchivar = S.certs.filter(c => c.estado === 'firmado').length;
-    document.title = (pendMias ? '(' + pendMias + ') ' : '') + 'Certificados ASPM';
+    if (S.vista !== 'doc') S.editor = null;
+    const pendMiasCert = S.certs.filter(faltaMiFirma).length;
+    const docsMios = S.docs.filter(faltaMiDoc).length;
+    const pendMias = pendMiasCert + docsMios;
+    const pendTodas = S.certs.filter(c => c.estado === 'pendiente').length + S.docs.filter(d => d.estado === 'revision' || d.estado === 'pendiente').length;
+    const sinArchivar = S.certs.filter(c => c.estado === 'firmado').length + S.docs.filter(d => d.tipo === 'acta' && d.estado === 'firmado').length;
+    document.title = (pendMias ? '(' + pendMias + ') ' : '') + 'Certificados y firmas ASPM';
 
-    const tabs = [['pendientes', firmante() ? 'Pendientes de mi firma' : 'Pendientes', firmante() ? pendMias : pendTodas]];
+    const tabs = [['pendientes', firmante() ? 'Pendientes' : 'En curso', firmante() ? pendMias : pendTodas]];
     if (gestiona()) tabs.push(['nuevo', 'Nuevo certificado', 0]);
-    tabs.push(['todos', 'Todos', 0], ['perfil', 'Mi perfil', 0]);
+    tabs.push(['todos', 'Certificados', 0], ['documentos', 'Documentos y actas', firmante() ? 0 : docsMios], ['perfil', 'Mi perfil', 0]);
     if (gestiona()) tabs.push(['ajustes', 'Ajustes', 0]);
 
-    const actual = S.vista === 'detalle' || S.vista === 'editar' ? null : S.vista;
+    const actual = { detalle: 'todos', editar: 'todos', doc: 'documentos', nuevodoc: 'documentos', nuevaacta: 'documentos' }[S.vista] || S.vista;
     $('#app').innerHTML = `
       <header class="top"><div class="wrap">
         <span class="logo"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></span>
-        <div class="titulo"><h1>Certificados de donación</h1><p>Emisión y firma de certificados (Ley 49/2002 · modelo 182)</p></div>
+        <div class="titulo"><h1>Certificados y firmas</h1><p>Certificados de donación, documentos para firmar y actas de la junta</p></div>
         <div class="quien">${S.yo.rol === 'coordinadora' ? '<a class="btn" href="../">Menú</a>' : ''}<span class="chip">${esc(ROL[S.yo.rol])} · ${esc(S.yo.email)}</span>
           <button class="btn sutil" type="button" id="btnSalir">Salir</button></div>
       </div></header>
@@ -289,21 +312,34 @@
         ${tabs.map(([k, t, n]) => `<button class="vista" type="button" data-v="${k}" ${actual === k ? 'aria-current="page"' : ''}>${esc(t)}${n ? `<span class="n">${n}</span>` : ''}</button>`).join('')}
       </div></nav>
       <main class="contenido wrap" id="cont"></main>`;
-    $('#btnSalir').onclick = () => salir();
-    document.querySelectorAll('.vista').forEach(b => b.onclick = () => { S.vista = b.dataset.v; history.replaceState(null, '', location.pathname); pintar(); });
+    $('#btnSalir').onclick = async () => { if (await puedoSalir()) salir(); };
+    document.querySelectorAll('.vista').forEach(b => b.onclick = async () => {
+      if (!await puedoSalir()) return;
+      S.vista = b.dataset.v; history.replaceState(null, '', location.pathname); pintar();
+    });
 
     const cont = $('#cont');
     const avisos = [];
-    if (firmante() && pendMias && S.vista !== 'pendientes' && S.vista !== 'detalle') avisos.push(`<div class="aviso ambar">Tienes ${pendMias} certificado${pendMias > 1 ? 's' : ''} pendiente${pendMias > 1 ? 's' : ''} de firmar. <button class="btn" data-ir="pendientes" type="button">Ver</button></div>`);
+    const enDetalle = S.vista === 'pendientes' || S.vista === 'detalle' || S.vista === 'doc';
+    if (firmante() && pendMias && !enDetalle) avisos.push(`<div class="aviso ambar">Tienes ${pendMias} documento${pendMias > 1 ? 's' : ''} pendiente${pendMias > 1 ? 's' : ''} de firmar o revisar. <button class="btn" data-ir="pendientes" type="button">Ver</button></div>`);
+    if (gestiona() && docsMios && !enDetalle) avisos.push(`<div class="aviso ambar">Tienes ${docsMios} acta${docsMios > 1 ? 's' : ''} pendiente${docsMios > 1 ? 's' : ''} de revisar. <button class="btn" data-ir="pendientes" type="button">Ver</button></div>`);
     if (gestiona() && !S.ajustes.apps_script_url) avisos.push(`<div class="aviso rojo">Falta conectar Google: sin eso no se envían los correos ni se archiva en Drive. <button class="btn" data-ir="ajustes" type="button">Ir a Ajustes</button></div>`);
-    if (gestiona() && sinArchivar) avisos.push(`<div class="aviso rojo">${sinArchivar} certificado${sinArchivar > 1 ? 's' : ''} firmado${sinArchivar > 1 ? 's' : ''} sin archivar en Drive. Ábrelo y pulsa «Archivar ahora».</div>`);
+    if (gestiona() && sinArchivar) avisos.push(`<div class="aviso rojo">${sinArchivar} documento${sinArchivar > 1 ? 's' : ''} firmado${sinArchivar > 1 ? 's' : ''} sin archivar en Drive. Ábrelo y pulsa «Archivar ahora».</div>`);
     cont.innerHTML = avisos.join('');
     cont.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { S.vista = b.dataset.ir; pintar(); });
 
     const zona = document.createElement('div');
     cont.appendChild(zona);
-    ({ pendientes: vPendientes, nuevo: vFormulario, editar: vFormulario, todos: vTodos, perfil: vPerfil, ajustes: vAjustes, detalle: vDetalle }[S.vista] || vPendientes)(zona);
+    ({ pendientes: vPendientes, nuevo: vFormulario, editar: vFormulario, todos: vTodos, perfil: vPerfil, ajustes: vAjustes, detalle: vDetalle,
+       documentos: vDocumentos, nuevodoc: vNuevoDoc, nuevaacta: vNuevaActa, doc: vDoc }[S.vista] || vPendientes)(zona);
   }
+
+  // Si hay un acta con cambios sin guardar, pregunta antes de irse
+  async function puedoSalir() {
+    if (!S.editor || !S.editor.sucio) return true;
+    return confirmar('Cambios sin guardar', 'Has corregido el acta y no has guardado. Si sales ahora, se perderán esos cambios.');
+  }
+  window.addEventListener('beforeunload', e => { if (S.editor && S.editor.sucio) { e.preventDefault(); e.returnValue = ''; } });
 
   function filaCert(c) {
     return `<button class="fila" type="button" data-id="${c.id}">
@@ -312,15 +348,21 @@
       <span class="imp">${euros(c.importe)}<br><span class="estado ${c.estado}">${ESTADO[c.estado]}</span></span>
     </button>`;
   }
-  function enlazarFilas(el) { el.querySelectorAll('.fila').forEach(b => b.onclick = () => abrir(b.dataset.id)); }
+  function enlazarFilas(el) { el.querySelectorAll('.fila').forEach(b => b.onclick = () => b.dataset.doc ? abrirDoc(b.dataset.doc) : abrir(b.dataset.id)); }
 
   /* =================== Vistas =================== */
   function vPendientes(el) {
-    const lista = firmante() ? S.certs.filter(faltaMiFirma) : S.certs.filter(c => c.estado === 'pendiente' || c.estado === 'firmado');
+    const certs = firmante() ? S.certs.filter(faltaMiFirma) : S.certs.filter(c => c.estado === 'pendiente' || c.estado === 'firmado');
+    const docs = firmante() ? S.docs.filter(faltaMiDoc) : S.docs.filter(d => ['revision', 'pendiente'].includes(d.estado) || (d.tipo === 'acta' && d.estado === 'firmado'));
     el.innerHTML = `<section class="panel">
-      <h2>${firmante() ? 'Pendientes de mi firma' : 'En curso'}</h2>
+      <h2>${firmante() ? 'Documentos y actas pendientes' : 'Documentos y actas en curso'}</h2>
+      <p class="sub">${firmante() ? 'Actas que te toca revisar y documentos que esperan tu firma.' : 'Actas en revisión y documentos que esperan alguna firma o el archivo en Drive.'}</p>
+      <div class="lista">${docs.map(filaDoc).join('') || `<div class="vacio">${firmante() ? 'No tienes nada pendiente.' : 'No hay documentos ni actas en curso.'}</div>`}</div>
+    </section>
+    <section class="panel">
+      <h2>${firmante() ? 'Certificados pendientes de mi firma' : 'Certificados en curso'}</h2>
       <p class="sub">${firmante() ? 'Certificados que esperan tu firma. Ábrelos para revisarlos y firmar.' : 'Certificados que aún esperan alguna firma o el archivo en Drive.'}</p>
-      <div class="lista">${lista.map(filaCert).join('') || `<div class="vacio">${firmante() ? 'No tienes nada pendiente de firmar.' : 'No hay certificados en curso.'}</div>`}</div>
+      <div class="lista">${certs.map(filaCert).join('') || `<div class="vacio">${firmante() ? 'No tienes certificados pendientes de firmar.' : 'No hay certificados en curso.'}</div>`}</div>
     </section>`;
     enlazarFilas(el);
   }
@@ -668,6 +710,579 @@
     if (w) w.location = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
   }
 
+  /* =================== Documentos para firmar y actas de la junta =================== */
+  const quienFirma = d => [d.firma_secretaria && 'secretaria', d.firma_presidenta && 'presidenta'].filter(Boolean).join(' y ');
+  function estadoDoc(d) {
+    if (d.estado === 'revision') return 'En revisión · ' + ROL[d.revisa].toLowerCase();
+    if (d.tipo !== 'acta' && d.estado === 'firmado') return 'Firmado';   // los documentos no se archivan en Drive: se descargan
+    return ESTADO_DOC[d.estado];
+  }
+  function filaDoc(d) {
+    const mio = S.yo && faltaMiDoc(d);
+    return `<button class="fila" type="button" data-doc="${d.id}">
+      <span class="num">${d.tipo === 'acta' ? 'Acta' : 'Doc.'}</span>
+      <span><span class="don">${esc(d.titulo)}</span><br><span class="meta">${d.tipo === 'acta' ? 'Reunión del ' : 'Fecha: '}${fechaCorta(d.fecha)} · firma${d.firma_secretaria && d.firma_presidenta ? 'n' : ''} ${quienFirma(d)}</span></span>
+      <span class="imp"><span class="estado ${d.estado}">${esc(estadoDoc(d))}</span>${mio ? '<br><span class="meta" style="color:var(--warn);font-weight:700">Te toca</span>' : ''}</span>
+    </button>`;
+  }
+
+  function abrirDoc(id) {
+    S.docDetalle = id; S.vista = 'doc'; S.editor = null;
+    history.replaceState(null, '', '#d=' + id);
+    pintar();
+    window.scrollTo(0, 0);
+  }
+
+  function vDocumentos(el) {
+    el.innerHTML = `<section class="panel"><h2>Documentos y actas</h2>
+      <p class="sub">Documentos subidos para que los firmen la secretaria, la presidenta o las dos, y actas de la junta directiva
+        (revisión: coordinadora → secretaria → presidenta; firma: secretaria → presidenta).</p>
+      ${gestiona() ? `<div class="acciones" style="margin:0 0 16px">
+        <button class="btn primario" type="button" id="btnNuevoDoc">Subir documento para firmar</button>
+        <button class="btn primario" type="button" id="btnNuevaActa">Nueva acta</button></div>` : ''}
+      <input class="buscador" type="text" id="buscaDoc" placeholder="Buscar por título" value="${esc(S.buscaDoc)}" aria-label="Buscar">
+      <div class="lista" id="listaDocs"></div></section>`;
+    const pintarLista = () => {
+      const q = S.buscaDoc.toLowerCase();
+      const l = S.docs.filter(d => !q || d.titulo.toLowerCase().includes(q));
+      $('#listaDocs').innerHTML = l.map(filaDoc).join('') || `<div class="vacio">${S.docs.length ? 'Sin resultados.' : 'Todavía no hay documentos ni actas.'}</div>`;
+      enlazarFilas($('#listaDocs'));
+    };
+    $('#buscaDoc').oninput = e => { S.buscaDoc = e.target.value; pintarLista(); };
+    pintarLista();
+    if (gestiona()) {
+      $('#btnNuevoDoc').onclick = () => { S.vista = 'nuevodoc'; pintar(); };
+      $('#btnNuevaActa').onclick = () => { S.vista = 'nuevaacta'; pintar(); };
+    }
+  }
+
+  const opcionesFirma = (sec, pre) => `
+    <h3>Quién firma</h3>
+    <p class="sub" style="margin:-4px 0 10px;font-size:13.5px;color:var(--muted)">Si firman las dos, primero la secretaria y después la presidenta, que recibe el aviso cuando la secretaria ya ha firmado.</p>
+    <div class="opciones">
+      <label class="opcion"><input type="checkbox" id="f_fsec" ${sec ? 'checked' : ''}><span><b>1. Secretaria</b><span>Firma primero</span></span></label>
+      <label class="opcion"><input type="checkbox" id="f_fpre" ${pre ? 'checked' : ''}><span><b>2. Presidenta</b><span>Firma después</span></span></label>
+    </div>`;
+
+  /* ---------- Subir un documento para firmar ---------- */
+  function vNuevoDoc(el) {
+    el.innerHTML = `<form class="panel" id="formDoc" novalidate>
+      <h2>Subir documento para firmar</h2>
+      <p class="sub">Sube el PDF y marca quién tiene que firmarlo. Se avisará por correo a quien le toque.</p>
+      <div class="error" id="errDoc" hidden></div>
+      <div class="rejilla">
+        <div class="campo ancho"><label for="d_titulo">Título del documento *</label><input type="text" id="d_titulo" required placeholder="Por ejemplo: Convenio de colaboración con …"></div>
+        <div class="campo"><label for="d_fecha">Fecha del documento *</label><input type="date" id="d_fecha" required value="${hoyISO()}"><span class="ayuda">Sirve para ordenarlo y para el nombre del archivo en Drive.</span></div>
+        <div class="campo"><label for="d_archivo">Archivo PDF *</label><input type="file" id="d_archivo" accept="application/pdf,.pdf,.doc,.docx"><span class="ayuda">Máximo 15 MB. Si es un Word, guárdalo antes como PDF (Archivo → Guardar como → PDF).</span></div>
+        <div class="campo ancho"><label for="d_nota">Nota para las firmantes (opcional)</label><input type="text" id="d_nota" placeholder="Por ejemplo: hay que entregarlo antes del viernes"></div>
+      </div>
+      ${opcionesFirma(true, true)}
+      <div class="acciones">
+        <button class="btn primario grande" type="submit" id="btnSubirDoc">Subir y enviar a firmar</button>
+        <button class="btn sutil" type="button" id="btnCancelarDoc">Cancelar</button>
+      </div>
+    </form>`;
+    const err = m => { const e = $('#errDoc'); e.textContent = m; e.hidden = false; e.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+    $('#btnCancelarDoc').onclick = () => { S.vista = 'documentos'; pintar(); };
+    $('#formDoc').onsubmit = async ev => {
+      ev.preventDefault();
+      const titulo = $('#d_titulo').value.trim(), fecha = $('#d_fecha').value, file = $('#d_archivo').files[0];
+      const sec = $('#f_fsec').checked, pre = $('#f_fpre').checked;
+      if (!titulo) return err('Falta el título.');
+      if (!fecha) return err('Falta la fecha del documento.');
+      if (!file) return err('Elige el archivo PDF.');
+      if (/\.docx?$/i.test(file.name)) return err('Es un Word: ábrelo y guárdalo como PDF (Archivo → Guardar como → PDF). Después súbelo aquí.');
+      if (file.size > 15 * 1024 * 1024) return err('El archivo pesa más de 15 MB.');
+      if (!sec && !pre) return err('Marca al menos una firmante.');
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      if (!window.CertPDF.esPdf(bytes)) return err('Ese archivo no es un PDF.');
+      const btn = $('#btnSubirDoc');
+      btn.disabled = true; btn.textContent = 'Subiendo…';
+      try {
+        const id = crypto.randomUUID();
+        const ruta = id + '/original-' + Date.now() + '.pdf';
+        const up = await sb.storage.from('documentos').upload(ruta, new Blob([bytes], { type: 'application/pdf' }), { contentType: 'application/pdf' });
+        if (up.error) throw up.error;
+        const { error } = await sb.from('documentos').insert({ id, tipo: 'documento', titulo, fecha, original_path: ruta,
+          firma_secretaria: sec, firma_presidenta: pre, nota: $('#d_nota').value.trim() || null });
+        if (error) throw error;
+        try {
+          const r = await google('doc_avisar', { id });
+          aviso(r.enviados ? 'Documento subido. Aviso enviado a ' + ROL_ART[r.rol] + '.' : 'Documento subido, pero no se ha enviado ningún aviso.');
+        } catch (e) { aviso('Documento subido, pero no se ha podido enviar el correo: ' + e.message); }
+        await cargarTodo();
+        abrirDoc(id);
+      } catch (e) {
+        btn.disabled = false; btn.textContent = 'Subir y enviar a firmar';
+        err(e.message);
+      }
+    };
+  }
+
+  /* ---------- Nueva acta ---------- */
+  function vNuevaActa(el) {
+    el.innerHTML = `<form class="panel" id="formActa" novalidate>
+      <h2>Nueva acta de la junta</h2>
+      <p class="sub">Pega o escribe el texto, o impórtalo desde un Word. Al crearla, empieza la revisión: primero tú, después la secretaria y por último la presidenta. Con el último OK pasa a firma.</p>
+      <div class="error" id="errActa" hidden></div>
+      <div class="rejilla">
+        <div class="campo"><label for="a_titulo">Título *</label><input type="text" id="a_titulo" required value="ASPM Acta reunión junta directiva"><span class="ayuda">Se completa con el mes y el año al poner la fecha. En Drive se guarda como «AAAAMMDD título.pdf».</span></div>
+        <div class="campo"><label for="a_fecha">Fecha de la reunión *</label><input type="date" id="a_fecha" required></div>
+      </div>
+      <h3>Texto del acta</h3>
+      ${editorHtml('')}
+      ${opcionesFirma(true, true)}
+      <div class="acciones">
+        <button class="btn primario grande" type="submit" id="btnCrearActa">Crear y empezar la revisión</button>
+        <button class="btn sutil" type="button" id="btnCancelarActa">Cancelar</button>
+      </div>
+    </form>`;
+    const ed = activarEditor(el);
+    // Título como el de las actas de la asociación: «ASPM Acta reunión junta directiva Julio 2026»
+    let tituloManual = false;
+    $('#a_titulo').addEventListener('input', () => { tituloManual = true; });
+    $('#a_fecha').addEventListener('change', () => {
+      const f = $('#a_fecha').value;
+      if (tituloManual || !f) return;
+      const mes = window.CertPDF.fechaLarga(f).split(' de ')[1];
+      $('#a_titulo').value = 'ASPM Acta reunión junta directiva ' + mes[0].toUpperCase() + mes.slice(1) + ' ' + f.slice(0, 4);
+    });
+    const err = m => { const e = $('#errActa'); e.textContent = m; e.hidden = false; e.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+    $('#btnCancelarActa').onclick = () => { S.vista = 'documentos'; pintar(); };
+    $('#formActa').onsubmit = async ev => {
+      ev.preventDefault();
+      const titulo = $('#a_titulo').value.trim(), fecha = $('#a_fecha').value, contenido = ed.html();
+      const sec = $('#f_fsec').checked, pre = $('#f_fpre').checked;
+      if (!titulo) return err('Falta el título.');
+      if (!fecha) return err('Falta la fecha de la reunión.');
+      if (!ed.texto()) return err('El acta está vacía.');
+      if (!sec && !pre) return err('Marca al menos una firmante.');
+      const btn = $('#btnCrearActa');
+      btn.disabled = true; btn.textContent = 'Creando…';
+      try {
+        const id = crypto.randomUUID();
+        const { error } = await sb.from('documentos').insert({ id, tipo: 'acta', titulo, fecha, contenido, firma_secretaria: sec, firma_presidenta: pre });
+        if (error) throw error;
+        if (S.yo.rol !== 'coordinadora') { try { await google('doc_avisar', { id }); } catch (e) {} }
+        await cargarTodo();
+        abrirDoc(id);
+        aviso(S.yo.rol === 'coordinadora' ? 'Acta creada. Te toca revisarla a ti primero.' : 'Acta creada. Se ha avisado a la coordinadora para que la revise.');
+      } catch (e) {
+        btn.disabled = false; btn.textContent = 'Crear y empezar la revisión';
+        err(e.message);
+      }
+    };
+  }
+
+  /* ---------- Editor del acta ---------- */
+  function editorHtml(html) {
+    const b = (cmd, txt, tit) => `<button class="btn" type="button" data-cmd="${cmd}" title="${tit}">${txt}</button>`;
+    return `<div class="editor">
+      <div class="barra" role="toolbar" aria-label="Formato">
+        ${b('bold', '<b>N</b>', 'Negrita')}${b('italic', '<i>C</i>', 'Cursiva')}
+        ${b('h2', 'Título', 'Título de apartado')}${b('h3', 'Subtítulo', 'Subtítulo')}${b('p', 'Texto', 'Párrafo normal')}
+        ${b('ul', '• Lista', 'Lista con puntos')}${b('ol', '1. Lista', 'Lista numerada')}
+        ${b('undo', '↶', 'Deshacer')}${b('redo', '↷', 'Rehacer')}
+        <label class="btn" title="Sustituye el texto por el de un archivo Word">Importar Word<input type="file" id="edWord" accept=".docx" hidden></label>
+      </div>
+      <div class="hoja" id="ed" contenteditable="true" spellcheck="true" lang="es">${sanear(html) || '<p><br></p>'}</div>
+    </div>`;
+  }
+
+  function activarEditor(raiz, alCambiar) {
+    const ed = $('#ed', raiz);
+    try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch (e) {}
+    const cambio = () => alCambiar && alCambiar();
+    raiz.querySelectorAll('[data-cmd]').forEach(b => {
+      b.addEventListener('mousedown', e => e.preventDefault());   // no perder la selección
+      b.onclick = () => {
+        ed.focus();
+        const c = b.dataset.cmd;
+        if (c === 'ul') document.execCommand('insertUnorderedList');
+        else if (c === 'ol') document.execCommand('insertOrderedList');
+        else if (c === 'h2' || c === 'h3' || c === 'p') document.execCommand('formatBlock', false, '<' + c + '>');
+        else document.execCommand(c);
+        cambio();
+      };
+    });
+    ed.addEventListener('input', cambio);
+    // Al pegar, solo se queda el formato básico (títulos, negrita, cursiva, listas)
+    ed.addEventListener('paste', e => {
+      const html = e.clipboardData.getData('text/html');
+      const txt = e.clipboardData.getData('text/plain');
+      e.preventDefault();
+      const limpio = html ? sanear(html) : txt.split(/\r?\n/).map(l => '<p>' + esc(l) + '</p>').join('');
+      document.execCommand('insertHTML', false, limpio);
+      cambio();
+    });
+    const word = $('#edWord', raiz);
+    if (word) word.onchange = async () => {
+      const file = word.files[0]; word.value = '';
+      if (!file) return;
+      try {
+        if (ed.textContent.trim() && !await confirmar('Importar Word', 'Se sustituirá el texto que hay ahora por el del archivo.')) return;
+        await cargarScript('https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js');
+        const r = await window.mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
+        ed.innerHTML = sanear(r.value) || '<p><br></p>';
+        cambio();
+        aviso('Texto importado. Revisa el formato antes de seguir.');
+      } catch (e) { aviso('No se ha podido importar: ' + e.message); }
+    };
+    return { el: ed, html: () => sanear(ed.innerHTML), texto: () => ed.textContent.trim() };
+  }
+
+  function cargarScript(src) {
+    return new Promise((res, rej) => {
+      if (document.querySelector('script[src="' + src + '"]')) return res();
+      const s = document.createElement('script');
+      s.src = src; s.onload = res; s.onerror = () => rej(new Error('no se ha podido cargar el lector de Word'));
+      document.head.appendChild(s);
+    });
+  }
+
+  // Deja solo las etiquetas que entiende el PDF: h2, h3, p, ul, ol, li, b, i, br
+  function sanear(html) {
+    if (!html) return '';
+    const raiz = new DOMParser().parseFromString('<div>' + html + '</div>', 'text/html').body.firstChild;
+    const MAPA = { P: 'p', DIV: 'p', TR: 'p', BLOCKQUOTE: 'p', H1: 'h2', H2: 'h2', H3: 'h3', H4: 'h3', H5: 'h3', H6: 'h3',
+                   UL: 'ul', OL: 'ol', LI: 'li', B: 'b', STRONG: 'b', I: 'i', EM: 'i' };
+    const limpio = n => {
+      if (n.nodeType === 3) return esc(n.nodeValue);
+      if (n.nodeType !== 1 || /^(SCRIPT|STYLE|HEAD|TITLE|META|LINK|IFRAME|OBJECT|svg|IMG)$/i.test(n.tagName)) return '';
+      if (n.tagName === 'BR') return '<br>';
+      const dentro = Array.from(n.childNodes).map(limpio).join('');
+      const st = (n.getAttribute('style') || '').toLowerCase();
+      let t = MAPA[n.tagName];
+      if (t === 'b' && /font-weight:\s*(normal|[1-5]00)/.test(st)) t = null;   // Google Docs envuelve todo en <b style="font-weight:normal">
+      if (!t) {
+        let r = dentro;
+        if (/font-weight:\s*(bold|[6-9]00)/.test(st)) r = '<b>' + r + '</b>';
+        if (/font-style:\s*italic/.test(st)) r = '<i>' + r + '</i>';
+        if (n.tagName === 'TD' || n.tagName === 'TH') r += ' ';
+        return r;
+      }
+      if ((t === 'p' || t === 'h2' || t === 'h3' || t === 'li') && !dentro.replace(/<br>|&nbsp;|\s/g, '')) return '';
+      return '<' + t + '>' + dentro + '</' + t + '>';
+    };
+    return Array.from(raiz.childNodes).map(limpio).join('').replace(/ /g, ' ');
+  }
+
+  /* ---------- Comparar versiones (qué ha cambiado cada revisora) ---------- */
+  function lcs(a, b) {
+    const n = a.length, m = b.length, t = new Uint32Array((n + 1) * (m + 1));
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+      t[i * (m + 1) + j] = a[i] === b[j] ? t[(i + 1) * (m + 1) + j + 1] + 1 : Math.max(t[(i + 1) * (m + 1) + j], t[i * (m + 1) + j + 1]);
+    const ops = [];
+    let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (a[i] === b[j]) { ops.push(['=', a[i]]); i++; j++; }
+      else if (t[(i + 1) * (m + 1) + j] >= t[i * (m + 1) + j + 1]) ops.push(['-', a[i++]]);
+      else ops.push(['+', b[j++]]);
+    }
+    while (i < n) ops.push(['-', a[i++]]);
+    while (j < m) ops.push(['+', b[j++]]);
+    return ops;
+  }
+  const parrafos = html => window.DocPDF.bloques(html).map(b => (b.tipo === 'li' ? b.marca + ' ' : '') + b.runs.map(r => r.br ? ' ' : r.t).join('').replace(/\s+/g, ' ').trim());
+  function diffPalabras(a, b) {
+    const ta = a.split(/(\s+)/).filter(Boolean), tb = b.split(/(\s+)/).filter(Boolean);
+    // Agrupa las palabras seguidas con el mismo cambio (los espacios entre ellas van con el grupo)
+    const ops = lcs(ta, tb), grupos = [];
+    ops.forEach(([o, w], k) => {
+      if (o === '=' && /^\s+$/.test(w) && k > 0 && k < ops.length - 1 && ops[k - 1][0] !== '=' && ops[k + 1][0] === ops[k - 1][0]) o = ops[k - 1][0];
+      const u = grupos[grupos.length - 1];
+      if (u && u[0] === o) u[1] += w; else grupos.push([o, w]);
+    });
+    return grupos.map(([o, w]) => o === '=' ? esc(w) : o === '-' ? '<del>' + esc(w) + '</del>' : '<ins>' + esc(w) + '</ins>').join('');
+  }
+  // Devuelve { html, cambios }: el texto nuevo con lo quitado tachado y lo añadido resaltado
+  function comparar(viejo, nuevo) {
+    const ops = lcs(parrafos(viejo), parrafos(nuevo));
+    const out = [];
+    let cambios = 0, quitados = [], puestos = [];
+    const vaciar = () => {
+      const k = Math.min(quitados.length, puestos.length);
+      for (let i = 0; i < k; i++) out.push('<p class="cambio">' + diffPalabras(quitados[i], puestos[i]) + '</p>');
+      quitados.slice(k).forEach(p => out.push('<p class="cambio"><del>' + esc(p) + '</del></p>'));
+      puestos.slice(k).forEach(p => out.push('<p class="cambio"><ins>' + esc(p) + '</ins></p>'));
+      cambios += Math.max(quitados.length, puestos.length);
+      quitados = []; puestos = [];
+    };
+    ops.forEach(([o, p]) => {
+      if (o === '-') quitados.push(p);
+      else if (o === '+') puestos.push(p);
+      else { vaciar(); out.push('<p>' + esc(p) + '</p>'); }
+    });
+    vaciar();
+    return { html: out.join(''), cambios };
+  }
+
+  /* ---------- PDF del documento o del acta ---------- */
+  async function bajarDoc(path) {
+    const { data, error } = await sb.storage.from('documentos').download(path);
+    if (error) throw new Error('No se ha podido leer el PDF');
+    return new Uint8Array(await data.arrayBuffer());
+  }
+  // Si ya hay firma digital, el PDF es el guardado. paraFirmar: versión limpia para firmar con certificado digital.
+  async function pdfDoc(d, paraFirmar) {
+    if (d.pdf_path) return bajarDoc(d.pdf_path);
+    const completo = d.estado === 'firmado' || d.estado === 'archivado';
+    const [lg, fp, fs] = await Promise.all([
+      logo(),
+      d.firmado_presidenta ? bytesFirma(d.firma_presidenta_path) : null,
+      d.firmado_secretaria ? bytesFirma(d.firma_secretaria_path) : null
+    ]);
+    const firmas = { presidenta: fp, secretaria: fs };
+    if (d.tipo === 'acta') return window.DocPDF.acta({ d, aj: S.ajustes, firmas, logo: lg, borrador: !completo, paraFirmar });
+    const original = await bajarDoc(d.original_path);
+    if (paraFirmar && !fp && !fs) return original;   // nadie ha firmado con imagen: se firma el original tal cual
+    return window.DocPDF.conHojaDeFirmas({ original, d, aj: S.ajustes, firmas, logo: lg, borrador: !completo && !paraFirmar });
+  }
+  const nombreDoc = (d, pre, ext) => (pre || '') + String(d.fecha).replace(/-/g, '') + ' ' + d.titulo.replace(/[\\/:*?"<>|]/g, ' ') + (ext || '.pdf');
+
+  function descargarWord(d, html) {
+    const cuerpo = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(d.titulo)}</title>
+      <style>body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.4}h2{font-size:13pt}h3{font-size:11.5pt}</style></head><body>${html}</body></html>`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['﻿', cuerpo], { type: 'application/msword' }));
+    a.download = nombreDoc(d, '', '.doc'); a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+
+  /* ---------- Detalle de un documento o acta ---------- */
+  function vDoc(el) {
+    const d = S.docs.find(x => x.id === S.docDetalle);
+    if (!d) { el.innerHTML = '<div class="panel vacio">Este documento no existe o no tienes acceso.</div>'; return; }
+    const esActa = d.tipo === 'acta';
+    const reviso = d.estado === 'revision' && d.revisa === S.yo.rol;
+    const puedoFirmar = faltaMiFirma(d);
+    const completo = d.estado === 'firmado' || d.estado === 'archivado';
+    const sinFirmas = !d.firmado_presidenta && !d.firmado_secretaria;
+    const filasFirma = [];
+    if (d.firma_secretaria) filasFirma.push(['Secretaria', d.firmado_secretaria, d.estado === 'revision' ? 'Firmará cuando termine la revisión' : 'Pendiente de firma (firma primero)']);
+    if (d.firma_presidenta) filasFirma.push(['Presidenta', d.firmado_presidenta, d.estado === 'revision' ? 'Firmará cuando termine la revisión' : esperaSecretaria(d) ? 'Firmará cuando lo haya firmado la secretaria' : 'Pendiente de firma']);
+    const siguiente = { coordinadora: 'la secretaria', secretaria: 'la presidenta', presidenta: null }[d.revisa];
+
+    el.innerHTML = `<div class="acciones" style="margin:0 0 14px"><button class="btn sutil" type="button" id="btnAtras">← Volver</button></div>
+    <div class="${reviso ? 'apilado' : 'detalle'}">
+      <section class="panel">
+        <h2>${esc(d.titulo)}</h2>
+        <p class="sub"><span class="estado ${d.estado}">${esc(estadoDoc(d))}</span></p>
+        <dl class="datos">
+          <dt>Tipo</dt><dd>${esActa ? 'Acta de la junta' : 'Documento para firmar'}</dd>
+          <dt>${esActa ? 'Reunión' : 'Fecha'}</dt><dd>${fechaCorta(d.fecha)}</dd>
+          ${d.nota ? `<dt>Nota</dt><dd>${esc(d.nota)}</dd>` : ''}
+          ${d.drive_url ? `<dt>Drive</dt><dd><a href="${esc(d.drive_url)}" target="_blank" rel="noopener">Abrir el PDF archivado</a></dd>` : ''}
+        </dl>
+        ${esActa ? `<h3>Revisión</h3><div class="firmantes" id="pasosRev">${REVISORAS.map(r => {
+          const hecho = d.estado !== 'revision' && d.estado !== 'anulado' || REVISORAS.indexOf(r) < REVISORAS.indexOf(d.revisa);
+          const ahora = d.estado === 'revision' && d.revisa === r;
+          return `<div class="firmante ${hecho ? 'hecho' : 'falta'}" data-rev="${r}"><span class="ico">${hecho ? '✓' : ahora ? '✎' : '…'}</span><span><b>${ROL[r]}</b><small>${hecho ? 'Revisada' : ahora ? 'Revisando ahora' : 'Espera su turno'}</small></span></div>`;
+        }).join('')}</div>` : ''}
+        <h3>Firmas</h3>
+        <div class="firmantes">${filasFirma.map(([cargo, cuando, falta]) => `<div class="firmante ${cuando ? 'hecho' : 'falta'}"><span class="ico">${cuando ? '✓' : '…'}</span><span><b>${cargo}</b><small>${cuando ? 'Firmado el ' + new Date(cuando).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : (['revision', 'pendiente'].includes(d.estado) ? falta : 'Sin firmar')}</small></span></div>`).join('')}</div>
+        ${S.yo.rol === 'presidenta' && d.estado === 'pendiente' && d.firma_presidenta && !d.firmado_presidenta && esperaSecretaria(d)
+          ? '<div class="aviso info" style="margin-top:14px">Primero lo firma la secretaria. Te llegará un aviso por correo cuando lo haya hecho.</div>' : ''}
+
+        ${puedoFirmar ? `<div class="firmar-caja">
+          <h3 style="margin-top:0">Firmar con certificado digital</h3>
+          <ol class="pasos">
+            <li><button class="btn primario" type="button" id="btnBajarFirmar">Descargar PDF para firmar</button></li>
+            <li>Fírmalo en tu ordenador con tu certificado digital (AutoFirma o Adobe Acrobat) y guárdalo.</li>
+            <li><label class="btn primario" for="pdfFirmado">Subir PDF firmado</label><input type="file" id="pdfFirmado" accept="application/pdf,.pdf" hidden></li>
+          </ol>
+          ${d.pdf_path ? '<p class="nota">Este documento ya lleva una firma digital: descarga el PDF y añade la tuya encima.</p>'
+            : S.yo.firma_path
+              ? `<details class="plegable"><summary>O firmar con tu firma guardada (imagen)</summary><p>${esActa ? 'Se añadirá tu firma guardada al pie del acta' : 'Se añadirá al final una hoja de firmas con tu firma guardada'}, con la fecha y hora de hoy.</p><button class="btn" type="button" id="btnFirmar">Firmar con un clic</button></details>`
+              : ''}
+        </div>` : ''}
+
+        <div class="acciones">
+          ${completo ? '<button class="btn primario" type="button" id="btnDescargar">Descargar PDF firmado</button>' : !reviso ? '<button class="btn" type="button" id="btnDescargar">Descargar PDF</button>' : ''}
+          ${esActa && !reviso ? '<button class="btn" type="button" id="btnWord">Descargar en Word</button>' : ''}
+          ${gestiona() && esActa && d.estado === 'firmado' ? '<button class="btn primario" type="button" id="btnArchivar">Archivar ahora en Drive</button>' : ''}
+          ${gestiona() && (d.estado === 'pendiente' || (d.estado === 'revision' && d.revisa !== S.yo.rol)) ? '<button class="btn" type="button" id="btnReavisar">Reenviar aviso por correo</button>' : ''}
+          ${gestiona() && ['revision', 'pendiente'].includes(d.estado) && sinFirmas ? '<button class="btn no" type="button" id="btnAnular">Anular</button>' : ''}
+        </div>
+      </section>
+      ${reviso ? `<section class="panel">
+          <h2>Te toca revisar el acta</h2>
+          <p class="sub">Corrige directamente sobre el texto${d.revisa === 'coordinadora' ? '' : ', que ya lleva los cambios de quien la revisó antes'}. Puedes guardar e ir volviendo. Cuando esté bien, pulsa «Dar el OK»: ${siguiente ? 'pasará a ' + siguiente + ', que revisará sobre tu versión' : 'el acta pasará a firma (primero la secretaria y después la presidenta)'}.</p>
+          <details class="plegable" id="cambiosPrevios" hidden><summary>Ver qué cambió en la revisión anterior</summary><div class="diff" id="diffPrevio"></div></details>
+          ${editorHtml(d.contenido)}
+          <div class="acciones">
+            <button class="btn" type="button" id="btnGuardarActa">Guardar cambios</button>
+            <button class="btn primario grande" type="button" id="btnOk">${siguiente ? 'Dar el OK y pasar a ' + siguiente : 'Dar el OK y pasar a firma'}</button>
+            <button class="btn sutil" type="button" id="btnPrevia">Ver cómo queda en PDF</button>
+            <span class="meta" id="estadoGuardado" style="color:var(--muted);font-size:13px"></span>
+          </div>
+        </section>`
+      : `<section class="panel"><h2 style="margin-bottom:12px">${completo ? 'Documento firmado' : d.pdf_path ? 'PDF con firma digital (falta otra firma)' : d.estado === 'revision' ? 'Borrador en revisión' : 'Vista previa'}</h2><iframe class="visor" id="visor" title="Vista previa del documento"></iframe></section>`}
+      ${esActa ? `<section class="panel" id="historial"><h2>Historial de la revisión</h2><p class="sub">Cada versión, tal como la dejó cada persona al dar el OK.</p><div class="lista" id="listaVersiones"><div class="vacio">Cargando…</div></div><div class="diff" id="diffVer" hidden></div></section>` : ''}
+    </div>`;
+
+    $('#btnAtras').onclick = async () => { if (!await puedoSalir()) return; S.vista = firmante() ? 'pendientes' : 'documentos'; history.replaceState(null, '', location.pathname); pintar(); };
+    if (!reviso) pdfDoc(d).then(b => { $('#visor') && ($('#visor').src = URL.createObjectURL(new Blob([b], { type: 'application/pdf' })) + '#view=FitH'); })
+      .catch(e => aviso('No se ha podido generar la vista previa: ' + e.message));
+
+    // Historial de versiones del acta
+    if (esActa) sb.from('documentos_versiones').select('id,rol,contenido,creado').eq('documento_id', d.id).order('creado').then(({ data }) => {
+      const vs = data || [];
+      const lista = $('#listaVersiones');
+      if (!lista) return;
+      const nombre = { borrador: 'Borrador inicial', coordinadora: 'Revisión de la coordinadora', secretaria: 'Revisión de la secretaria', presidenta: 'Revisión de la presidenta' };
+      lista.innerHTML = vs.map((v, k) => {
+        const c = k ? comparar(vs[k - 1].contenido, v.contenido).cambios : null;
+        return `<div class="firmante hecho" style="flex-wrap:wrap"><span class="ico">${k + 1}</span><span style="flex:1 1 200px"><b>${nombre[v.rol] || v.rol}</b><small>${new Date(v.creado).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' })}${k ? ' · ' + (c ? c + ' párrafo' + (c > 1 ? 's' : '') + ' cambiado' + (c > 1 ? 's' : '') : 'sin cambios') : ''}</small></span>
+          ${k ? `<button class="btn" type="button" data-ver="${k}">Ver cambios</button>` : ''}</div>`;
+      }).join('') || '<div class="vacio">Sin versiones.</div>';
+      lista.querySelectorAll('[data-ver]').forEach(b => b.onclick = () => {
+        const k = +b.dataset.ver, r = comparar(vs[k - 1].contenido, vs[k].contenido), caja = $('#diffVer');
+        caja.hidden = false;
+        caja.innerHTML = `<h3 style="margin-top:14px">${nombre[vs[k].rol]}: cambios respecto a la versión anterior</h3>${r.cambios ? r.html : '<p>No cambió nada.</p>'}`;
+        caja.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      // Para quien revisa: qué cambió la anterior
+      if (reviso && vs.length >= 2) {
+        const r = comparar(vs[vs.length - 2].contenido, vs[vs.length - 1].contenido);
+        $('#cambiosPrevios').hidden = false;
+        $('#diffPrevio').innerHTML = r.cambios ? r.html : '<p>La revisión anterior no cambió nada.</p>';
+      }
+    });
+
+    // Revisión: editor
+    if (reviso) {
+      const marcar = t => { const e = $('#estadoGuardado'); if (e) e.textContent = t; };
+      const ed = activarEditor(el, () => { S.editor.sucio = true; marcar('Cambios sin guardar'); });
+      S.editor = {
+        sucio: false,
+        guardar: async () => {
+          const { error } = await sb.rpc('doc_guardar', { p_id: d.id, p_contenido: ed.html() });
+          if (error) throw error;
+          S.editor.sucio = false; d.contenido = ed.html();
+          marcar('Guardado a las ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }));
+        }
+      };
+      $('#btnGuardarActa').onclick = async () => {
+        if (!ed.texto()) return aviso('El acta no puede quedar vacía.');
+        try { await S.editor.guardar(); aviso('Cambios guardados.'); } catch (e) { aviso('No se ha podido guardar: ' + e.message); }
+      };
+      $('#btnPrevia').onclick = async () => verPdfNuevaPestana(await window.DocPDF.acta({ d: Object.assign({}, d, { contenido: ed.html() }), aj: S.ajustes, firmas: {}, logo: await logo(), borrador: true }));
+      $('#btnOk').onclick = async b => {
+        if (!ed.texto()) return aviso('El acta no puede quedar vacía.');
+        if (!await confirmar('Dar el OK al acta', siguiente ? `Pasará a ${siguiente}, que la revisará sobre tu versión. Tú ya no podrás cambiarla.` : 'Termina la revisión y el acta pasa a firma: primero la secretaria y después la presidenta. Ya nadie podrá cambiar el texto.')) return;
+        const btn = $('#btnOk'); btn.disabled = true;
+        const { data, error } = await sb.rpc('doc_aprobar', { p_id: d.id, p_contenido: ed.html() });
+        if (error) { btn.disabled = false; return aviso(error.message); }
+        S.editor = null;
+        try {
+          const r = await google('doc_avisar', { id: d.id });
+          aviso(data.estado === 'revision' ? 'Hecho. ' + (r.enviados ? 'Se ha avisado a ' + ROL_ART[data.revisa] + ' para que la revise.' : '')
+                                           : 'Revisión terminada. ' + (r.enviados ? 'Se ha avisado a ' + ROL_ART[r.rol] + ' para que firme.' : ''));
+        } catch (e) { aviso('OK guardado, pero no se ha podido enviar el aviso: ' + e.message + ' Puedes reenviarlo desde aquí.'); }
+        await cargarTodo(); abrirDoc(d.id);
+      };
+    }
+
+    const on = (sel, fn) => { const b = $(sel); if (b) b.onclick = () => fn(b); };
+    on('#btnDescargar', async () => descargarBytes(await pdfDoc(d), nombreDoc(d)));
+    on('#btnWord', () => descargarWord(d, d.contenido));
+    on('#btnFirmar', async b => {
+      if (!await confirmar('Firmar', `Vas a firmar como ${ROL[S.yo.rol].toLowerCase()} «${d.titulo}».`)) return;
+      b.disabled = true; b.textContent = 'Firmando…';
+      const { data, error } = await sb.rpc('doc_firmar', { p_id: d.id });
+      if (error) { b.disabled = false; b.textContent = 'Firmar con un clic'; return aviso(error.message); }
+      await trasFirmarDoc(data);
+    });
+    on('#btnBajarFirmar', async b => {
+      b.disabled = true;
+      try {
+        await cargarTodo();
+        const actual = S.docs.find(x => x.id === d.id) || d;
+        const bytes = await pdfDoc(actual, true);
+        guardarBase(actual);
+        descargarBytes(bytes, nombreDoc(actual, 'Para firmar - '));
+        aviso('Descargado. Fírmalo con tu certificado digital y súbelo con «Subir PDF firmado».');
+      } catch (e) { aviso('No se ha podido descargar: ' + e.message); }
+      b.disabled = false;
+    });
+    const entradaPdf = $('#pdfFirmado');
+    if (entradaPdf) entradaPdf.onchange = async () => {
+      const file = entradaPdf.files[0];
+      entradaPdf.value = '';
+      if (!file) return;
+      const etiqueta = $('label[for="pdfFirmado"]');
+      try {
+        if (file.size > 15 * 1024 * 1024) throw new Error('El archivo pesa más de 15 MB.');
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        if (!window.CertPDF.esPdf(bytes)) throw new Error('Ese archivo no es un PDF.');
+        const previo = d.pdf_path ? await bajarDoc(d.pdf_path)
+          : (d.tipo === 'documento' && sinFirmas ? await bajarDoc(d.original_path) : null);
+        if (window.CertPDF.contarFirmas(bytes) <= (previo ? window.CertPDF.contarFirmas(previo) : 0)) {
+          throw new Error('Ese PDF no lleva tu firma digital. Fírmalo con tu certificado (AutoFirma o Acrobat), guárdalo y súbelo de nuevo.');
+        }
+        if (!window.DocPDF.esDelDocumento(bytes, d.id, previo) &&
+            !await confirmar('¿Es el PDF correcto?', `No reconozco este archivo como «${d.titulo}». Súbelo solo si estás segura de que es el de este documento.`)) return;
+        etiqueta.textContent = 'Subiendo…';
+        const base = leerBase(d);
+        const ruta = d.id + '/firmado-' + Date.now() + '-' + S.yo.rol + '.pdf';
+        const up = await sb.storage.from('documentos').upload(ruta, new Blob([bytes], { type: 'application/pdf' }), { contentType: 'application/pdf' });
+        if (up.error) throw up.error;
+        const { data, error } = await sb.rpc('doc_firmar_pdf', { p_id: d.id, p_path: ruta, p_base: base.path, p_previas: base.previas });
+        if (error) throw error;
+        try { sessionStorage.removeItem(claveBase(d.id)); } catch (e) {}
+        await trasFirmarDoc(data);
+      } catch (e) {
+        etiqueta.textContent = 'Subir PDF firmado';
+        aviso(e.message);
+      }
+    };
+    async function trasFirmarDoc(data) {
+      await cargarTodo();
+      if (data.estado === 'firmado' && data.tipo === 'acta') {
+        aviso('Firmado. Ya están todas las firmas: archivando en Drive…');
+        await archivarDoc(data.id, true);
+      } else if (data.estado === 'firmado') {
+        // Los documentos no se archivan en Drive: se avisa a coordinación para que descargue el PDF
+        try { await google('doc_avisar', { id: data.id }); } catch (e) {}
+        aviso('Firmado. Ya están todas las firmas: la coordinación puede descargar el PDF firmado.');
+      } else {
+        try {
+          const r = await google('doc_avisar', { id: data.id });
+          aviso('Firmado. ' + (r.enviados ? 'Se ha avisado por correo a ' + ROL_ART[r.rol] + ' para que firme.' : 'Falta la otra firma.'));
+        } catch (e) {
+          aviso('Firmado, pero no se ha podido avisar a la siguiente firmante: ' + e.message + ' La coordinación puede reenviar el aviso.');
+        }
+      }
+      abrirDoc(d.id);
+    }
+    on('#btnArchivar', async b => { b.disabled = true; b.textContent = 'Archivando…'; await archivarDoc(d.id); await cargarTodo(); abrirDoc(d.id); });
+    on('#btnReavisar', async b => {
+      b.disabled = true;
+      try { const r = await google('doc_avisar', { id: d.id }); aviso(r.enviados ? 'Aviso reenviado a ' + ROL_ART[r.rol] + '.' : 'No había nadie a quien avisar.'); }
+      catch (e) { aviso(e.message); }
+      b.disabled = false;
+    });
+    on('#btnAnular', async () => {
+      if (!await confirmar('Anular', 'Quedará marcado como anulado y ya no se podrá revisar ni firmar.')) return;
+      const { error } = await sb.rpc('doc_anular', { p_id: d.id });
+      if (error) return aviso(error.message);
+      await cargarTodo(); abrirDoc(d.id); aviso('Anulado.');
+    });
+  }
+
+  async function archivarDoc(id, silencioso) {
+    try {
+      await cargarTodo();
+      const d = S.docs.find(x => x.id === id);
+      const bytes = await pdfDoc(d);
+      await google('doc_archivar', { id, pdf: aBase64(new Uint8Array(bytes)) });
+      aviso('Archivado en Drive (Actas Junta Directiva › ' + String(d.fecha).slice(0, 4) + ').');
+    } catch (e) {
+      aviso((silencioso ? 'Firmado, pero no se ha podido archivar: ' : 'No se ha podido archivar: ') + e.message + ' La coordinación puede reintentarlo.');
+    }
+  }
+
   /* ---------- Mi perfil ---------- */
   function vPerfil(el) {
     el.innerHTML = `
@@ -872,6 +1487,8 @@
     if (location.hash === '#olvido' && !S.yo) return mostrarOlvido();
     const m = /#c=([0-9a-f-]{36})/.exec(location.hash);
     if (m && S.yo && S.detalle !== m[1]) abrir(m[1]);
+    const md = /#d=([0-9a-f-]{36})/.exec(location.hash);
+    if (md && S.yo && S.docDetalle !== md[1]) abrirDoc(md[1]);
   });
 
   arrancar();

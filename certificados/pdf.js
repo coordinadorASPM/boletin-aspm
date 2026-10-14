@@ -284,5 +284,6 @@
     return s;
   }
 
-  window.CertPDF = { generar, textos, importeEnLetra, importeNum, fechaLarga, AVISO_LEGAL, llevaMarca, contarFirmas, esPdf };
+  window.CertPDF = { generar, textos, importeEnLetra, importeNum, fechaLarga, AVISO_LEGAL, llevaMarca, contarFirmas, esPdf,
+                     CABECERA, limpiarWinAnsi, fechaHora, latin1 };
 })();
