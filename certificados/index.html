@@ -178,6 +178,48 @@ main.contenido{padding-block:22px 60px}
 .firma-actual img{max-height:80px;max-width:100%}
 .pestanas-firma{display:flex;gap:6px;margin-bottom:10px}
 
+/* Tareas: tablero por urgencia, con los colores de la asociación (rojo y ámbar solo para lo vencido y lo de hoy) */
+.wrap.ancho{max-width:1480px}
+.tareas-cab{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.tareas-cab>div:first-child{flex:1 1 420px}
+.tareas-cab .sub{margin:0}
+.tablero{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,1fr);gap:12px;overflow-x:auto;padding-bottom:10px;align-items:start;scrollbar-width:thin}
+.tcol{--c:var(--brand);background:var(--c);border-radius:14px;padding:10px;min-height:180px}
+.tcol h3{margin:2px 4px 10px;font-size:14px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tcount{background:rgba(255,255,255,.25);border-radius:999px;padding:0 9px;font-family:Manrope,sans-serif;font-size:12.5px;line-height:22px}
+.c-vencidas{--c:#a3262a}.c-hoy{--c:#c4661f}.c-pronto{--c:#a8d144}.c-semana{--c:#38b000}.c-mas{--c:#1a692d}.c-sin{--c:#004b23}.c-hechas{--c:#6b7d70}
+.c-pronto h3{color:#1d2a21}.c-pronto .tcount{background:rgba(0,0,0,.12)}
+.tlista{display:flex;flex-direction:column;gap:8px}
+.tvacio{margin:6px 4px;color:rgba(255,255,255,.8);font-size:13px}
+.c-pronto .tvacio{color:rgba(29,42,33,.7)}
+.tcard{position:relative;background:var(--surface);border-radius:10px;padding:10px 12px 8px;box-shadow:0 1px 3px rgba(0,0,0,.15);border-left:4px solid transparent}
+.tcard.alta{border-left-color:var(--no)}
+.tcard:hover{box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.tcard.hecha .tc-abrir{text-decoration:line-through;color:var(--muted)}
+.tc-chips{display:flex;flex-wrap:wrap;gap:4px}
+.tc-chips:empty{display:none}
+.tchip{font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;margin-bottom:5px}
+.tchip.auto{background:var(--info-soft);color:var(--info)}
+.tchip.alta{background:var(--no-soft);color:var(--no)}
+.tchip.curso{background:var(--warn-soft);color:var(--warn)}
+.tchip.ok{background:var(--ok-soft);color:var(--ok)}
+.tc-abrir{display:block;width:100%;border:0;background:none;padding:0;text-align:left;font-weight:700;font-size:14px;line-height:1.35;cursor:pointer;color:var(--ink)}
+.tc-abrir::after{content:"";position:absolute;inset:0;border-radius:10px}
+.tc-det{margin:4px 0 0;font-size:12.5px;color:var(--muted);line-height:1.4}
+.tc-prog{height:6px;border-radius:999px;background:var(--surface-2);margin-top:8px;overflow:hidden}
+.tc-prog span{display:block;height:100%;background:var(--brand-bright);border-radius:999px}
+.tc-pie{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-size:12.5px;color:var(--muted);min-height:26px}
+.tc-hecha{position:relative;z-index:1;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;font-weight:800;flex:none}
+.tc-hecha:hover{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.etapas{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.etapa{display:flex;align-items:center;gap:8px}
+.etapa input[type=checkbox]{width:20px;height:20px;accent-color:var(--brand);flex:none}
+.etapa input[type=text]{padding:7px 10px}
+.etapa.hecha input[type=text]{text-decoration:line-through;color:var(--muted)}
+.etapa .btn{padding:4px 8px}
+.etapa-nueva{display:flex;gap:8px}
+.meta{color:var(--muted);font-size:13px;font-weight:500}
+
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:600;font-size:14px;z-index:50;box-shadow:0 6px 24px rgba(0,0,0,.2);max-width:calc(100% - 32px);text-align:center}
 
 dialog{border:0;border-radius:14px;padding:22px;max-width:440px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.25)}
@@ -238,8 +280,8 @@ dialog p{margin:0 0 16px;font-size:14.5px}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-<script src="pdf.js?v=202610141200"></script>
-<script src="doc-pdf.js?v=202610141200"></script>
-<script src="app.js?v=202610141200"></script>
+<script src="pdf.js?v=202610141800"></script>
+<script src="doc-pdf.js?v=202610141800"></script>
+<script src="app.js?v=202610141800"></script>
 </body>
 </html>

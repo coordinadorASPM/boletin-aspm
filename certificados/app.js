@@ -43,7 +43,7 @@
   const REVISORAS = ['coordinadora', 'secretaria', 'presidenta'];   // orden de revisión del acta
   const ROL_ART = { coordinadora: 'la coordinadora', secretaria: 'la secretaria', presidenta: 'la presidenta' };
 
-  const S = { yo: null, perfiles: [], ajustes: {}, certs: [], docs: [], vista: 'pendientes', detalle: null, logo: null, busca: '', buscaDoc: '', editor: null };
+  const S = { yo: null, perfiles: [], ajustes: {}, certs: [], docs: [], tareas: [], auto: [], cal: null, vista: 'pendientes', detalle: null, logo: null, busca: '', buscaDoc: '', editor: null };
   const $ = (sel, raiz) => (raiz || document).querySelector(sel);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   const gestiona = () => S.yo && (S.yo.rol === 'coordinadora' || S.yo.rol === 'trabajadora_social');
@@ -163,12 +163,15 @@
     await cargarTodo();
     const m = /#c=([0-9a-f-]{36})/.exec(location.hash);
     const md = /#d=([0-9a-f-]{36})/.exec(location.hash);
-    if (m) abrir(m[1]); else if (md) abrirDoc(md[1]); else { S.vista = 'pendientes'; pintar(); }
+    const mt = /#t=([0-9a-f-]{36})/.exec(location.hash);
+    if (m) abrir(m[1]); else if (md) abrirDoc(md[1]);
+    else if (mt && esCoord()) abrirTarea(mt[1]);
+    else { S.vista = esCoord() ? 'tareas' : 'pendientes'; pintar(); }
   }
 
   async function salir(msg) {
     await sb.auth.signOut();
-    S.yo = null; S.certs = []; S.docs = []; S.perfiles = []; S.ajustes = {}; S.editor = null;
+    S.yo = null; S.certs = []; S.docs = []; S.tareas = []; S.auto = []; S.cal = null; S.perfiles = []; S.ajustes = {}; S.editor = null;
     history.replaceState(null, '', location.pathname);
     mostrarAcceso(msg);
   }
@@ -205,6 +208,7 @@
     S.certs = c.data || [];
     S.docs = d.data || [];
     S.yo = S.perfiles.find(x => x.id === S.yo.id) || S.yo;
+    await cargarTareas();
   }
 
   // Orden de firma: primero la secretaria; la presidenta, cuando la secretaria ya ha firmado
@@ -295,12 +299,13 @@
     const sinArchivar = S.certs.filter(c => c.estado === 'firmado').length + S.docs.filter(d => d.tipo === 'acta' && d.estado === 'firmado').length;
     document.title = (pendMias ? '(' + pendMias + ') ' : '') + 'Certificados y firmas ASPM';
 
-    const tabs = [['pendientes', firmante() ? 'Pendientes' : 'En curso', firmante() ? pendMias : pendTodas]];
+    const tabs = esCoord() ? [['tareas', 'Tareas', tareasUrgentes()]] : [];
+    tabs.push(['pendientes', firmante() ? 'Pendientes' : 'En curso', firmante() ? pendMias : pendTodas]);
     if (gestiona()) tabs.push(['nuevo', 'Nuevo certificado', 0]);
     tabs.push(['todos', 'Certificados', 0], ['documentos', 'Documentos y actas', firmante() ? 0 : docsMios], ['perfil', 'Mi perfil', 0]);
     if (gestiona()) tabs.push(['ajustes', 'Ajustes', 0]);
 
-    const actual = { detalle: 'todos', editar: 'todos', doc: 'documentos', nuevodoc: 'documentos', nuevaacta: 'documentos' }[S.vista] || S.vista;
+    const actual = { detalle: 'todos', editar: 'todos', doc: 'documentos', nuevodoc: 'documentos', nuevaacta: 'documentos', tarea: 'tareas' }[S.vista] || S.vista;
     $('#app').innerHTML = `
       <header class="top"><div class="wrap">
         <span class="logo"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></span>
@@ -311,11 +316,11 @@
       <nav class="vistas" aria-label="Secciones"><div class="wrap">
         ${tabs.map(([k, t, n]) => `<button class="vista" type="button" data-v="${k}" ${actual === k ? 'aria-current="page"' : ''}>${esc(t)}${n ? `<span class="n">${n}</span>` : ''}</button>`).join('')}
       </div></nav>
-      <main class="contenido wrap" id="cont"></main>`;
+      <main class="contenido wrap${S.vista === 'tareas' ? ' ancho' : ''}" id="cont"></main>`;
     $('#btnSalir').onclick = async () => { if (await puedoSalir()) salir(); };
     document.querySelectorAll('.vista').forEach(b => b.onclick = async () => {
       if (!await puedoSalir()) return;
-      S.vista = b.dataset.v; history.replaceState(null, '', location.pathname); pintar();
+      S.vista = b.dataset.v; history.replaceState(null, '', S.vista === 'tareas' ? '#tareas' : location.pathname); pintar();
     });
 
     const cont = $('#cont');
@@ -331,7 +336,7 @@
     const zona = document.createElement('div');
     cont.appendChild(zona);
     ({ pendientes: vPendientes, nuevo: vFormulario, editar: vFormulario, todos: vTodos, perfil: vPerfil, ajustes: vAjustes, detalle: vDetalle,
-       documentos: vDocumentos, nuevodoc: vNuevoDoc, nuevaacta: vNuevaActa, doc: vDoc }[S.vista] || vPendientes)(zona);
+       documentos: vDocumentos, nuevodoc: vNuevoDoc, nuevaacta: vNuevaActa, doc: vDoc, tareas: vTareas, tarea: vTarea }[S.vista] || vPendientes)(zona);
   }
 
   // Si hay un acta con cambios sin guardar, pregunta antes de irse
@@ -559,7 +564,7 @@
     const completo = c.estado === 'firmado' || c.estado === 'archivado';
     const sinFirmas = !c.firmado_presidenta && !c.firmado_secretaria;
 
-    el.innerHTML = `<div class="acciones" style="margin:0 0 14px"><button class="btn sutil" type="button" id="btnAtras">← Volver</button></div>
+    el.innerHTML = `<div class="acciones" style="margin:0 0 14px"><button class="btn sutil" type="button" id="btnAtras">← Volver</button>${esCoord() ? '<button class="btn" type="button" id="btnTareaDe" style="margin-left:auto">+ Crear tarea sobre esto</button>' : ''}</div>
     <div class="detalle">
       <section class="panel">
         <h2>${c.numero ? 'Certificado n.º ' + c.numero : 'Certificado de donación'}</h2>
@@ -603,6 +608,7 @@
       <section class="panel"><h2 style="margin-bottom:12px">${completo ? 'Certificado firmado' : c.pdf_path ? 'PDF con firma digital (falta otra firma)' : 'Vista previa (borrador)'}</h2><iframe class="visor" id="visor" title="Vista previa del certificado"></iframe></section>
     </div>`;
 
+    if ($('#btnTareaDe')) $('#btnTareaDe').onclick = () => abrirTarea('nueva', { enlace_tipo: 'certificado', enlace_id: c.id, titulo: 'Certificado de ' + c.donante + ': ' });
     $('#btnAtras').onclick = () => { S.vista = firmante() ? 'pendientes' : 'todos'; history.replaceState(null, '', location.pathname); pintar(); };
     el.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { S.vista = b.dataset.ir; pintar(); });
     pdfDe(c).then(b => { $('#visor') && ($('#visor').src = URL.createObjectURL(new Blob([b], { type: 'application/pdf' })) + '#view=FitH'); })
@@ -1063,7 +1069,7 @@
     if (d.firma_presidenta) filasFirma.push(['Presidenta', d.firmado_presidenta, d.estado === 'revision' ? 'Firmará cuando termine la revisión' : esperaSecretaria(d) ? 'Firmará cuando lo haya firmado la secretaria' : 'Pendiente de firma']);
     const siguiente = { coordinadora: 'la secretaria', secretaria: 'la presidenta', presidenta: null }[d.revisa];
 
-    el.innerHTML = `<div class="acciones" style="margin:0 0 14px"><button class="btn sutil" type="button" id="btnAtras">← Volver</button></div>
+    el.innerHTML = `<div class="acciones" style="margin:0 0 14px"><button class="btn sutil" type="button" id="btnAtras">← Volver</button>${esCoord() ? '<button class="btn" type="button" id="btnTareaDe" style="margin-left:auto">+ Crear tarea sobre esto</button>' : ''}</div>
     <div class="${reviso ? 'apilado' : 'detalle'}">
       <section class="panel">
         <h2>${esc(d.titulo)}</h2>
@@ -1121,6 +1127,7 @@
       ${esActa ? `<section class="panel" id="historial"><h2>Historial de la revisión</h2><p class="sub">Cada versión, tal como la dejó cada persona al dar el OK.</p><div class="lista" id="listaVersiones"><div class="vacio">Cargando…</div></div><div class="diff" id="diffVer" hidden></div></section>` : ''}
     </div>`;
 
+    if ($('#btnTareaDe')) $('#btnTareaDe').onclick = async () => { if (await puedoSalir()) abrirTarea('nueva', { enlace_tipo: 'documento', enlace_id: d.id, titulo: (esActa ? 'Acta' : 'Documento') + ' «' + d.titulo + '»: ' }); };
     $('#btnAtras').onclick = async () => { if (!await puedoSalir()) return; S.vista = firmante() ? 'pendientes' : 'documentos'; history.replaceState(null, '', location.pathname); pintar(); };
     if (!reviso) pdfDoc(d).then(b => { $('#visor') && ($('#visor').src = URL.createObjectURL(new Blob([b], { type: 'application/pdf' })) + '#view=FitH'); })
       .catch(e => aviso('No se ha podido generar la vista previa: ' + e.message));
@@ -1393,6 +1400,236 @@
     return out;
   }
 
+  /* =================== Tareas de la coordinadora =================== */
+  // Tablero por urgencia. Las tareas automáticas salen de certificados, documentos y actas (Supabase → tareas_automaticas)
+  // y se cierran solas. El calendario lo lleva el script de Google (evento diario a las 9:00 y plazos).
+  const esCoord = () => S.yo && S.yo.rol === 'coordinadora';
+  const COLUMNAS = [
+    ['vencidas', 'Vencidas'], ['hoy', 'Hoy'], ['pronto', 'Próximos 3 días'], ['semana', 'Esta semana'],
+    ['mas', 'Más adelante'], ['sin', 'Sin plazo'], ['hechas', 'Realizadas']
+  ];
+  const PRIORIDAD = { alta: 'Alta', normal: 'Normal', baja: 'Baja' };
+  const ESTADO_TAREA = { pendiente: 'Pendiente', en_curso: 'En curso', realizada: 'Realizada' };
+  // Misma regla que el script de Google (3-apps-script.gs → grupo_)
+  function urgencia(plazo) {
+    if (!plazo) return 5;
+    const dias = Math.round((new Date(plazo + 'T12:00') - new Date(hoyISO() + 'T12:00')) / 86400000);
+    return dias < 0 ? 0 : dias === 0 ? 1 : dias <= 3 ? 2 : dias <= 7 ? 3 : 4;
+  }
+  const ORDEN_PRIO = { alta: 0, normal: 1, baja: 2 };
+  const porUrgencia = (a, b) => urgencia(a.plazo) - urgencia(b.plazo) || ORDEN_PRIO[a.prioridad] - ORDEN_PRIO[b.prioridad]
+    || String(a.plazo || '9').localeCompare(String(b.plazo || '9')) || a.titulo.localeCompare(b.titulo);
+  const etapasHechas = t => (t.etapas || []).filter(e => e.hecha).length;
+
+  async function cargarTareas() {
+    if (!esCoord()) return;
+    const [t, a, c] = await Promise.all([
+      sb.from('tareas').select('*').order('plazo', { ascending: true, nullsFirst: false }),
+      sb.rpc('tareas_automaticas'),
+      sb.rpc('tareas_calendario')
+    ]);
+    S.tareas = t.data || [];
+    S.auto = a.data || [];
+    S.cal = c.data || null;
+  }
+  // Abiertas (manuales + automáticas) que vencen hoy o antes: el número de la pestaña
+  const tareasUrgentes = () => esCoord() ? S.tareas.filter(t => t.estado !== 'realizada' && urgencia(t.plazo) <= 1).length
+    + S.auto.filter(a => urgencia(a.plazo) <= 1).length : 0;
+
+  // Tras cada cambio, el calendario se pone al día en segundo plano
+  function sincronizarCalendario() {
+    if (!S.cal || !S.ajustes.apps_script_url) return;
+    google('tareas_sincronizar').then(() => sb.rpc('tareas_calendario')).then(r => { if (r && r.data) S.cal = r.data; })
+      .catch(e => aviso('Guardado, pero el calendario no se ha actualizado: ' + e.message));
+  }
+
+  function abrirTarea(id, prev) {
+    S.tarea = id; S.tareaPrev = prev || null; S.vista = 'tarea';
+    history.replaceState(null, '', id === 'nueva' ? '#tareas' : '#t=' + id);
+    pintar(); window.scrollTo(0, 0);
+  }
+
+  function tarjetaTarea(t) {
+    const n = (t.etapas || []).length, h = etapasHechas(t);
+    const hecha = t.estado === 'realizada';
+    let extra = '';
+    if (t.auto && t.enlace_tipo === 'certificado') {
+      const c = S.certs.find(x => x.id === t.enlace_id);
+      if (c) extra = c.donante + ' · ' + euros(c.importe);
+    }
+    const enl = !t.auto && t.enlace_id ? textoEnlace(t.enlace_tipo, t.enlace_id) : '';
+    return `<article class="tcard${hecha ? ' hecha' : ''}${t.prioridad === 'alta' && !hecha ? ' alta' : ''}">
+      <div class="tc-chips">
+        ${t.auto ? '<span class="tchip auto">Automática</span>' : ''}
+        ${t.prioridad === 'alta' && !hecha ? '<span class="tchip alta">Prioridad alta</span>' : ''}
+        ${t.estado === 'en_curso' ? '<span class="tchip curso">En curso</span>' : ''}
+        ${hecha ? '<span class="tchip ok">Realizada</span>' : ''}
+      </div>
+      <button class="tc-abrir" type="button" ${t.auto ? `data-auto="${t.enlace_tipo}" data-id="${t.enlace_id}"` : `data-t="${t.id}"`}>${esc(t.titulo)}</button>
+      ${t.auto && t.detalle ? `<p class="tc-det">${esc(t.detalle)}</p>` : ''}
+      ${extra ? `<p class="tc-det">${esc(extra)}</p>` : ''}
+      ${enl ? `<p class="tc-det">🔗 ${esc(enl)}</p>` : ''}
+      ${n ? `<div class="tc-prog" title="${h} de ${n} etapas"><span style="width:${Math.round(100 * h / n)}%"></span></div>` : ''}
+      <div class="tc-pie">
+        <span>${hecha ? '✓ Hecha el ' + fechaCorta(t.realizada) : (t.plazo ? '📅 ' + fechaCorta(t.plazo) : 'Sin plazo') + (n ? ' · ' + h + '/' + n + ' etapas' : '')}</span>
+        ${!t.auto && !hecha ? `<button class="tc-hecha" type="button" data-hecha="${t.id}" title="Marcar como realizada" aria-label="Marcar «${esc(t.titulo)}» como realizada">✓</button>` : ''}
+      </div>
+    </article>`;
+  }
+
+  function textoEnlace(tipo, id) {
+    if (tipo === 'certificado') {
+      const c = S.certs.find(x => x.id === id);
+      return c ? 'Certificado' + (c.numero ? ' n.º ' + c.numero : '') + ' · ' + c.donante : 'Certificado';
+    }
+    const d = S.docs.find(x => x.id === id);
+    return d ? (d.tipo === 'acta' ? 'Acta' : 'Documento') + ' · ' + d.titulo : 'Documento';
+  }
+
+  function vTareas(el) {
+    const abiertas = S.tareas.filter(t => t.estado !== 'realizada').concat(S.auto.map(a => Object.assign({ auto: true, estado: 'pendiente' }, a)));
+    const cols = COLUMNAS.map(() => []);
+    abiertas.sort(porUrgencia).forEach(t => cols[urgencia(t.plazo)].push(t));
+    const hace14 = new Date(Date.now() - 14 * 86400000).toISOString();
+    cols[6] = S.tareas.filter(t => t.estado === 'realizada' && t.realizada >= hace14).sort((a, b) => b.realizada.localeCompare(a.realizada));
+
+    const ultima = S.cal && S.cal.ultima ? new Date(S.cal.ultima) : null;
+    const caido = S.cal && (!ultima || Date.now() - ultima > 2 * 86400000);
+    el.innerHTML = `<section class="panel tareas-cab">
+        <div><h2>Mis tareas</h2>
+        <p class="sub">${abiertas.length} pendiente${abiertas.length === 1 ? '' : 's'}, ordenadas por urgencia (plazo y, dentro de cada columna, prioridad).
+          Las <b>automáticas</b> salen de certificados, documentos y actas, y se cierran solas.</p></div>
+        <div class="acciones" style="margin:0">
+          <button class="btn primario" type="button" id="btnNuevaTarea">+ Nueva tarea</button>
+          ${S.cal ? `<button class="btn" type="button" id="btnSincCal" title="Última actualización: ${ultima ? ultima.toLocaleString('es-ES') : 'nunca'}">Actualizar calendario</button>`
+                  : `<button class="btn" type="button" id="btnConectarCal">Conectar Google Calendar</button>`}
+        </div>
+      </section>
+      ${!S.cal ? `<div class="aviso info">Conecta Google Calendar para recibir cada día, a las 9:00, un evento «Tareas» con las pendientes ordenadas por urgencia, y un evento en el plazo de cada tarea (calendario «Tareas ASPM»).</div>` : ''}
+      ${caido ? `<div class="aviso rojo">El calendario lleva 2 días o más sin actualizarse${ultima ? ' (última vez: ' + ultima.toLocaleString('es-ES') + ')' : ''}: el recordatorio diario ha dejado de generarse. Pulsa «Actualizar calendario»; si falla, avisa a Claude.</div>` : ''}
+      <div class="tablero">${COLUMNAS.map(([k, t], i) => `<section class="tcol c-${k}" aria-label="${t}">
+          <h3>${t}<span class="tcount">${cols[i].length}</span></h3>
+          <div class="tlista">${cols[i].map(tarjetaTarea).join('') || '<p class="tvacio">Nada por aquí</p>'}</div>
+        </section>`).join('')}</div>`;
+
+    $('#btnNuevaTarea').onclick = () => abrirTarea('nueva');
+    el.querySelectorAll('[data-t]').forEach(b => b.onclick = () => abrirTarea(b.dataset.t));
+    el.querySelectorAll('[data-auto]').forEach(b => b.onclick = () => b.dataset.auto === 'certificado' ? abrir(b.dataset.id) : abrirDoc(b.dataset.id));
+    el.querySelectorAll('[data-hecha]').forEach(b => b.onclick = async () => {
+      const { error } = await sb.from('tareas').update({ estado: 'realizada' }).eq('id', b.dataset.hecha);
+      if (error) return aviso('No se ha podido guardar: ' + error.message);
+      await cargarTareas(); pintar(); aviso('Tarea realizada.'); sincronizarCalendario();
+    });
+    const conectar = async (btn, accion) => {
+      btn.disabled = true; btn.textContent = 'Conectando…';
+      try {
+        const r = await google(accion);
+        await cargarTareas(); pintar();
+        aviso(accion === 'tareas_activar' ? 'Calendario conectado: «' + r.calendario + '» en ' + r.cuenta + '.' : 'Calendario actualizado.');
+      } catch (e) {
+        btn.disabled = false; btn.textContent = accion === 'tareas_activar' ? 'Conectar Google Calendar' : 'Actualizar calendario';
+        aviso('No se ha podido: ' + e.message);
+      }
+    };
+    if ($('#btnConectarCal')) $('#btnConectarCal').onclick = e => conectar(e.currentTarget, 'tareas_activar');
+    if ($('#btnSincCal')) $('#btnSincCal').onclick = e => conectar(e.currentTarget, 'tareas_sincronizar');
+  }
+
+  /* ---------- Nueva tarea / detalle ---------- */
+  function vTarea(el) {
+    const nueva = S.tarea === 'nueva';
+    const t = nueva ? Object.assign({ titulo: '', notas: '', plazo: '', prioridad: 'normal', estado: 'pendiente', etapas: [], enlace_tipo: null, enlace_id: null }, S.tareaPrev || {})
+                    : S.tareas.find(x => x.id === S.tarea);
+    if (!t) { el.innerHTML = '<div class="panel vacio">Esta tarea ya no existe.</div>'; return; }
+    let etapas = (t.etapas || []).map(e => ({ t: e.t, hecha: !!e.hecha }));
+    const enlaceVal = t.enlace_id ? t.enlace_tipo + ':' + t.enlace_id : '';
+    const opcCert = S.certs.filter(c => c.estado !== 'anulado' || 'certificado:' + c.id === enlaceVal)
+      .map(c => `<option value="certificado:${c.id}">Certificado${c.numero ? ' n.º ' + c.numero : ''} · ${esc(c.donante)} · ${fechaCorta(c.fecha_donacion)}</option>`).join('');
+    const opcDoc = S.docs.filter(d => d.estado !== 'anulado' || 'documento:' + d.id === enlaceVal)
+      .map(d => `<option value="documento:${d.id}">${d.tipo === 'acta' ? 'Acta' : 'Documento'} · ${esc(d.titulo)} · ${fechaCorta(d.fecha)}</option>`).join('');
+
+    el.innerHTML = `<div class="acciones" style="margin:0 0 14px"><button class="btn sutil" type="button" id="btnAtrasT">← Volver al tablero</button></div>
+      <form class="panel" id="formTarea" autocomplete="off">
+        <h2>${nueva ? 'Nueva tarea' : 'Tarea'}</h2>
+        <p class="sub">${nueva ? 'Ponle un plazo para que salga en el calendario y en el aviso de cada mañana.' : 'Creada el ' + fechaCorta(t.creado) + (t.realizada ? ' · realizada el ' + fechaCorta(t.realizada) : '') + '.'}</p>
+        <div class="campo"><label for="t_ti">Qué hay que hacer</label><input type="text" id="t_ti" required maxlength="200" value="${esc(t.titulo)}"></div>
+        <div class="rejilla">
+          <div class="campo"><label for="t_pl">Plazo</label><input type="date" id="t_pl" value="${esc(t.plazo || '')}"><span class="ayuda">Sin plazo no sale en el calendario como fecha límite.</span></div>
+          <div class="campo"><label for="t_pr">Prioridad</label><select id="t_pr">${Object.entries(PRIORIDAD).map(([k, v]) => `<option value="${k}" ${t.prioridad === k ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+        </div>
+        <h3>Estado</h3>
+        <div class="opciones">${Object.entries(ESTADO_TAREA).map(([k, v]) => `<label class="opcion"><input type="radio" name="t_es" value="${k}" ${t.estado === k ? 'checked' : ''}><span><b>${v}</b></span></label>`).join('')}</div>
+        <h3>Etapas <span class="meta" id="t_prog"></span></h3>
+        <div class="etapas" id="t_etapas"></div>
+        <div class="etapa-nueva"><input type="text" id="t_en" placeholder="Nueva etapa (p. ej. «Pedir presupuesto»)" maxlength="200"><button class="btn" type="button" id="btnEtapa">Añadir</button></div>
+        <h3>Relacionada con</h3>
+        <div class="campo"><select id="t_enl"><option value="">— Nada —</option>
+          ${opcCert ? `<optgroup label="Certificados de donación">${opcCert}</optgroup>` : ''}
+          ${opcDoc ? `<optgroup label="Documentos y actas">${opcDoc}</optgroup>` : ''}</select>
+          <span class="ayuda">Para abrir el certificado, documento o acta desde la tarea.</span></div>
+        <div class="campo"><label for="t_no">Notas</label><textarea id="t_no" rows="4">${esc(t.notas || '')}</textarea></div>
+        <div class="acciones">
+          <button class="btn primario" type="submit" id="btnGuardarT">${nueva ? 'Crear tarea' : 'Guardar'}</button>
+          <button class="btn" type="button" id="btnAbrirEnl" ${t.enlace_id ? '' : 'hidden'}>Abrir lo relacionado</button>
+          ${nueva ? '' : '<button class="btn no" type="button" id="btnBorrarT" style="margin-left:auto">Borrar tarea</button>'}
+        </div>
+      </form>`;
+    $('#t_enl').value = enlaceVal;
+
+    const radioEstado = () => el.querySelector('input[name=t_es]:checked');
+    const pintarEtapas = () => {
+      $('#t_etapas').innerHTML = etapas.map((e, i) => `<div class="etapa${e.hecha ? ' hecha' : ''}">
+          <input type="checkbox" id="et${i}" data-i="${i}" ${e.hecha ? 'checked' : ''} aria-label="Etapa hecha">
+          <input type="text" data-txt="${i}" value="${esc(e.t)}" maxlength="200" aria-label="Etapa ${i + 1}">
+          <button class="btn sutil" type="button" data-sube="${i}" title="Subir" aria-label="Subir" ${i ? '' : 'disabled'}>↑</button>
+          <button class="btn sutil" type="button" data-quita="${i}" title="Quitar" aria-label="Quitar etapa">✕</button></div>`).join('')
+        || '<p class="meta" style="margin:0 0 8px">Sin etapas. Divide la tarea en pasos para ir marcando el avance.</p>';
+      const h = etapas.filter(e => e.hecha).length;
+      $('#t_prog').textContent = etapas.length ? `· ${h} de ${etapas.length} hechas` : '';
+      $('#t_etapas').querySelectorAll('[data-i]').forEach(c => c.onchange = () => {
+        etapas[+c.dataset.i].hecha = c.checked;
+        // Al marcar la primera etapa, la tarea pasa a «en curso»
+        if (c.checked && radioEstado().value === 'pendiente') el.querySelector('input[name=t_es][value=en_curso]').checked = true;
+        if (c.checked && etapas.every(e => e.hecha)) aviso('Todas las etapas hechas. Si ya está, marca la tarea como «Realizada».');
+        pintarEtapas();
+      });
+      $('#t_etapas').querySelectorAll('[data-txt]').forEach(c => c.oninput = () => { etapas[+c.dataset.txt].t = c.value; });
+      $('#t_etapas').querySelectorAll('[data-quita]').forEach(b => b.onclick = () => { etapas.splice(+b.dataset.quita, 1); pintarEtapas(); });
+      $('#t_etapas').querySelectorAll('[data-sube]').forEach(b => b.onclick = () => { const i = +b.dataset.sube; [etapas[i - 1], etapas[i]] = [etapas[i], etapas[i - 1]]; pintarEtapas(); });
+    };
+    pintarEtapas();
+    const anadir = () => { const v = $('#t_en').value.trim(); if (!v) return; etapas.push({ t: v, hecha: false }); $('#t_en').value = ''; pintarEtapas(); $('#t_en').focus(); };
+    $('#btnEtapa').onclick = anadir;
+    $('#t_en').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); anadir(); } };
+
+    $('#btnAtrasT').onclick = () => { S.vista = 'tareas'; history.replaceState(null, '', '#tareas'); pintar(); };
+    $('#btnAbrirEnl').onclick = () => t.enlace_tipo === 'certificado' ? abrir(t.enlace_id) : abrirDoc(t.enlace_id);
+    if ($('#btnBorrarT')) $('#btnBorrarT').onclick = async () => {
+      if (!await confirmar('Borrar tarea', '«' + t.titulo + '» se borrará para siempre, también su evento del calendario. Si ya está hecha, mejor márcala como «Realizada».')) return;
+      const { error } = await sb.from('tareas').delete().eq('id', t.id);
+      if (error) return aviso('No se ha podido borrar: ' + error.message);
+      await cargarTareas(); S.vista = 'tareas'; history.replaceState(null, '', '#tareas'); pintar(); aviso('Tarea borrada.'); sincronizarCalendario();
+    };
+    $('#formTarea').onsubmit = async ev => {
+      ev.preventDefault();
+      if ($('#t_en').value.trim()) anadir();
+      const [tipo, id] = ($('#t_enl').value || ':').split(':');
+      const d = {
+        titulo: $('#t_ti').value.trim(), plazo: $('#t_pl').value || null, prioridad: $('#t_pr').value, estado: radioEstado().value,
+        etapas: etapas.filter(e => e.t.trim()).map(e => ({ t: e.t.trim(), hecha: e.hecha })),
+        notas: $('#t_no').value.trim() || null, enlace_tipo: tipo || null, enlace_id: id || null
+      };
+      if (!d.titulo) return aviso('Escribe qué hay que hacer.');
+      $('#btnGuardarT').disabled = true;
+      const { error } = nueva ? await sb.from('tareas').insert(d) : await sb.from('tareas').update(d).eq('id', t.id);
+      $('#btnGuardarT').disabled = false;
+      if (error) return aviso('No se ha podido guardar: ' + error.message);
+      await cargarTareas(); S.vista = 'tareas'; history.replaceState(null, '', '#tareas'); pintar();
+      aviso(nueva ? 'Tarea creada.' : 'Tarea guardada.'); sincronizarCalendario();
+    };
+    if (nueva) $('#t_ti').focus();
+  }
+
   /* ---------- Ajustes ---------- */
   function vAjustes(el) {
     const a = S.ajustes;
@@ -1489,6 +1726,9 @@
     if (m && S.yo && S.detalle !== m[1]) abrir(m[1]);
     const md = /#d=([0-9a-f-]{36})/.exec(location.hash);
     if (md && S.yo && S.docDetalle !== md[1]) abrirDoc(md[1]);
+    const mt = /#t=([0-9a-f-]{36})/.exec(location.hash);
+    if (mt && esCoord() && S.tarea !== mt[1]) abrirTarea(mt[1]);
+    if (location.hash === '#tareas' && esCoord() && S.vista !== 'tareas' && S.vista !== 'tarea') { S.vista = 'tareas'; pintar(); }
   });
 
   arrancar();
