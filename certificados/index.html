@@ -180,6 +180,13 @@ main.contenido{padding-block:22px 60px}
 
 /* Tareas: tablero por urgencia, con los colores de la asociación (rojo y ámbar solo para lo vencido y lo de hoy) */
 .wrap.ancho{max-width:1480px}
+.segmentos{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.seg{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font:700 14px Montserrat,sans-serif;color:var(--muted);cursor:pointer}
+.seg:hover{border-color:var(--brand);color:var(--ink)}
+.seg[aria-current="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.seg-n{font-family:Manrope,sans-serif;font-size:12.5px;background:var(--surface-2);color:var(--muted);border-radius:999px;padding:0 8px;line-height:20px}
+.seg[aria-current="true"] .seg-n{background:rgba(255,255,255,.2);color:#fff}
+.seg .n{min-width:20px;padding:0 6px;border-radius:999px;background:var(--no);color:#fff;font:700 12px/20px Manrope,sans-serif;text-align:center}
 .tareas-cab{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
 .tareas-cab>div:first-child{flex:1 1 420px}
 .tareas-cab .sub{margin:0}
@@ -280,8 +287,8 @@ dialog p{margin:0 0 16px;font-size:14.5px}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-<script src="pdf.js?v=202610141800"></script>
-<script src="doc-pdf.js?v=202610141800"></script>
-<script src="app.js?v=202610141800"></script>
+<script src="pdf.js?v=202610151100"></script>
+<script src="doc-pdf.js?v=202610151100"></script>
+<script src="app.js?v=202610151100"></script>
 </body>
 </html>

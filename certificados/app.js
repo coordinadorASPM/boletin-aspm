@@ -43,7 +43,7 @@
   const REVISORAS = ['coordinadora', 'secretaria', 'presidenta'];   // orden de revisión del acta
   const ROL_ART = { coordinadora: 'la coordinadora', secretaria: 'la secretaria', presidenta: 'la presidenta' };
 
-  const S = { yo: null, perfiles: [], ajustes: {}, certs: [], docs: [], tareas: [], auto: [], cal: null, vista: 'pendientes', detalle: null, logo: null, busca: '', buscaDoc: '', editor: null };
+  const S = { yo: null, perfiles: [], ajustes: {}, certs: [], docs: [], tareas: [], auto: [], cal: null, tareasDe: 'coordinadora', vista: 'pendientes', detalle: null, logo: null, busca: '', buscaDoc: '', editor: null };
   const $ = (sel, raiz) => (raiz || document).querySelector(sel);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   const gestiona = () => S.yo && (S.yo.rol === 'coordinadora' || S.yo.rol === 'trabajadora_social');
@@ -1410,6 +1410,9 @@
   ];
   const PRIORIDAD = { alta: 'Alta', normal: 'Normal', baja: 'Baja' };
   const ESTADO_TAREA = { pendiente: 'Pendiente', en_curso: 'En curso', realizada: 'Realizada' };
+  // Quién hace la tarea: las de la coordinadora y las que encarga al equipo (las sigue ella; el equipo no ve el gestor)
+  const RESPONSABLE = { coordinadora: 'Mis tareas', trabajadora_social: 'Trabajadora social', gerente_comunicacion: 'Gerente de comunicación' };
+  const QUIEN = { coordinadora: 'Yo (coordinadora)', trabajadora_social: 'Trabajadora social', gerente_comunicacion: 'Gerente de comunicación' };
   // Misma regla que el script de Google (3-apps-script.gs → grupo_)
   function urgencia(plazo) {
     if (!plazo) return 5;
@@ -1445,6 +1448,8 @@
 
   function abrirTarea(id, prev) {
     S.tarea = id; S.tareaPrev = prev || null; S.vista = 'tarea';
+    const ex = S.tareas.find(x => x.id === id);
+    if (ex) S.tareasDe = ex.responsable;
     history.replaceState(null, '', id === 'nueva' ? '#tareas' : '#t=' + id);
     pintar(); window.scrollTo(0, 0);
   }
@@ -1487,18 +1492,30 @@
   }
 
   function vTareas(el) {
-    const abiertas = S.tareas.filter(t => t.estado !== 'realizada').concat(S.auto.map(a => Object.assign({ auto: true, estado: 'pendiente' }, a)));
+    const de = S.tareasDe, mias = de === 'coordinadora';
+    const suyas = S.tareas.filter(t => t.responsable === de);
+    const abiertas = suyas.filter(t => t.estado !== 'realizada').concat(mias ? S.auto.map(a => Object.assign({ auto: true, estado: 'pendiente' }, a)) : []);
     const cols = COLUMNAS.map(() => []);
     abiertas.sort(porUrgencia).forEach(t => cols[urgencia(t.plazo)].push(t));
     const hace14 = new Date(Date.now() - 14 * 86400000).toISOString();
-    cols[6] = S.tareas.filter(t => t.estado === 'realizada' && t.realizada >= hace14).sort((a, b) => b.realizada.localeCompare(a.realizada));
+    cols[6] = suyas.filter(t => t.estado === 'realizada' && t.realizada >= hace14).sort((a, b) => b.realizada.localeCompare(a.realizada));
+
+    // Un apartado por persona: el número rojo cuenta lo vencido o para hoy
+    const seccion = r => {
+      const ab = S.tareas.filter(t => t.responsable === r && t.estado !== 'realizada').concat(r === 'coordinadora' ? S.auto : []);
+      const urg = ab.filter(t => urgencia(t.plazo) <= 1).length;
+      return `<button class="seg" type="button" data-de="${r}" ${de === r ? 'aria-current="true"' : ''}>${RESPONSABLE[r]}
+        <span class="seg-n">${ab.length}</span>${urg ? `<span class="n" title="Vencidas o para hoy">${urg}</span>` : ''}</button>`;
+    };
 
     const ultima = S.cal && S.cal.ultima ? new Date(S.cal.ultima) : null;
     const caido = S.cal && (!ultima || Date.now() - ultima > 2 * 86400000);
-    el.innerHTML = `<section class="panel tareas-cab">
-        <div><h2>Mis tareas</h2>
-        <p class="sub">${abiertas.length} pendiente${abiertas.length === 1 ? '' : 's'}, ordenadas por urgencia (plazo y, dentro de cada columna, prioridad).
-          Las <b>automáticas</b> salen de certificados, documentos y actas, y se cierran solas.</p></div>
+    el.innerHTML = `<nav class="segmentos" aria-label="De quién son las tareas">${Object.keys(RESPONSABLE).map(seccion).join('')}</nav>
+      <section class="panel tareas-cab">
+        <div><h2>${mias ? 'Mis tareas' : 'Tareas encargadas a la ' + RESPONSABLE[de].toLowerCase()}</h2>
+        <p class="sub">${abiertas.length} pendiente${abiertas.length === 1 ? '' : 's'}${abiertas.length > 1 ? ', ordenadas' : ''} por urgencia (plazo y, dentro de cada columna, prioridad).
+          ${mias ? 'Las <b>automáticas</b> salen de certificados, documentos y actas, y se cierran solas.'
+                 : 'Para seguir lo que le has encargado: ella no ve este gestor. Marca tú las etapas y el estado según te vaya contando.'}</p></div>
         <div class="acciones" style="margin:0">
           <button class="btn primario" type="button" id="btnNuevaTarea">+ Nueva tarea</button>
           ${S.cal ? `<button class="btn" type="button" id="btnSincCal" title="Última actualización: ${ultima ? ultima.toLocaleString('es-ES') : 'nunca'}">Actualizar calendario</button>`
@@ -1513,6 +1530,7 @@
         </section>`).join('')}</div>`;
 
     $('#btnNuevaTarea').onclick = () => abrirTarea('nueva');
+    el.querySelectorAll('[data-de]').forEach(b => b.onclick = () => { S.tareasDe = b.dataset.de; pintar(); });
     el.querySelectorAll('[data-t]').forEach(b => b.onclick = () => abrirTarea(b.dataset.t));
     el.querySelectorAll('[data-auto]').forEach(b => b.onclick = () => b.dataset.auto === 'certificado' ? abrir(b.dataset.id) : abrirDoc(b.dataset.id));
     el.querySelectorAll('[data-hecha]').forEach(b => b.onclick = async () => {
@@ -1538,7 +1556,7 @@
   /* ---------- Nueva tarea / detalle ---------- */
   function vTarea(el) {
     const nueva = S.tarea === 'nueva';
-    const t = nueva ? Object.assign({ titulo: '', notas: '', plazo: '', prioridad: 'normal', estado: 'pendiente', etapas: [], enlace_tipo: null, enlace_id: null }, S.tareaPrev || {})
+    const t = nueva ? Object.assign({ titulo: '', notas: '', plazo: '', prioridad: 'normal', estado: 'pendiente', etapas: [], enlace_tipo: null, enlace_id: null, responsable: S.tareasDe }, S.tareaPrev || {})
                     : S.tareas.find(x => x.id === S.tarea);
     if (!t) { el.innerHTML = '<div class="panel vacio">Esta tarea ya no existe.</div>'; return; }
     let etapas = (t.etapas || []).map(e => ({ t: e.t, hecha: !!e.hecha }));
@@ -1553,7 +1571,9 @@
         <h2>${nueva ? 'Nueva tarea' : 'Tarea'}</h2>
         <p class="sub">${nueva ? 'Ponle un plazo para que salga en el calendario y en el aviso de cada mañana.' : 'Creada el ' + fechaCorta(t.creado) + (t.realizada ? ' · realizada el ' + fechaCorta(t.realizada) : '') + '.'}</p>
         <div class="campo"><label for="t_ti">Qué hay que hacer</label><input type="text" id="t_ti" required maxlength="200" value="${esc(t.titulo)}"></div>
-        <div class="rejilla">
+        <h3>Quién la hace</h3>
+        <div class="opciones">${Object.entries(QUIEN).map(([k, v]) => `<label class="opcion"><input type="radio" name="t_re" value="${k}" ${t.responsable === k ? 'checked' : ''}><span><b>${v}</b></span></label>`).join('')}</div>
+        <div class="rejilla" style="margin-top:14px">
           <div class="campo"><label for="t_pl">Plazo</label><input type="date" id="t_pl" value="${esc(t.plazo || '')}"><span class="ayuda">Sin plazo no sale en el calendario como fecha límite.</span></div>
           <div class="campo"><label for="t_pr">Prioridad</label><select id="t_pr">${Object.entries(PRIORIDAD).map(([k, v]) => `<option value="${k}" ${t.prioridad === k ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
         </div>
@@ -1616,6 +1636,7 @@
       const [tipo, id] = ($('#t_enl').value || ':').split(':');
       const d = {
         titulo: $('#t_ti').value.trim(), plazo: $('#t_pl').value || null, prioridad: $('#t_pr').value, estado: radioEstado().value,
+        responsable: el.querySelector('input[name=t_re]:checked').value,
         etapas: etapas.filter(e => e.t.trim()).map(e => ({ t: e.t.trim(), hecha: e.hecha })),
         notas: $('#t_no').value.trim() || null, enlace_tipo: tipo || null, enlace_id: id || null
       };
@@ -1624,7 +1645,7 @@
       const { error } = nueva ? await sb.from('tareas').insert(d) : await sb.from('tareas').update(d).eq('id', t.id);
       $('#btnGuardarT').disabled = false;
       if (error) return aviso('No se ha podido guardar: ' + error.message);
-      await cargarTareas(); S.vista = 'tareas'; history.replaceState(null, '', '#tareas'); pintar();
+      await cargarTareas(); S.tareasDe = d.responsable; S.vista = 'tareas'; history.replaceState(null, '', '#tareas'); pintar();
       aviso(nueva ? 'Tarea creada.' : 'Tarea guardada.'); sincronizarCalendario();
     };
     if (nueva) $('#t_ti').focus();
