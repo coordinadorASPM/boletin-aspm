@@ -1513,7 +1513,7 @@
     el.innerHTML = `<nav class="segmentos" aria-label="De quién son las tareas">${Object.keys(RESPONSABLE).map(seccion).join('')}</nav>
       <section class="panel tareas-cab">
         <div><h2>${mias ? 'Mis tareas' : 'Tareas encargadas a la ' + RESPONSABLE[de].toLowerCase()}</h2>
-        <p class="sub">${abiertas.length} pendiente${abiertas.length === 1 ? '' : 's'}${abiertas.length > 1 ? ', ordenadas' : ''} por urgencia (plazo y, dentro de cada columna, prioridad).
+        <p class="sub">${abiertas.length === 1 ? '1 pendiente.' : abiertas.length + ' pendientes, ordenadas por urgencia (plazo y, dentro de cada columna, prioridad).'}
           ${mias ? 'Las <b>automáticas</b> salen de certificados, documentos y actas, y se cierran solas.'
                  : 'Para seguir lo que le has encargado: ella no ve este gestor. Marca tú las etapas y el estado según te vaya contando.'}</p></div>
         <div class="acciones" style="margin:0">
