@@ -26,6 +26,7 @@
     secretaria: 'Secretaria'
   };
   const ESTADO = {
+    borrador: 'Borrador · sin enviar',
     pendiente: 'Pendiente de firma',
     firmado: 'Firmado · falta archivar',
     archivado: 'Firmado y archivado',
@@ -357,7 +358,7 @@
 
   /* =================== Vistas =================== */
   function vPendientes(el) {
-    const certs = firmante() ? S.certs.filter(faltaMiFirma) : S.certs.filter(c => c.estado === 'pendiente' || c.estado === 'firmado');
+    const certs = firmante() ? S.certs.filter(faltaMiFirma) : S.certs.filter(c => ['borrador', 'pendiente', 'firmado'].includes(c.estado));
     const docs = firmante() ? S.docs.filter(faltaMiDoc) : S.docs.filter(d => ['revision', 'pendiente'].includes(d.estado) || (d.tipo === 'acta' && d.estado === 'firmado'));
     el.innerHTML = `<section class="panel">
       <h2>${firmante() ? 'Documentos y actas pendientes' : 'Documentos y actas en curso'}</h2>
@@ -366,20 +367,22 @@
     </section>
     <section class="panel">
       <h2>${firmante() ? 'Certificados pendientes de mi firma' : 'Certificados en curso'}</h2>
-      <p class="sub">${firmante() ? 'Certificados que esperan tu firma. Ábrelos para revisarlos y firmar.' : 'Certificados que aún esperan alguna firma o el archivo en Drive.'}</p>
+      <p class="sub">${firmante() ? 'Certificados que esperan tu firma. Ábrelos para revisarlos y firmar.' : 'Borradores sin enviar y certificados que aún esperan alguna firma o el archivo en Drive.'}</p>
       <div class="lista">${certs.map(filaCert).join('') || `<div class="vacio">${firmante() ? 'No tienes certificados pendientes de firmar.' : 'No hay certificados en curso.'}</div>`}</div>
     </section>`;
     enlazarFilas(el);
   }
 
   function vTodos(el) {
+    // Los borradores solo los ven coordinación y trabajadora social
+    const certs = gestiona() ? S.certs : S.certs.filter(c => c.estado !== 'borrador');
     el.innerHTML = `<section class="panel"><h2>Todos los certificados</h2>
-      <p class="sub">${S.certs.length} en total.</p>
+      <p class="sub">${certs.length} en total.</p>
       <input class="buscador" type="text" id="busca" placeholder="Buscar por donante, NIF o número" value="${esc(S.busca)}" aria-label="Buscar">
       <div class="lista" id="listaTodos"></div></section>`;
     const pintarLista = () => {
       const q = S.busca.toLowerCase();
-      const l = S.certs.filter(c => !q || [c.donante, c.nif, c.numero].join(' ').toLowerCase().includes(q));
+      const l = certs.filter(c => !q || [c.donante, c.nif, c.numero].join(' ').toLowerCase().includes(q));
       $('#listaTodos').innerHTML = l.map(filaCert).join('') || '<div class="vacio">Sin resultados.</div>';
       enlazarFilas($('#listaTodos'));
     };
@@ -393,7 +396,7 @@
     const v = ed || { tipo: 'dineraria', ejercicio: new Date().getFullYear(), fecha_emision: hoyISO(), fecha_donacion: '', cuenta: 'BBVA', partida: PARTIDAS[0], firma_presidenta: true, firma_secretaria: true };
     el.innerHTML = `<form class="panel" id="formCert" novalidate>
       <h2>${ed ? 'Corregir certificado' : 'Nuevo certificado de donación'}</h2>
-      <p class="sub">${ed ? 'Solo se puede corregir mientras nadie lo haya firmado.' : 'Rellena los datos. Al crearlo, se avisará por correo a quien tenga que firmar.'}</p>
+      <p class="sub">${ed ? (ed.estado === 'borrador' ? 'Es un borrador: nadie lo ha recibido todavía.' : 'Solo se puede corregir mientras nadie lo haya firmado.') : 'Rellena los datos. Puedes enviarlo ya a firmar o guardarlo como borrador sin avisar a nadie.'}</p>
       <div class="error" id="errForm" hidden></div>
 
       <h3>Donante</h3>
@@ -439,7 +442,11 @@
       <div class="vista-previa" id="previa"></div>
 
       <div class="acciones">
-        <button class="btn primario grande" type="submit" id="btnGuardar">${ed ? 'Guardar cambios' : 'Crear y enviar a firmar'}</button>
+        ${!ed ? `<button class="btn primario grande" type="submit" data-modo="enviar">Crear y enviar a firmar</button>
+                 <button class="btn grande" type="submit" data-modo="borrador">Guardar como borrador</button>`
+          : ed.estado === 'borrador' ? `<button class="btn primario grande" type="submit" data-modo="enviar">Guardar y enviar a firmar</button>
+                 <button class="btn grande" type="submit" data-modo="guardar">Guardar borrador</button>`
+          : '<button class="btn primario grande" type="submit" data-modo="guardar">Guardar cambios</button>'}
         <button class="btn" type="button" id="btnVerPdf">Ver borrador en PDF</button>
         ${ed ? '<button class="btn sutil" type="button" id="btnVolver">Cancelar</button>' : ''}
       </div>
@@ -492,34 +499,47 @@
       const d = leer();
       const err = validar(d);
       if (err) return mostrarError(err);
-      const btn = $('#btnGuardar');
-      btn.disabled = true; btn.textContent = 'Guardando…';
+      // enviar: se manda a firmar · borrador: se crea sin avisar a nadie · guardar: solo guarda los cambios
+      const btn = ev.submitter || f.querySelector('[data-modo]');
+      const modo = btn.dataset.modo, texto = btn.textContent;
+      f.querySelectorAll('[data-modo]').forEach(b => { b.disabled = true; });
+      btn.textContent = 'Guardando…';
       try {
         let id;
         if (ed) {
           const { error } = await sb.from('certificados').update(d).eq('id', ed.id);
           if (error) throw error;
           id = ed.id;
+          if (modo === 'enviar') {
+            const { error: e2 } = await sb.rpc('enviar_a_firmar', { p_id: id });
+            if (e2) throw e2;
+          }
         } else {
-          const { data, error } = await sb.from('certificados').insert(d).select('id').single();
+          const { data, error } = await sb.from('certificados').insert(Object.assign({ estado: modo === 'borrador' ? 'borrador' : 'pendiente' }, d)).select('id').single();
           if (error) throw error;
           id = data.id;
-          try {
-            const r = await google('avisar', { id });
-            aviso(r.enviados ? 'Certificado creado. Aviso enviado a ' + (d.firma_presidenta ? 'la presidenta' : 'la secretaria') + '.' : 'Certificado creado, pero no se ha enviado ningún aviso.');
-          } catch (e) {
-            aviso('Certificado creado, pero no se ha podido enviar el correo: ' + e.message);
-          }
         }
+        if (modo === 'enviar') await avisarFirma(id, d, ed ? 'Enviado a firmar.' : 'Certificado creado.');
+        else aviso(modo === 'borrador' ? 'Borrador guardado. No se ha avisado a nadie: envíalo a firmar cuando esté listo.' : 'Cambios guardados.');
         await cargarTodo();
         abrir(id);
-        if (ed) aviso('Cambios guardados.');
       } catch (e) {
-        btn.disabled = false; btn.textContent = ed ? 'Guardar cambios' : 'Crear y enviar a firmar';
+        f.querySelectorAll('[data-modo]').forEach(b => { b.disabled = false; });
+        btn.textContent = texto;
         mostrarError(e.message);
       }
     });
     function mostrarError(m) { const e = $('#errForm'); e.textContent = m; e.hidden = false; e.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  }
+
+  // Aviso a la primera firmante (primero la secretaria, si firma)
+  async function avisarFirma(id, d, inicio) {
+    try {
+      const r = await google('avisar', { id });
+      aviso(inicio + ' ' + (r.enviados ? 'Aviso enviado a ' + (d.firma_secretaria ? 'la secretaria' : 'la presidenta') + '.' : 'No se ha enviado ningún aviso.'));
+    } catch (e) {
+      aviso(inicio + ' No se ha podido enviar el correo: ' + e.message);
+    }
   }
 
   function validar(d) {
@@ -581,7 +601,8 @@
           ${c.observaciones ? `<dt>Observaciones</dt><dd>${esc(c.observaciones)}</dd>` : ''}
           ${c.drive_url ? `<dt>Drive</dt><dd><a href="${esc(c.drive_url)}" target="_blank" rel="noopener">Abrir el PDF archivado</a></dd>` : ''}
         </dl>
-        <div class="firmantes">${filasFirma.map(([cargo, cuando, falta]) => `<div class="firmante ${cuando ? 'hecho' : 'falta'}"><span class="ico">${cuando ? '✓' : '…'}</span><span><b>${cargo}</b><small>${cuando ? 'Firmado el ' + new Date(cuando).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : (c.estado === 'pendiente' ? falta : 'Sin firmar')}</small></span></div>`).join('')}</div>
+        <div class="firmantes">${filasFirma.map(([cargo, cuando, falta]) => `<div class="firmante ${cuando ? 'hecho' : 'falta'}"><span class="ico">${cuando ? '✓' : '…'}</span><span><b>${cargo}</b><small>${cuando ? 'Firmado el ' + new Date(cuando).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : (c.estado === 'pendiente' ? falta : c.estado === 'borrador' ? 'Aún no se le ha enviado' : 'Sin firmar')}</small></span></div>`).join('')}</div>
+        ${c.estado === 'borrador' ? `<div class="aviso info" style="margin-top:14px">Es un borrador: no se ha avisado a nadie y no se puede firmar.${gestiona() ? ' Cuando esté listo, pulsa «Enviar a firmar».' : ''}</div>` : ''}
         ${S.yo.rol === 'presidenta' && c.estado === 'pendiente' && c.firma_presidenta && !c.firmado_presidenta && esperaSecretaria(c)
           ? '<div class="aviso info" style="margin-top:14px">Primero lo firma la secretaria. Te llegará un aviso por correo cuando lo haya hecho.</div>' : ''}
 
@@ -602,7 +623,8 @@
           ${completo ? '<button class="btn primario" type="button" id="btnDescargar">Descargar PDF firmado</button>' : ''}
           ${gestiona() && c.estado === 'firmado' ? '<button class="btn primario" type="button" id="btnArchivar">Archivar ahora en Drive y en la hoja</button>' : ''}
           ${gestiona() && c.estado === 'pendiente' ? '<button class="btn" type="button" id="btnReavisar">Reenviar aviso por correo</button>' : ''}
-          ${gestiona() && c.estado === 'pendiente' && sinFirmas ? '<button class="btn" type="button" id="btnEditar">Corregir datos</button><button class="btn no" type="button" id="btnAnular">Anular</button>' : ''}
+          ${gestiona() && c.estado === 'borrador' ? '<button class="btn primario" type="button" id="btnEnviarFirma">Enviar a firmar</button>' : ''}
+          ${gestiona() && (c.estado === 'pendiente' || c.estado === 'borrador') && sinFirmas ? `<button class="btn" type="button" id="btnEditar">${c.estado === 'borrador' ? 'Editar borrador' : 'Corregir datos'}</button><button class="btn no" type="button" id="btnAnular">Anular</button>` : ''}
         </div>
       </section>
       <section class="panel"><h2 style="margin-bottom:12px">${completo ? 'Certificado firmado' : c.pdf_path ? 'PDF con firma digital (falta otra firma)' : 'Vista previa (borrador)'}</h2><iframe class="visor" id="visor" title="Vista previa del certificado"></iframe></section>
@@ -691,6 +713,14 @@
       b.disabled = false;
     });
     on('#btnEditar', () => { S.vista = 'editar'; pintar(); });
+    on('#btnEnviarFirma', async b => {
+      if (!await confirmar('Enviar a firmar', `Se avisará por correo a ${c.firma_secretaria ? 'la secretaria' : 'la presidenta'} para que firme el certificado de ${c.donante} por ${euros(c.importe)}.`)) return;
+      b.disabled = true;
+      const { error } = await sb.rpc('enviar_a_firmar', { p_id: c.id });
+      if (error) { b.disabled = false; return aviso(error.message); }
+      await avisarFirma(c.id, c, 'Enviado a firmar.');
+      await cargarTodo(); abrir(c.id);
+    });
     on('#btnAnular', async () => {
       if (!await confirmar('Anular certificado', 'Quedará marcado como anulado y no se podrá firmar. No consume número.')) return;
       const { error } = await sb.rpc('anular', { p_id: c.id });
