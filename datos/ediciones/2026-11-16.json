@@ -1,0 +1,46 @@
+[
+    {
+        "id":  "i3000cd51a931",
+        "seccion":  "legislacion",
+        "grupo":  "espana",
+        "titulo":  "RDL 35/2026 de apoyo a familias: con dos hijos y uno con discapacidad ya se es familia numerosa",
+        "entidad":  "Ministerio de Derechos Sociales, Consumo y Agenda 2030 (BOE)",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "BOE de 11 de noviembre de 2026; en vigor desde el 12 de noviembre (algunas medidas desde el 1 de enero de 2027)",
+        "importe":  null,
+        "etiquetas":  [
+                          "publicado",
+                          "familias",
+                          "prestaciones"
+                      ],
+        "resumen":  "El Real Decreto-ley 35/2026 crea el título de familia monoparental y modifica la Ley de Familias Numerosas: las familias con dos hijos en las que al menos uno tenga discapacidad (33 % o más) se equiparan a familia numerosa, cada hijo con discapacidad cuenta como dos para la categoría, y la familia monoparental con un hijo con discapacidad pasa a categoría especial. Además, el Fondo de Garantía del Pago de Alimentos adelantará pensiones impagadas a hijos mayores de edad con discapacidad del 65 % o más o en situación de dependencia. Como todo real decreto-ley, debe convalidarse; con las Cortes disueltas, le corresponde a la Diputación Permanente del Congreso.",
+        "para_aspm":  "Conviene avisar a los socios por el servicio de información y orientación: muchas familias con dos hijos pueden pedir ahora el título de familia numerosa en su comunidad autónoma.",
+        "url":  "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-23604",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-16"
+    },
+    {
+        "id":  "i89e0240901ab",
+        "seccion":  "investigacion",
+        "grupo":  "",
+        "titulo":  "Revisión: el PMS comparte vías biológicas con otros síndromes genéticos con autismo",
+        "entidad":  "Frontiers in Genetics",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "30 de octubre de 2026 (indexado en PubMed la semana del 10 de noviembre)",
+        "importe":  null,
+        "etiquetas":  [
+                          "revisión",
+                          "sin datos nuevos",
+                          "autismo sindrómico"
+                      ],
+        "resumen":  "Una revisión narrativa compara doce síndromes genéticos en los que el autismo es frecuente y encuentra que muchos de sus genes confluyen en las mismas funciones (sinapsis, conexiones entre neuronas, regulación del ADN y del ARN). El PMS aparece entre los siete síndromes, con X frágil, Rett o Angelman, cuyas vías se solapan en lo social, el lenguaje y el neurodesarrollo. Los autores plantean que esto podría orientar algún día tratamientos comunes, pero es una idea que aún hay que investigar.",
+        "para_aspm":  "Útil como contexto para explicar por qué los avances en otros síndromes pueden interesar a las familias PMS; no cambia nada en la práctica.",
+        "url":  "https://pubmed.ncbi.nlm.nih.gov/43031613/",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-16"
+    }
+]
