@@ -1,6 +1,7 @@
 window.BOLETIN = {
-    "actualizado":  "2026-11-13 15:22",
+    "actualizado":  "2026-11-16 08:44",
     "ediciones":  [
+                      "2026-11-15",
                       "2026-11-13",
                       "2026-11-12",
                       "2026-10-08",
@@ -3812,6 +3813,116 @@ window.BOLETIN = {
                       "url_bases":  null,
                       "requisitos":  null,
                       "primera_edicion":  "2026-11-13"
+                  },
+                  {
+                      "id":  "i552fc118e297",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "El CERMI pide a los partidos que sus campañas del 29-N sean plenamente accesibles",
+                      "entidad":  "CERMI",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "9 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "29-N",
+                                        "accesibilidad",
+                                        "incidencia"
+                                    ],
+                      "resumen":  "El CERMI pide a los partidos que sus campañas para las elecciones del 29 de noviembre sean un ejemplo de accesibilidad universal en todas sus fases. Reclama accesibilidad física, de comunicación e información (webs, redes, propaganda) y cognitiva, y programas en formatos accesibles, yendo más allá de los mínimos legales.",
+                      "para_aspm":  "Sirve de argumento si la ASPM pide a los partidos programas en lectura fácil para las familias con discapacidad intelectual.",
+                      "url":  "https://sid-inico.usal.es/noticias/el-cermi-insta-a-los-partidos-politicos-a-hacer-plenamente-accesibles-sus-campanas-electorales/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-15"
+                  },
+                  {
+                      "id":  "iecb974696a4c",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Plena inclusión lleva señales accesibles a colegios electorales de toda España y guías de voto en lectura fácil",
+                      "entidad":  "Plena inclusión España",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "13 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "29-N",
+                                        "voto accesible",
+                                        "discapacidad intelectual"
+                                    ],
+                      "resumen":  "Plena inclusión ayuda a que colegios electorales de toda España tengan señales que hagan más accesible el voto a las personas con discapacidad intelectual, y difunde guías de voto en lectura fácil para el 29-N.",
+                      "para_aspm":  "Se puede compartir el material en lectura fácil con los socios antes del 29-N.",
+                      "url":  "https://www.plenainclusion.org/noticias/plena-inclusion-ayuda-a-que-colegios-electorales-de-toda-espana-cuenten-con-senales-para-hacer-mas-accesible-el-voto-a-las-personas-con-discapacidad-intelectual/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-15"
+                  },
+                  {
+                      "id":  "i5f3f9a245b4c",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "FEDER reclama en el European Health Summit una innovación en enfermedades raras centrada en las personas",
+                      "entidad":  "FEDER",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "10 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "incidencia",
+                                        "innovación",
+                                        "participación de pacientes"
+                                    ],
+                      "resumen":  "En el European Health Summit: Rare Diseases Edition, celebrado en Madrid, FEDER pidió que la innovación llegue a la práctica, con diagnósticos más rápidos y tratamientos accesibles para todos. También reclamó que las personas afectadas participen de forma efectiva en las decisiones de investigación y que los resultados se midan por su impacto en la calidad de vida.",
+                      "para_aspm":  null,
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/participamos-en-el-european-health-summit-para-reivindicar-una-innovacion-en-enfermedades-raras-centrada-en-las-personas",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-15"
+                  },
+                  {
+                      "id":  "ife09f6f193db",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Fundación FEDER resuelve su X Convocatoria de Ayudas a la Investigación: 550.000 euros para 22 proyectos",
+                      "entidad":  "Fundación FEDER",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "12 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "investigación",
+                                        "resolución",
+                                        "FEDER"
+                                    ],
+                      "resumen":  "Fundación FEDER ha resuelto su X Convocatoria de Ayudas a la Investigación con 550.000 euros para 22 proyectos: diagnóstico (6), tratamiento (7), enfermedades de prevalencia muy baja (6) e investigación psicológica y social (3). La noticia no cita proyectos de neurodesarrollo ni de Phelan-McDermid.",
+                      "para_aspm":  "Conviene revisar la resolución completa por si hay algún proyecto sobre neurodesarrollo y como referencia para la XI convocatoria.",
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/fundacion-feder-resuelve-su-x-convocatoria-de-ayudas-la-investigacion-con-una-dotacion-de-550000-euros-para-impulsar-22-proyectos",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-15"
+                  },
+                  {
+                      "id":  "i392cef7c89b8",
+                      "seccion":  "investigacion",
+                      "grupo":  "",
+                      "titulo":  "Revisión: la vía del IGF-1 como biomarcador y diana de tratamiento en autismo y síndromes como el PMS",
+                      "entidad":  "Neuroscience \u0026 Biobehavioral Reviews",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Publicado en línea el 2 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "revisión",
+                                        "IGF-1",
+                                        "tratamientos"
+                                    ],
+                      "resumen":  "Una revisión repasa lo que se sabe del IGF-1 y el IGF-2 en el autismo y en síndromes genéticos como Rett, Angelman, X frágil y Phelan-McDermid. Concluye que el IGF-1 es el que tiene más respaldo clínico, sobre todo en Rett y en PMS, pero recuerda que los estudios son pequeños, los biomarcadores poco uniformes y faltan datos de seguridad a largo plazo.",
+                      "para_aspm":  "Da contexto a las familias sobre por qué se ensayan fármacos de la familia del IGF-1 (como NNZ-2591) en el PMS, sin prometer resultados.",
+                      "url":  "https://pubmed.ncbi.nlm.nih.gov/42971337/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-15"
                   }
               ]
 };
