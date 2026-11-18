@@ -1,0 +1,46 @@
+[
+    {
+        "id":  "iadccc6015c60",
+        "seccion":  "sector",
+        "grupo":  "federaciones",
+        "titulo":  "FEDER publica una guía divulgativa sobre genómica y diagnóstico de las enfermedades raras",
+        "entidad":  "Fundación FEDER",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "2026-11-17",
+        "importe":  null,
+        "etiquetas":  [
+                          "genómica",
+                          "diagnóstico",
+                          "guía para familias"
+                      ],
+        "resumen":  "Por la Semana de la Ciencia, la Fundación FEDER publica el CuadERno de investigación «Genómica, el camino al diagnóstico», pensado para pacientes y familias. Explica qué pruebas genéticas ofrece el Sistema Nacional de Salud (catálogo común de pruebas genéticas y genómicas), cómo leer los resultados y las variantes, y advierte de que un resultado negativo o no concluyente no siempre descarta una causa genética. También presenta el proyecto IMPaCT GENÓMICA.",
+        "para_aspm":  "Útil para el servicio de información y orientación a familias que esperan o confirman un diagnóstico genético; se puede enlazar en la web y en redes.",
+        "url":  "https://www.enfermedades-raras.org/actualidad/noticias/semana-de-la-ciencia-2026-lanzamos-un-nuevo-cuaderno-de-investigacion-para-acercar-la-genomica-y-su-papel-en-el-diagnostico-de-las-enfermedades-raras",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-18"
+    },
+    {
+        "id":  "i4aa4cb96a00a",
+        "seccion":  "investigacion",
+        "grupo":  "",
+        "titulo":  "MB-204, un fármaco experimental, mejora conductas en ratones con alteración de Shank3 (comunicado de la empresa)",
+        "entidad":  "Marvel Biosciences",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "2026-11-10",
+        "importe":  null,
+        "etiquetas":  [
+                          "estudio en ratones",
+                          "comunicado de empresa",
+                          "sin revisión por pares"
+                      ],
+        "resumen":  "MB-204 deriva de un fármaco para el párkinson y actúa sobre los receptores de adenosina A2a. En ratones con una alteración de Shank3 (modelo del PMS), la dosis alta devolvió a niveles normales seis medidas de conducta social y de memoria, cosa que no logró el fármaco original. El titular habla de datos «finales», pero el propio texto dice que son parte de los datos preliminares; es una nota de prensa de la empresa, difundida con promoción pagada y no publicada en una revista. La empresa prepara un primer ensayo en personas (fase 1), sin fecha.",
+        "para_aspm":  "Si alguna familia pregunta, explicar que es una fase muy temprana, solo en ratones y sin publicación científica: no supone un tratamiento cercano.",
+        "url":  "https://investingnews.com/marvel-announces-final-shank3-data-mb-204-highly-effective-at-reversing-autism-behaviours/",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-18"
+    }
+]
