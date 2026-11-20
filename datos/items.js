@@ -1,6 +1,7 @@
 window.BOLETIN = {
-    "actualizado":  "2026-11-19 13:22",
+    "actualizado":  "2026-11-20 08:37",
     "ediciones":  [
+                      "2026-11-20",
                       "2026-11-19",
                       "2026-11-18",
                       "2026-11-17",
@@ -3036,8 +3037,6 @@ window.BOLETIN = {
                       "url":  "https://tramits.gencat.cat/ca/tramits/tramits-temes/Subvencions-per-al-foment-de-la-salut-i-el-suport-als-pacients-i-les-families",
                       "primera_edicion":  "2026-11-12",
                       "url_bases":  "https://irsjd.org/media/upload/domain_3/pdf/Bases_1699864517.pdf",
-                      "estado":  "proxima",
-                      "plazo":  "Por confirmar: a 13-11-2026 la convocatoria 2027 no está publicada en el DOGC. La de 2026 (Resolució SLT/4321/2025) salió en el DOGC el 1-12-2025 con 15 días hábiles. Es probable que la de 2027 salga entre finales de noviembre y diciembre de 2026, con un plazo igual de corto.",
                       "requisitos":  {
                                          "beneficiarios":  "Entidades privadas sin ánimo de lucro que trabajen en el ámbito de la salud (bases: Ordre SLT/119/2022, DOGC 8673 de 23-5-2022, modificada por la Ordre SLT/233/2022)",
                                          "requisitos_entidad":  "Que los estatutos incluyan la actividad. Constituida al menos 2 años antes de la convocatoria e inscrita en el registro que corresponda. Medios humanos y materiales propios. Cuentas anuales accesibles al público. Si procede, estatutos adaptados a la Llei 4/2008 del Codi civil de Catalunya. Cumplir la Llei 1/1998 de política lingüística. Perspectiva de género en el proyecto. Adhesión al código ético. Certificado de delitos sexuales del personal que trate con menores. Estar al día según el art. 13 de la Ley General de Subvenciones.",
@@ -3064,7 +3063,9 @@ window.BOLETIN = {
                                                         ],
                                          "plazo_presentacion":  "Lo fija cada convocatoria: en 2026 fueron 15 días hábiles desde el día siguiente a la publicación en el DOGC, hasta las 14:00. La actividad se ejecuta durante el año de la convocatoria y se justifica antes del 1 de marzo del año siguiente, con informe de auditoría si la subvención es de 60.000 € o más.",
                                          "forma_presentacion":  "Solo telemática, con los formularios obligatorios de Tràmits gencat. Una solicitud presentada por otro canal se da por no presentada."
-                                     }
+                                     },
+                      "estado":  "proxima",
+                      "plazo":  "Por confirmar: a 20-11-2026 la convocatoria 2027 sigue sin publicarse en el DOGC ni en la BDNS. El 18-11 Salut registró en la BDNS otras dos convocatorias 2027 con las mismas bases (Ordre SLT/119/2022), así que es probable que salga a finales de noviembre o en diciembre, con unos 15 días hábiles. Requisito: entidad constituida al menos dos años antes de la convocatoria. Conviene preparar ya la documentación."
                   },
                   {
                       "id":  "ie23fb59b532c",
@@ -4212,6 +4213,114 @@ window.BOLETIN = {
                       "url_bases":  null,
                       "requisitos":  null,
                       "primera_edicion":  "2026-11-19"
+                  },
+                  {
+                      "id":  "ia1c643453f15",
+                      "seccion":  "legislacion",
+                      "grupo":  "autonomica",
+                      "titulo":  "Madrid abre la consulta pública sobre ayudas de hasta 4.000 € al año para que niños de 6 a 12 años sigan con sus terapias",
+                      "entidad":  "Comunidad de Madrid, Consejería de Familia, Juventud y Asuntos Sociales",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Consulta abierta el 10 de noviembre de 2026 (plazo por confirmar)",
+                      "importe":  "Hasta 4.000 € al año por menor; 10 millones de euros al año",
+                      "etiquetas":  [
+                                        "consulta pública",
+                                        "atención temprana",
+                                        "Madrid"
+                                    ],
+                      "resumen":  "Madrid ha abierto la consulta pública de la norma que regulará ayudas directas para niños de 6 a 12 años con discapacidad reconocida que necesitan seguir con terapia de atención temprana, que hasta ahora el servicio público solo cubre hasta los 6 años. Prevé unos 2.500 beneficiarios y que las ayudas empiecen en el primer trimestre de 2027.",
+                      "para_aspm":  "Es un modelo que se puede pedir en otras comunidades para los niños con PMS que siguen necesitando terapia después de los 6 años; si hay familias socias en Madrid, conviene enviar aportaciones a la consulta.",
+                      "url":  "https://vivirediciones.es/?p=1150793",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-20"
+                  },
+                  {
+                      "id":  "i1f0af679e98a",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "La Plataforma del Tercer Sector pide ante el 29-N dejar atrás la polarización y dar voz real a la sociedad civil",
+                      "entidad":  "Plataforma del Tercer Sector",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "15 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "29-N",
+                                        "incidencia",
+                                        "tercer sector"
+                                    ],
+                      "resumen":  "Ante las elecciones del 29-N, la Plataforma del Tercer Sector pide superar la polarización, reforzar la cohesión social y una relación estable con las instituciones en la que el tercer sector tenga capacidad de propuesta, con los derechos sociales por encima de las disputas entre partidos.",
+                      "para_aspm":  "Sirve como argumento común del tercer sector para los mensajes de incidencia de la ASPM ante el nuevo Gobierno.",
+                      "url":  "https://sid-inico.usal.es/noticias/el-tercer-sector-pide-superar-la-polarizacion-politica-y-extender-la-cohesion-social/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-20"
+                  },
+                  {
+                      "id":  "i736a8fdfa452",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Programa de Liderazgo Juvenil 2027-2028 de Rare Diseases International",
+                      "entidad":  "Rare Diseases International (RDI), difundido por FEDER",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Difundido el 19 de noviembre de 2026; candidaturas hasta el 22 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "liderazgo joven"
+                                    ],
+                      "resumen":  "Programa de dos años, en inglés, para jóvenes de 21 a 30 años del movimiento de enfermedades raras (pacientes, familiares, cuidadores o activistas), con formación en liderazgo e incidencia, mentorías y participación en foros internacionales. Se solicita con un formulario y un vídeo de hasta 90 segundos; tienen prioridad las candidaturas de entidades miembro de RDI.",
+                      "para_aspm":  "Solo si algún joven del entorno de la asociación tiene interés: el plazo acaba el 22 de noviembre.",
+                      "url":  "https://www.rarediseasesinternational.org/rdi-youth-leadership-programme/",
+                      "url_bases":  "https://www.rarediseasesinternational.org/wp-content/uploads/2026/10/RDI_YouthLeadershipProgramme_ToR_2026.pdf",
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-20"
+                  },
+                  {
+                      "id":  "i4463b5b746ff",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Segunda edición de «La Gran Campanada Solidaria» de FEDER y Fundación Solidaridad Carrefour",
+                      "entidad":  "FEDER y Fundación Solidaridad Carrefour",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Anunciada el 17 de noviembre de 2026",
+                      "importe":  "1,99 € por bola de Navidad",
+                      "etiquetas":  [
+                                        "campaña",
+                                        "Navidad",
+                                        "infancia"
+                                    ],
+                      "resumen":  "Carrefour vende una edición limitada de bolas de Navidad con personajes de Disney, Pixar, Marvel y Star Wars a 1,99 €, y lo recaudado va a proyectos de FEDER para niños con enfermedades raras y sus familias.",
+                      "para_aspm":  "Se puede difundir en redes como campaña del movimiento FEDER en Navidad, y es un ejemplo de producto solidario de temporada para la futura tienda online.",
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/volvemos-unirnos-fundacion-solidaridad-carrefour-en-la-segunda-edicion-de-la-gran-campanada-solidaria-favor-de-la-infancia-con-enfermedades-raras",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-20"
+                  },
+                  {
+                      "id":  "iaa950524353f",
+                      "seccion":  "sector",
+                      "grupo":  "autismo",
+                      "titulo":  "Autismo España supera las 200 entidades y empieza a integrar a las asociaciones de FESPAU",
+                      "entidad":  "Confederación Autismo España",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Asamblea General Extraordinaria del 14 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "movimiento asociativo",
+                                        "FESPAU",
+                                        "gobernanza"
+                                    ],
+                      "resumen":  "En su asamblea extraordinaria, Autismo España aprobó la entrada de siete entidades y llega a 202 miembros. Cinco vienen de FESPAU, que deja de ser federación para convertirse en una fundación vinculada a Autismo España; el resto de sus entidades se integrarán en los próximos meses.",
+                      "para_aspm":  "El movimiento del autismo se concentra en un solo interlocutor estatal, algo a tener en cuenta en alianzas e incidencia.",
+                      "url":  "https://autismo.org.es/actualidad/noticias/nuevas-entidades-asamblea-extraordinaria/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-20"
                   }
               ]
 };
