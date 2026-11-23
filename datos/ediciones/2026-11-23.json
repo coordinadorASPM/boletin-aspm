@@ -1,0 +1,90 @@
+[
+    {
+        "id":  "ibb35a2909d3f",
+        "seccion":  "legislacion",
+        "grupo":  "espana",
+        "titulo":  "El Congreso convalida los RDL 35/2026 (familias) y 36/2026 (dependencia): ya están en vigor de forma definitiva",
+        "entidad":  "Congreso de los Diputados (Diputación Permanente) / Ministerio de Derechos Sociales",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "Convalidados el 2026-11-18; acuerdo del RDL 36/2026 publicado en el BOE el 2026-11-20 (BOE-A-2026-24297)",
+        "importe":  null,
+        "etiquetas":  [
+                          "publicado",
+                          "dependencia",
+                          "familias"
+                      ],
+        "resumen":  "Con las Cortes disueltas, la Diputación Permanente del Congreso convalidó el 18 de noviembre los dos reales decretos-ley aprobados el 10 de noviembre: el 35/2026 de apoyo a familias (beneficios de familia numerosa ampliados, Fondo de Garantía de Alimentos extendido a hijos mayores con discapacidad de al menos el 65 % o con dependencia reconocida, protección reforzada para familias monoparentales con un hijo con grado III de dependencia) y el 36/2026 de despliegue de la reforma de la dependencia (teleasistencia para todos los grados, ayuda a domicilio en el entorno comunitario, prestación compartida). La convalidación del 36/2026 se publicó en el BOE el 20 de noviembre.",
+        "para_aspm":  "Ya no hay riesgo de que decaigan con el cambio de legislatura: se puede informar a las familias de estas medidas como vigentes.",
+        "url":  "https://www.dsca.gob.es/es/comunicacion/notas-prensa/congreso-convalida-real-decreto-ley-que-crea-titulo-familias",
+        "url_bases":  "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-24297",
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-23"
+    },
+    {
+        "id":  "i0109fc21b789",
+        "seccion":  "sector",
+        "grupo":  "federaciones",
+        "titulo":  "Plena inclusión pide una atención temprana pública, gratuita e igual en todas las comunidades autónomas",
+        "entidad":  "Plena inclusión España",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "2026-11-20 (Día Mundial de la Infancia)",
+        "importe":  null,
+        "etiquetas":  [
+                          "atención temprana",
+                          "incidencia",
+                          "familias"
+                      ],
+        "resumen":  "Con la campaña #AtenciónALasFamilias, Plena inclusión reclama que la atención temprana (0-6 años) sea accesible, pública y gratuita sin depender de la comunidad autónoma, y que las familias decidan los apoyos con los equipos profesionales. Se apoya en su informe de situación, que detecta diferencias entre comunidades en criterios de acceso, tiempos de respuesta y apoyos, y recuerda que el movimiento asociativo gestiona cerca del 75% de los servicios estudiados.",
+        "para_aspm":  "Argumentario útil para el servicio de información y orientación a familias con menores recién diagnosticados y para sumarse a la incidencia ante el nuevo Gobierno tras el 29-N.",
+        "url":  "https://www.plenainclusion.org/noticias/el-derecho-a-la-atencion-temprana-debe-ser-accesible-publico-y-gratuito-para-todas-las-familias-de-menores-con-discapacidad-intelectual-y-del-desarrollo-sin-depender-de-la-comunidad-autonoma-en-la-qu/",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-23"
+    },
+    {
+        "id":  "i7e33e6e11853",
+        "seccion":  "sector",
+        "grupo":  "asociaciones",
+        "titulo":  "Una distribuidora dona 8.000 € a la asociación de Rett con un reto solidario en bicicleta",
+        "entidad":  "Asociación Española del Síndrome de Rett",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "2026-11-17",
+        "importe":  "8.000 €",
+        "etiquetas":  [
+                          "captación de fondos",
+                          "empresas",
+                          "reto deportivo"
+                      ],
+        "resumen":  "Una empresa de distribución organizó en sus jornadas anuales con socios la iniciativa «Kilómetros Solidarios»: un responsable de RSC recorrió 1.053 km en bicicleta y la empresa convirtió el reto en una donación de 8.000 € a la asociación de Rett. La noticia no explica cómo se elige la entidad beneficiaria.",
+        "para_aspm":  "Modelo replicable para proponer a empresas colaboradoras un reto deportivo con donación ligado a «Run Like a Hero».",
+        "url":  "https://rett.es/2026/11/17/auna-distribucion-dona-8-000-euros-a-la-asociacion-espanola-del-sindrome-de-rett-gracias-a-la-iniciativa-kilometros-solidarios/",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-23"
+    },
+    {
+        "id":  "id6001bbc8ffa",
+        "seccion":  "investigacion",
+        "grupo":  "",
+        "titulo":  "En ratas sin Shank3, el desarrollo social se conserva pero fallan las funciones ejecutivas",
+        "entidad":  "bioRxiv (preprint, indexado en PubMed)",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "Preprint de agosto de 2026, recogido en PubMed esta semana",
+        "importe":  null,
+        "etiquetas":  [
+                          "preprint",
+                          "modelo animal (rata)",
+                          "cognición"
+                      ],
+        "resumen":  "Un estudio en ratas con pérdida parcial o total de Shank3, seguidas desde que nacen hasta la edad adulta, encuentra reflejos y desarrollo social normales, problemas leves de memoria a corto plazo y de coordinación en la etapa juvenil y, en la edad adulta, muchos errores en tareas de aprendizaje y de cambio de regla (funciones ejecutivas). Los autores proponen este modelo para estudiar la discapacidad cognitiva y buscar momentos adecuados para tratar.",
+        "para_aspm":  "Es investigación básica en animales y todavía sin revisión por pares: sirve para entender el PMS, no tiene aplicación inmediata para las familias.",
+        "url":  "https://pubmed.ncbi.nlm.nih.gov/43067741/",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-23"
+    }
+]

@@ -1,6 +1,7 @@
 window.BOLETIN = {
-    "actualizado":  "2026-11-20 08:37",
+    "actualizado":  "2026-11-23 08:10",
     "ediciones":  [
+                      "2026-11-23",
                       "2026-11-20",
                       "2026-11-19",
                       "2026-11-18",
@@ -3036,36 +3037,27 @@ window.BOLETIN = {
                       "para_aspm":  "Conviene vigilar el DOGC en las próximas semanas y comprobar en las bases si la ASPM, por su actividad en Cataluña, puede presentarse; las bases de 2026 se pueden usar como referencia.",
                       "url":  "https://tramits.gencat.cat/ca/tramits/tramits-temes/Subvencions-per-al-foment-de-la-salut-i-el-suport-als-pacients-i-les-families",
                       "primera_edicion":  "2026-11-12",
-                      "url_bases":  "https://irsjd.org/media/upload/domain_3/pdf/Bases_1699864517.pdf",
-                      "requisitos":  {
-                                         "beneficiarios":  "Entidades privadas sin ánimo de lucro que trabajen en el ámbito de la salud (bases: Ordre SLT/119/2022, DOGC 8673 de 23-5-2022, modificada por la Ordre SLT/233/2022)",
-                                         "requisitos_entidad":  "Que los estatutos incluyan la actividad. Constituida al menos 2 años antes de la convocatoria e inscrita en el registro que corresponda. Medios humanos y materiales propios. Cuentas anuales accesibles al público. Si procede, estatutos adaptados a la Llei 4/2008 del Codi civil de Catalunya. Cumplir la Llei 1/1998 de política lingüística. Perspectiva de género en el proyecto. Adhesión al código ético. Certificado de delitos sexuales del personal que trate con menores. Estar al día según el art. 13 de la Ley General de Subvenciones.",
-                                         "ambito_territorial":  "Actuaciones en Cataluña; se valora el alcance supramunicipal",
-                                         "actividades_financiables":  "Promoción de la salud y apoyo a personas enfermas, a quienes las cuidan y a sus familias, sobre todo personas con discapacidad, menores y personas con necesidades de salud complejas. Las enfermedades minoritarias son área prioritaria (edición 2026).",
-                                         "gastos_subvencionables":  "Solo gasto corriente: personal, materiales y consumibles, seguros, publicidad del proyecto, dietas y desplazamientos con límites, servicios externos, alquiler de locales y costes indirectos justificados. No se paga inversión ni bienes inventariables (sí su amortización). En 2026 se podía subcontratar hasta el 70 %; la auditoría cuenta como gasto hasta el 3 % de lo solicitado.",
-                                         "importe_max":  "Sin máximo por proyecto. Se concede un porcentaje de lo solicitado según la puntuación (anexo 4 de las bases; con 100 puntos, el 100 %). En la edición 2026 había 4 M€ en total, con un anticipo del 80 %.",
-                                         "cofinanciacion":  "Puede cubrir todo el coste, pero la cantidad concedida suele ser una parte de lo solicitado. Puntúa tener más del 25 % de recursos propios. Hay que gastar y justificar al menos el 50 % del presupuesto aceptado o se pierde toda la subvención.",
-                                         "criterios_valoracion":  "Máximo 100 y mínimo 61 puntos. Población y territorio de Cataluña: 20. Complementar la cartera pública de servicios de salud (SISCAT): 20. Viabilidad: 30 (recursos, experiencia previa, definición e indicadores). Perspectiva de género e interseccionalidad: 10. Encaje con el Pla de salut y los planes del Departament de Salut, e innovación: 20.",
-                                         "documentacion":  "Formulario de solicitud con declaración responsable, que incluye el acuerdo del órgano de gobierno de pedir la subvención. Memoria del proyecto según el modelo oficial. Presupuesto anual de la entidad. Una solicitud por proyecto.",
-                                         "formulario":  [
-                                                            "Área de actuación en salud",
-                                                            "Fechas y lugares de ejecución",
-                                                            "Importe solicitado",
-                                                            "Objetivo general y específicos",
-                                                            "Perspectiva de género",
-                                                            "Análisis interseccional de desigualdades",
-                                                            "Actuaciones",
-                                                            "Población destinataria y nº estimado de beneficiarios",
-                                                            "Evaluación e indicadores",
-                                                            "Recursos humanos y materiales",
-                                                            "Experiencia de la entidad",
-                                                            "Presupuesto de gastos e ingresos por conceptos y fuentes de financiación"
-                                                        ],
-                                         "plazo_presentacion":  "Lo fija cada convocatoria: en 2026 fueron 15 días hábiles desde el día siguiente a la publicación en el DOGC, hasta las 14:00. La actividad se ejecuta durante el año de la convocatoria y se justifica antes del 1 de marzo del año siguiente, con informe de auditoría si la subvención es de 60.000 € o más.",
-                                         "forma_presentacion":  "Solo telemática, con los formularios obligatorios de Tràmits gencat. Una solicitud presentada por otro canal se da por no presentada."
-                                     },
                       "estado":  "proxima",
-                      "plazo":  "Por confirmar: a 20-11-2026 la convocatoria 2027 sigue sin publicarse en el DOGC ni en la BDNS. El 18-11 Salut registró en la BDNS otras dos convocatorias 2027 con las mismas bases (Ordre SLT/119/2022), así que es probable que salga a finales de noviembre o en diciembre, con unos 15 días hábiles. Requisito: entidad constituida al menos dos años antes de la convocatoria. Conviene preparar ya la documentación."
+                      "plazo":  "Por confirmar: 15 días hábiles desde el día siguiente a su publicación en el DOGC (firmada el 2026-11-18 y registrada en la BDNS 943529 el 2026-11-20; aún sin publicar en el DOGC)",
+                      "url_bases":  "https://www.infosubvenciones.es/bdnstrans/api/convocatorias/documentos?idDocumento=1559759",
+                      "requisitos":  {
+                                         "beneficiarios":  "Entidades privadas sin ánimo de lucro (personas jurídicas sin actividad económica) que realicen actuaciones de fomento de la salud y apoyo a pacientes y familias",
+                                         "requisitos_entidad":  "Base 3 de la Orden SLT/119/2022 (en convocatorias anteriores: constituida al menos 2 años antes, inscrita en su registro, estatutos adaptados a la Ley 4/2008, al corriente con Hacienda y Seguridad Social). Declaración responsable del art. 92.2 sexies TRLFPC y cumplimiento de la cuota de reserva de personas con discapacidad",
+                                         "ambito_territorial":  "Cataluña (actividades realizadas en Cataluña)",
+                                         "actividades_financiables":  "Fomento de la salud y apoyo a personas enfermas, cuidadores y familias, en especial personas con discapacidad, niños y adolescentes y necesidades de salud complejas. Áreas prioritarias del Plan de salud, entre ellas las enfermedades minoritarias y las condiciones crónicas. Ejecución durante 2027",
+                                         "gastos_subvencionables":  "Base 5 de la Orden SLT/119/2022; subcontratación hasta el 70 %; auditoría imputable hasta el 3 % de lo solicitado",
+                                         "importe_max":  "Según base 4 (en función de puntuación, crédito y coste del proyecto). Dotación total 4.000.000 € (3,2 M€ en 2027 y 0,8 M€ en 2028)",
+                                         "cofinanciacion":  "La subvención no puede superar el coste de la actividad; se valora tener más del 25 % de recursos propios y financiación ajena al sistema público",
+                                         "criterios_valoracion":  "Población y ámbito territorial (20), complementariedad con la cartera del SISCAT (20; 0 si reproduce un servicio incluido), viabilidad (30), perspectiva de género e interseccionalidad (10), adecuación al Plan de salud y otros planes (20). Mínimo 61 puntos",
+                                         "documentacion":  "Memoria del proyecto según modelo y previsión de presupuesto de la entidad para 2027; una solicitud por proyecto",
+                                         "formulario":  [
+                                                            "Formulario de solicitud de Tràmits gencat",
+                                                            "Memoria del proyecto (modelo)",
+                                                            "Previsión de presupuesto de la entidad"
+                                                        ],
+                                         "plazo_presentacion":  "15 días hábiles desde el día siguiente a la publicación en el DOGC (pendiente)",
+                                         "forma_presentacion":  "Solo telemática, con los formularios específicos de Tràmits gencat y firma con certificado de la entidad"
+                                     }
                   },
                   {
                       "id":  "ie23fb59b532c",
@@ -4321,6 +4313,94 @@ window.BOLETIN = {
                       "url_bases":  null,
                       "requisitos":  null,
                       "primera_edicion":  "2026-11-20"
+                  },
+                  {
+                      "id":  "ibb35a2909d3f",
+                      "seccion":  "legislacion",
+                      "grupo":  "espana",
+                      "titulo":  "El Congreso convalida los RDL 35/2026 (familias) y 36/2026 (dependencia): ya están en vigor de forma definitiva",
+                      "entidad":  "Congreso de los Diputados (Diputación Permanente) / Ministerio de Derechos Sociales",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Convalidados el 2026-11-18; acuerdo del RDL 36/2026 publicado en el BOE el 2026-11-20 (BOE-A-2026-24297)",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "publicado",
+                                        "dependencia",
+                                        "familias"
+                                    ],
+                      "resumen":  "Con las Cortes disueltas, la Diputación Permanente del Congreso convalidó el 18 de noviembre los dos reales decretos-ley aprobados el 10 de noviembre: el 35/2026 de apoyo a familias (beneficios de familia numerosa ampliados, Fondo de Garantía de Alimentos extendido a hijos mayores con discapacidad de al menos el 65 % o con dependencia reconocida, protección reforzada para familias monoparentales con un hijo con grado III de dependencia) y el 36/2026 de despliegue de la reforma de la dependencia (teleasistencia para todos los grados, ayuda a domicilio en el entorno comunitario, prestación compartida). La convalidación del 36/2026 se publicó en el BOE el 20 de noviembre.",
+                      "para_aspm":  "Ya no hay riesgo de que decaigan con el cambio de legislatura: se puede informar a las familias de estas medidas como vigentes.",
+                      "url":  "https://www.dsca.gob.es/es/comunicacion/notas-prensa/congreso-convalida-real-decreto-ley-que-crea-titulo-familias",
+                      "url_bases":  "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-24297",
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-23"
+                  },
+                  {
+                      "id":  "i0109fc21b789",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Plena inclusión pide una atención temprana pública, gratuita e igual en todas las comunidades autónomas",
+                      "entidad":  "Plena inclusión España",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "2026-11-20 (Día Mundial de la Infancia)",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "atención temprana",
+                                        "incidencia",
+                                        "familias"
+                                    ],
+                      "resumen":  "Con la campaña #AtenciónALasFamilias, Plena inclusión reclama que la atención temprana (0-6 años) sea accesible, pública y gratuita sin depender de la comunidad autónoma, y que las familias decidan los apoyos con los equipos profesionales. Se apoya en su informe de situación, que detecta diferencias entre comunidades en criterios de acceso, tiempos de respuesta y apoyos, y recuerda que el movimiento asociativo gestiona cerca del 75% de los servicios estudiados.",
+                      "para_aspm":  "Argumentario útil para el servicio de información y orientación a familias con menores recién diagnosticados y para sumarse a la incidencia ante el nuevo Gobierno tras el 29-N.",
+                      "url":  "https://www.plenainclusion.org/noticias/el-derecho-a-la-atencion-temprana-debe-ser-accesible-publico-y-gratuito-para-todas-las-familias-de-menores-con-discapacidad-intelectual-y-del-desarrollo-sin-depender-de-la-comunidad-autonoma-en-la-qu/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-23"
+                  },
+                  {
+                      "id":  "i7e33e6e11853",
+                      "seccion":  "sector",
+                      "grupo":  "asociaciones",
+                      "titulo":  "Una distribuidora dona 8.000 € a la asociación de Rett con un reto solidario en bicicleta",
+                      "entidad":  "Asociación Española del Síndrome de Rett",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "2026-11-17",
+                      "importe":  "8.000 €",
+                      "etiquetas":  [
+                                        "captación de fondos",
+                                        "empresas",
+                                        "reto deportivo"
+                                    ],
+                      "resumen":  "Una empresa de distribución organizó en sus jornadas anuales con socios la iniciativa «Kilómetros Solidarios»: un responsable de RSC recorrió 1.053 km en bicicleta y la empresa convirtió el reto en una donación de 8.000 € a la asociación de Rett. La noticia no explica cómo se elige la entidad beneficiaria.",
+                      "para_aspm":  "Modelo replicable para proponer a empresas colaboradoras un reto deportivo con donación ligado a «Run Like a Hero».",
+                      "url":  "https://rett.es/2026/11/17/auna-distribucion-dona-8-000-euros-a-la-asociacion-espanola-del-sindrome-de-rett-gracias-a-la-iniciativa-kilometros-solidarios/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-23"
+                  },
+                  {
+                      "id":  "id6001bbc8ffa",
+                      "seccion":  "investigacion",
+                      "grupo":  "",
+                      "titulo":  "En ratas sin Shank3, el desarrollo social se conserva pero fallan las funciones ejecutivas",
+                      "entidad":  "bioRxiv (preprint, indexado en PubMed)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Preprint de agosto de 2026, recogido en PubMed esta semana",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "preprint",
+                                        "modelo animal (rata)",
+                                        "cognición"
+                                    ],
+                      "resumen":  "Un estudio en ratas con pérdida parcial o total de Shank3, seguidas desde que nacen hasta la edad adulta, encuentra reflejos y desarrollo social normales, problemas leves de memoria a corto plazo y de coordinación en la etapa juvenil y, en la edad adulta, muchos errores en tareas de aprendizaje y de cambio de regla (funciones ejecutivas). Los autores proponen este modelo para estudiar la discapacidad cognitiva y buscar momentos adecuados para tratar.",
+                      "para_aspm":  "Es investigación básica en animales y todavía sin revisión por pares: sirve para entender el PMS, no tiene aplicación inmediata para las familias.",
+                      "url":  "https://pubmed.ncbi.nlm.nih.gov/43067741/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-23"
                   }
               ]
 };
