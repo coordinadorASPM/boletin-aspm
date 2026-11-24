@@ -167,7 +167,7 @@
     const mt = /#t=([0-9a-f-]{36})/.exec(location.hash);
     if (m) abrir(m[1]); else if (md) abrirDoc(md[1]);
     else if (mt && esCoord()) abrirTarea(mt[1]);
-    else { S.vista = esCoord() ? 'tareas' : 'pendientes'; pintar(); }
+    else { S.vista = esCoord() && location.hash === '#tareas' ? 'tareas' : 'pendientes'; pintar(); }
   }
 
   async function salir(msg) {
@@ -298,9 +298,11 @@
     const pendMias = pendMiasCert + docsMios;
     const pendTodas = S.certs.filter(c => c.estado === 'pendiente').length + S.docs.filter(d => d.estado === 'revision' || d.estado === 'pendiente').length;
     const sinArchivar = S.certs.filter(c => c.estado === 'firmado').length + S.docs.filter(d => d.tipo === 'acta' && d.estado === 'firmado').length;
-    document.title = (pendMias ? '(' + pendMias + ') ' : '') + 'Certificados y firmas ASPM';
+    // Desde el 2026-11-24 las tareas son una sección aparte del menú (../ → «Tareas»), sin las pestañas de certificados
+    const modoTareas = S.vista === 'tareas' || S.vista === 'tarea';
+    document.title = modoTareas ? 'Tareas ASPM' : (pendMias ? '(' + pendMias + ') ' : '') + 'Certificados y firmas ASPM';
 
-    const tabs = esCoord() ? [['tareas', 'Tareas', tareasUrgentes()]] : [];
+    const tabs = [];
     tabs.push(['pendientes', firmante() ? 'Pendientes' : 'En curso', firmante() ? pendMias : pendTodas]);
     if (gestiona()) tabs.push(['nuevo', 'Nuevo certificado', 0]);
     tabs.push(['todos', 'Certificados', 0], ['documentos', 'Documentos y actas', firmante() ? 0 : docsMios], ['perfil', 'Mi perfil', 0]);
@@ -310,13 +312,13 @@
     $('#app').innerHTML = `
       <header class="top"><div class="wrap">
         <span class="logo"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></span>
-        <div class="titulo"><h1>Certificados y firmas</h1><p>Certificados de donación, documentos para firmar y actas de la junta</p></div>
+        <div class="titulo">${modoTareas ? '<h1>Tareas</h1><p>Tus tareas y las del equipo, ordenadas por urgencia</p>' : '<h1>Certificados y firmas</h1><p>Certificados de donación, documentos para firmar y actas de la junta</p>'}</div>
         <div class="quien">${S.yo.rol === 'coordinadora' ? '<a class="btn" href="../">Menú</a>' : ''}<span class="chip">${esc(ROL[S.yo.rol])} · ${esc(S.yo.email)}</span>
           <button class="btn sutil" type="button" id="btnSalir">Salir</button></div>
       </div></header>
-      <nav class="vistas" aria-label="Secciones"><div class="wrap">
+      ${modoTareas ? '' : `<nav class="vistas" aria-label="Secciones"><div class="wrap">
         ${tabs.map(([k, t, n]) => `<button class="vista" type="button" data-v="${k}" ${actual === k ? 'aria-current="page"' : ''}>${esc(t)}${n ? `<span class="n">${n}</span>` : ''}</button>`).join('')}
-      </div></nav>
+      </div></nav>`}
       <main class="contenido wrap${S.vista === 'tareas' ? ' ancho' : ''}" id="cont"></main>`;
     $('#btnSalir').onclick = async () => { if (await puedoSalir()) salir(); };
     document.querySelectorAll('.vista').forEach(b => b.onclick = async () => {
@@ -331,7 +333,7 @@
     if (gestiona() && docsMios && !enDetalle) avisos.push(`<div class="aviso ambar">Tienes ${docsMios} acta${docsMios > 1 ? 's' : ''} pendiente${docsMios > 1 ? 's' : ''} de revisar. <button class="btn" data-ir="pendientes" type="button">Ver</button></div>`);
     if (gestiona() && !S.ajustes.apps_script_url) avisos.push(`<div class="aviso rojo">Falta conectar Google: sin eso no se envían los correos ni se archiva en Drive. <button class="btn" data-ir="ajustes" type="button">Ir a Ajustes</button></div>`);
     if (gestiona() && sinArchivar) avisos.push(`<div class="aviso rojo">${sinArchivar} documento${sinArchivar > 1 ? 's' : ''} firmado${sinArchivar > 1 ? 's' : ''} sin archivar en Drive. Ábrelo y pulsa «Archivar ahora».</div>`);
-    cont.innerHTML = avisos.join('');
+    cont.innerHTML = modoTareas ? '' : avisos.join('');
     cont.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { S.vista = b.dataset.ir; pintar(); });
 
     const zona = document.createElement('div');
