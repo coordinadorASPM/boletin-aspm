@@ -167,7 +167,7 @@
     const mt = /#t=([0-9a-f-]{36})/.exec(location.hash);
     if (m) abrir(m[1]); else if (md) abrirDoc(md[1]);
     else if (mt && esCoord()) abrirTarea(mt[1]);
-    else { S.vista = esCoord() && location.hash === '#tareas' ? 'tareas' : 'pendientes'; pintar(); }
+    else { S.vista = esCoord() && location.hash === '#tareas' ? 'tareas' : esCoord() && location.hash === '#horas' ? 'horas' : 'pendientes'; pintar(); }
   }
 
   async function salir(msg) {
@@ -300,7 +300,9 @@
     const sinArchivar = S.certs.filter(c => c.estado === 'firmado').length + S.docs.filter(d => d.tipo === 'acta' && d.estado === 'firmado').length;
     // Desde el 2026-11-24 las tareas son una sección aparte del menú (../ → «Tareas»), sin las pestañas de certificados
     const modoTareas = S.vista === 'tareas' || S.vista === 'tarea';
-    document.title = modoTareas ? 'Tareas ASPM' : (pendMias ? '(' + pendMias + ') ' : '') + 'Certificados y firmas ASPM';
+    const modoHoras = S.vista === 'horas'; // sección aparte del menú desde el 2026-11-24
+    const aparte = modoTareas || modoHoras;
+    document.title = modoHoras ? 'Horas del equipo ASPM' : modoTareas ? 'Tareas ASPM' : (pendMias ? '(' + pendMias + ') ' : '') + 'Certificados y firmas ASPM';
 
     const tabs = [];
     tabs.push(['pendientes', firmante() ? 'Pendientes' : 'En curso', firmante() ? pendMias : pendTodas]);
@@ -312,11 +314,11 @@
     $('#app').innerHTML = `
       <header class="top"><div class="wrap">
         <span class="logo"><img src="../img/logo.png" alt="Asociación Síndrome Phelan-McDermid"></span>
-        <div class="titulo">${modoTareas ? '<h1>Tareas</h1><p>Tus tareas y las del equipo, ordenadas por urgencia</p>' : '<h1>Certificados y firmas</h1><p>Certificados de donación, documentos para firmar y actas de la junta</p>'}</div>
+        <div class="titulo">${modoHoras ? '<h1>Horas del equipo</h1><p>Informe mensual de horas trabajadas y extras para la junta</p>' : modoTareas ? '<h1>Tareas</h1><p>Tus tareas y las del equipo, ordenadas por urgencia</p>' : '<h1>Certificados y firmas</h1><p>Certificados de donación, documentos para firmar y actas de la junta</p>'}</div>
         <div class="quien">${S.yo.rol === 'coordinadora' ? '<a class="btn" href="../">Menú</a>' : ''}<span class="chip">${esc(ROL[S.yo.rol])} · ${esc(S.yo.email)}</span>
           <button class="btn sutil" type="button" id="btnSalir">Salir</button></div>
       </div></header>
-      ${modoTareas ? '' : `<nav class="vistas" aria-label="Secciones"><div class="wrap">
+      ${aparte ? '' : `<nav class="vistas" aria-label="Secciones"><div class="wrap">
         ${tabs.map(([k, t, n]) => `<button class="vista" type="button" data-v="${k}" ${actual === k ? 'aria-current="page"' : ''}>${esc(t)}${n ? `<span class="n">${n}</span>` : ''}</button>`).join('')}
       </div></nav>`}
       <main class="contenido wrap${S.vista === 'tareas' ? ' ancho' : ''}" id="cont"></main>`;
@@ -333,13 +335,13 @@
     if (gestiona() && docsMios && !enDetalle) avisos.push(`<div class="aviso ambar">Tienes ${docsMios} acta${docsMios > 1 ? 's' : ''} pendiente${docsMios > 1 ? 's' : ''} de revisar. <button class="btn" data-ir="pendientes" type="button">Ver</button></div>`);
     if (gestiona() && !S.ajustes.apps_script_url) avisos.push(`<div class="aviso rojo">Falta conectar Google: sin eso no se envían los correos ni se archiva en Drive. <button class="btn" data-ir="ajustes" type="button">Ir a Ajustes</button></div>`);
     if (gestiona() && sinArchivar) avisos.push(`<div class="aviso rojo">${sinArchivar} documento${sinArchivar > 1 ? 's' : ''} firmado${sinArchivar > 1 ? 's' : ''} sin archivar en Drive. Ábrelo y pulsa «Archivar ahora».</div>`);
-    cont.innerHTML = modoTareas ? '' : avisos.join('');
+    cont.innerHTML = aparte ? '' : avisos.join('');
     cont.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => { S.vista = b.dataset.ir; pintar(); });
 
     const zona = document.createElement('div');
     cont.appendChild(zona);
     ({ pendientes: vPendientes, nuevo: vFormulario, editar: vFormulario, todos: vTodos, perfil: vPerfil, ajustes: vAjustes, detalle: vDetalle,
-       documentos: vDocumentos, nuevodoc: vNuevoDoc, nuevaacta: vNuevaActa, doc: vDoc, tareas: vTareas, tarea: vTarea }[S.vista] || vPendientes)(zona);
+       documentos: vDocumentos, nuevodoc: vNuevoDoc, nuevaacta: vNuevaActa, doc: vDoc, tareas: vTareas, tarea: vTarea, horas: esCoord() ? vHoras : vPendientes }[S.vista] || vPendientes)(zona);
   }
 
   // Si hay un acta con cambios sin guardar, pregunta antes de irse
@@ -1684,6 +1686,91 @@
   }
 
   /* ---------- Ajustes ---------- */
+  /* =================== Horas del equipo (desde el 2026-11-24, solo la coordinadora) ===================
+   * Los Excel de Bixpe se leen aquí (horas.js) y no se suben a ningún sitio. Al script de Google solo van
+   * los totales por cargo; el script escribe la hoja «Horas equipo AAAA» y exporta el mes a Excel y PDF en Drive. */
+  const CARGOS_HORAS = [['coordinadora', 'Coordinadora general'], ['trabajadora_social', 'Trabajadora social'], ['gerente_comunicacion', 'Gerente de comunicación y proyectos']];
+  const MESES_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  function finDeMes(mes) { const [a, m] = mes.split('-').map(Number); return mes + '-' + String(new Date(a, m, 0).getDate()).padStart(2, '0'); }
+  function fechaLarga(iso) { const [a, m, d] = iso.split('-').map(Number); return d + ' de ' + MESES_ES[m - 1] + ' de ' + a; }
+
+  function vHoras(el) {
+    if (!S.horas) {
+      const h = new Date(); if (h.getDate() < 15) h.setMonth(h.getMonth() - 1);
+      const mes = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0');
+      S.horas = { mes, desde: mes + '-01', hasta: finDeMes(mes), datos: {} };
+    }
+    const H = S.horas, fmt = window.HorasBixpe.fmt;
+    el.innerHTML = `<section class="panel">
+      <h2>Informe mensual de horas para la junta</h2>
+      <p class="sub">Sube el Excel de Bixpe de cada empleada. Los archivos se leen en este ordenador y no se suben a ningún sitio: a Google solo llegan los totales de cada cargo.
+        Por día, las horas extra de ${window.HorasBixpe.UMBRAL_MIN} minutos o menos no cuentan.</p>
+      <div class="error" id="errHoras" hidden></div>
+      <div class="rejilla tres">
+        <div class="campo"><label for="h_mes">Mes del informe</label><input type="month" id="h_mes" value="${H.mes}"></div>
+        <div class="campo"><label for="h_desde">Contar desde</label><input type="date" id="h_desde" value="${H.desde}"></div>
+        <div class="campo"><label for="h_hasta">Hasta</label><input type="date" id="h_hasta" value="${H.hasta}"></div>
+      </div>
+      <div class="horas-cargos">${CARGOS_HORAS.map(([k, t]) => {
+        const d = H.datos[k];
+        const tot = d && window.HorasBixpe.calcular(d.dias, H.desde, H.hasta);
+        return `<div class="horas-cargo">
+          <div><b>${esc(t)}</b>
+            <span class="ayuda">${d ? esc(d.archivo) + ' · ' + esc(d.formato) + (d.empleadas > 1 ? ' · <b>trae ' + d.empleadas + ' personas: se usa la primera</b>' : '') : 'Sin archivo'}</span>
+            ${tot ? `<span class="ayuda">${tot.diasConDatos ? 'Días con horas: del ' + esc(fechaLarga(tot.primero)) + ' al ' + esc(fechaLarga(tot.ultimo)) : 'No hay horas entre esas fechas'}${tot.diasDescartados ? ' · ' + tot.diasDescartados + ' día' + (tot.diasDescartados > 1 ? 's' : '') + ' con extras de 15 min o menos (' + fmt(tot.descartadas) + ', no cuentan)' : ''}</span>` : ''}</div>
+          <label class="btn">${d ? 'Cambiar' : 'Subir Excel'}<input type="file" accept=".xlsx,.xls" data-cargo="${k}" hidden></label>
+          ${d ? `<button class="btn sutil" type="button" data-quitar="${k}">Quitar</button>` : ''}
+        </div>`;
+      }).join('')}</div>
+      <table class="tabla-horas">
+        <thead><tr><th>Cargo</th><th>Horas en jornada</th><th>Horas extras computables</th><th>Total horas</th></tr></thead>
+        <tbody>${CARGOS_HORAS.map(([k, t]) => {
+          const d = H.datos[k], x = d && window.HorasBixpe.calcular(d.dias, H.desde, H.hasta);
+          return `<tr><td>${esc(t)}</td>${x ? `<td>${fmt(x.jornada)}</td><td>${fmt(x.extras)}</td><td>${fmt(x.jornada + x.extras)}</td>` : '<td colspan="3" class="sin">Sin datos</td>'}</tr>`;
+        }).join('')}</tbody>
+      </table>
+      <div class="acciones">
+        <button class="btn primario grande" type="button" id="btnHoras">Generar informe en Drive</button>
+        <span class="ayuda">Crea o rehace la pestaña del mes en la hoja «Horas equipo ${H.mes.slice(0, 4)}» y guarda el informe en Excel y PDF.</span>
+      </div>
+      <div id="resHoras"></div>
+    </section>`;
+    const err = m => { const e = $('#errHoras'); e.textContent = m; e.hidden = !m; };
+    $('#h_mes').onchange = e => { if (!e.target.value) return; H.mes = e.target.value; H.desde = H.mes + '-01'; H.hasta = finDeMes(H.mes); pintar(); };
+    $('#h_desde').onchange = e => { H.desde = e.target.value || H.mes + '-01'; pintar(); };
+    $('#h_hasta').onchange = e => { H.hasta = e.target.value || finDeMes(H.mes); pintar(); };
+    el.querySelectorAll('[data-quitar]').forEach(b => b.onclick = () => { delete H.datos[b.dataset.quitar]; pintar(); });
+    el.querySelectorAll('input[type=file][data-cargo]').forEach(inp => inp.onchange = async () => {
+      const f = inp.files[0]; if (!f) return;
+      try {
+        if (!window.XLSX) await cargarScript('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js');
+        const r = window.HorasBixpe.leer(await f.arrayBuffer());
+        H.datos[inp.dataset.cargo] = Object.assign(r, { archivo: f.name });
+        pintar();
+      } catch (e) { err(f.name + ': ' + e.message); }
+    });
+    $('#btnHoras').onclick = async () => {
+      err('');
+      if (H.desde > H.hasta) return err('La fecha «desde» es posterior a «hasta».');
+      if (H.desde.slice(0, 7) !== H.mes || H.hasta.slice(0, 7) !== H.mes) return err('Las fechas tienen que estar dentro del mes del informe.');
+      const filas = CARGOS_HORAS.map(([k, t]) => {
+        const d = H.datos[k], x = d && window.HorasBixpe.calcular(d.dias, H.desde, H.hasta);
+        return { cargo: t, jornada: x ? x.jornada : null, extras: x ? x.extras : null };
+      });
+      if (!filas.some(f => f.jornada != null)) return err('Sube al menos un Excel de Bixpe.');
+      const btn = $('#btnHoras'); btn.disabled = true; btn.textContent = 'Generando…';
+      try {
+        const r = await google('horas_informe', { mes: H.mes, desde: H.desde, hasta: H.hasta,
+          periodo: 'Periodo computado: del ' + fechaLarga(H.desde) + ' al ' + fechaLarga(H.hasta) + ' (exportaciones de Bixpe).', filas });
+        $('#resHoras').innerHTML = `<div class="aviso verde">Informe guardado en Drive:
+          <a href="${esc(r.pdf)}" target="_blank" rel="noopener">PDF</a> ·
+          <a href="${esc(r.xlsx)}" target="_blank" rel="noopener">Excel</a> ·
+          <a href="${esc(r.hoja)}" target="_blank" rel="noopener">hoja del año</a></div>`;
+      } catch (e) { err('No se ha podido generar: ' + e.message); }
+      btn.disabled = false; btn.textContent = 'Generar informe en Drive';
+    };
+  }
+
   function vAjustes(el) {
     const a = S.ajustes;
     const campo = (id, et, val, ayuda, tipo) => `<div class="campo"><label for="${id}">${et}</label><input type="${tipo || 'text'}" id="${id}" value="${esc(val)}">${ayuda ? `<span class="ayuda">${ayuda}</span>` : ''}</div>`;
@@ -1782,6 +1869,7 @@
     const mt = /#t=([0-9a-f-]{36})/.exec(location.hash);
     if (mt && esCoord() && S.tarea !== mt[1]) abrirTarea(mt[1]);
     if (location.hash === '#tareas' && esCoord() && S.vista !== 'tareas' && S.vista !== 'tarea') { S.vista = 'tareas'; pintar(); }
+    if (location.hash === '#horas' && esCoord() && S.vista !== 'horas') { S.vista = 'horas'; pintar(); }
   });
 
   arrancar();

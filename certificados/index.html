@@ -63,7 +63,7 @@ h1,h2,h3{font-family:Montserrat,system-ui,sans-serif;text-wrap:balance}
 .campo{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
 .campo label,.campo .et{font-weight:600;font-size:13.5px}
 .campo .ayuda{font-size:12.5px;color:var(--muted);font-weight:500}
-input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=url],select,textarea{
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=month],input[type=url],select,textarea{
   width:100%;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;font-size:15px}
 input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px var(--brand-soft)}
 textarea{min-height:90px;resize:vertical}
@@ -235,8 +235,25 @@ dialog::backdrop{background:rgba(10,20,14,.45)}
 dialog h3{margin:0 0 8px;font-size:17px}
 dialog p{margin:0 0 16px;font-size:14.5px}
 
+/* Horas del equipo (2026-11-24) */
+.rejilla.tres{grid-template-columns:repeat(3,1fr)}
+.horas-cargos{display:grid;gap:8px;margin:8px 0 18px}
+.horas-cargo{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface-2)}
+.horas-cargo .ayuda{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.tabla-horas{width:100%;border-collapse:collapse;font-size:14.5px}
+.tabla-horas th{background:var(--brand-deep);color:#fff;font-weight:700;padding:9px 10px;text-align:center}
+.tabla-horas th:first-child,.tabla-horas td:first-child{text-align:left}
+.tabla-horas td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:center;font-variant-numeric:tabular-nums}
+.tabla-horas td.sin{color:var(--muted);font-style:italic}
+:root[data-theme="dark"] .tabla-horas th{background:var(--brand-soft);color:var(--ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tabla-horas th{background:var(--brand-soft);color:var(--ink)}}
+
 @media (max-width:760px){
   .rejilla{grid-template-columns:1fr}
+  .rejilla.tres{grid-template-columns:1fr}
+  .horas-cargo{grid-template-columns:1fr auto}
+  .tabla-horas{font-size:13px}
+  .tabla-horas th,.tabla-horas td{padding:8px 5px}
   .detalle{grid-template-columns:1fr}
   .fila{grid-template-columns:1fr auto}
   .fila .num{display:none}
@@ -290,6 +307,7 @@ dialog p{margin:0 0 16px;font-size:14.5px}
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="pdf.js?v=202610271200"></script>
 <script src="doc-pdf.js?v=202610271200"></script>
-<script src="app.js?v=202611241000"></script>
+<script src="horas.js?v=202611241800"></script>
+<script src="app.js?v=202611241800"></script>
 </body>
 </html>
