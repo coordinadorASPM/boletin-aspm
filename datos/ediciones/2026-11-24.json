@@ -1,0 +1,89 @@
+[
+    {
+        "id":  "i2662b01b5ac0",
+        "seccion":  "legislacion",
+        "grupo":  "ue",
+        "titulo":  "El Parlamento Europeo vota el 25 de noviembre la aprobación definitiva del paquete farmacéutico y de la Ley de Medicamentos Críticos",
+        "entidad":  "Parlamento Europeo",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "Debate el 24 de noviembre de 2026 y votación el 25 de noviembre, en el pleno de Estrasburgo",
+        "importe":  null,
+        "etiquetas":  [
+                          "en tramitación",
+                          "medicamentos huérfanos"
+                      ],
+        "resumen":  "El pleno debate hoy y vota mañana el acuerdo en segunda lectura sobre el reglamento y la directiva del paquete farmacéutico, y el acuerdo en primera lectura sobre la Ley de Medicamentos Críticos. Con esta votación se cierra el procedimiento legislativo. Los medicamentos huérfanos tendrán entre 9 y 11 años de protección frente a genéricos, según su grado de innovación y si llegan de verdad a todos los países.",
+        "para_aspm":  "Conviene confirmar el resultado el día 25 y seguir su publicación en el DOUE: estas reglas marcarán el interés de la industria por desarrollar fármacos para el PMS.",
+        "url":  "https://diariofarma.com/2026/11/23/la-eurocamara-afronta-este-miercoles-la-votacion-definitiva-del-paquete-farmaceutico",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-24"
+    },
+    {
+        "id":  "i4d1b06224ae5",
+        "seccion":  "sector",
+        "grupo":  "autismo",
+        "titulo":  "Autismo España analiza qué proponen los programas del 29-N para las personas autistas y sus familias",
+        "entidad":  "Confederación Autismo España",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "Publicado el 24 de noviembre de 2026",
+        "importe":  null,
+        "etiquetas":  [
+                          "29-N",
+                          "incidencia política",
+                          "autismo"
+                      ],
+        "resumen":  "Revisa los programas de los principales partidos en atención temprana, educación, sanidad, empleo, vivienda, familias y dependencia, tomando como referencia la Ley de Autismo que pide la Confederación. Concluye que ninguno trata bien la financiación de la Estrategia Española en TEA, los plazos máximos de diagnóstico, la continuidad entre etapas de la vida ni las respuestas para personas con grandes necesidades de apoyo.",
+        "para_aspm":  "Sirve de base para comentar el 29-N en redes; sus carencias (grandes necesidades de apoyo, vida adulta) coinciden con las del PMS.",
+        "url":  "https://autismo.org.es/actualidad/noticias/analisis-programas-electorales-29n/",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-24"
+    },
+    {
+        "id":  "i9c252f4dfa1a",
+        "seccion":  "sector",
+        "grupo":  "federaciones",
+        "titulo":  "Estudio del CERMI: criar a un hijo con discapacidad puede costar casi el doble",
+        "entidad":  "CERMI Estatal (con Save the Children y Fundación CERMI Mujeres)",
+        "estado":  null,
+        "plazo":  null,
+        "fecha":  "Presentado el 20 de noviembre de 2026 (Día Mundial de la Infancia)",
+        "importe":  null,
+        "etiquetas":  [
+                          "familias",
+                          "coste de la crianza",
+                          "incidencia"
+                      ],
+        "resumen":  "Primer estudio en España que pone cifra al sobrecoste: criar a un menor sin discapacidad cuesta unos 835 € al mes y, con discapacidad, entre 882 y 1.662 €, sobre todo por terapias y productos de apoyo (cifras mínimas, sin contar listas de espera). El CERMI pide un complemento por discapacidad en la futura prestación universal de crianza y acceso rápido a la atención temprana.",
+        "para_aspm":  "Aporta cifras para las memorias de subvenciones y los mensajes de campaña sobre el gasto en terapias de las familias.",
+        "url":  "https://sid-inico.usal.es/noticias/el-cermi-alerta-de-que-la-discapacidad-puede-duplicar-el-coste-de-la-crianza-y-aumentar-el-riesgo-de-pobreza-infantil/",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-24"
+    },
+    {
+        "id":  "i74b6189e0e96",
+        "seccion":  "sector",
+        "grupo":  "federaciones",
+        "titulo":  "Andalucía organiza dos jornadas sobre cribado neonatal para pacientes y familias en Granada",
+        "entidad":  "Consejería de Sanidad de la Junta de Andalucía (difunde FEDER)",
+        "estado":  null,
+        "plazo":  "2026-12-01 (fin de inscripción)",
+        "fecha":  "9 y 10 de diciembre de 2026, de 10:00 a 14:00, en Granada",
+        "importe":  null,
+        "etiquetas":  [
+                          "cribado neonatal",
+                          "jornada",
+                          "Andalucía"
+                      ],
+        "resumen":  "Mesas redondas con profesionales sanitarios: el 9 de diciembre sobre la prueba del talón y la medicina de precisión (solo presencial) y el 10 sobre la detección precoz de la hipoacusia (también por Zoom). Son gratuitas, con inscripción hasta el 1 de diciembre.",
+        "para_aspm":  "Puede interesar a familias socias de Andalucía para estar presentes en el debate sobre ampliar el cribado y la genómica.",
+        "url":  "https://www.enfermedades-raras.org/actualidad/noticias/andalucia-impulsa-dos-jornadas-sobre-cribado-neonatal-dirigidas-pacientes-y-familiares-en-granada",
+        "url_bases":  null,
+        "requisitos":  null,
+        "primera_edicion":  "2026-11-24"
+    }
+]

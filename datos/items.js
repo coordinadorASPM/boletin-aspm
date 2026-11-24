@@ -1,6 +1,7 @@
 window.BOLETIN = {
-    "actualizado":  "2026-11-23 08:10",
+    "actualizado":  "2026-11-24 08:38",
     "ediciones":  [
+                      "2026-11-24",
                       "2026-11-23",
                       "2026-11-20",
                       "2026-11-19",
@@ -3037,26 +3038,26 @@ window.BOLETIN = {
                       "para_aspm":  "Conviene vigilar el DOGC en las próximas semanas y comprobar en las bases si la ASPM, por su actividad en Cataluña, puede presentarse; las bases de 2026 se pueden usar como referencia.",
                       "url":  "https://tramits.gencat.cat/ca/tramits/tramits-temes/Subvencions-per-al-foment-de-la-salut-i-el-suport-als-pacients-i-les-families",
                       "primera_edicion":  "2026-11-12",
-                      "estado":  "proxima",
-                      "plazo":  "Por confirmar: 15 días hábiles desde el día siguiente a su publicación en el DOGC (firmada el 2026-11-18 y registrada en la BDNS 943529 el 2026-11-20; aún sin publicar en el DOGC)",
-                      "url_bases":  "https://www.infosubvenciones.es/bdnstrans/api/convocatorias/documentos?idDocumento=1559759",
+                      "estado":  "abierta",
+                      "plazo":  "2026-12-15 (15 días hábiles desde el 24-11-2026; publicada en el DOGC el 23-11-2026. Fecha calculada contando el 7 de diciembre como laborable: confirmar en el texto oficial)",
+                      "url_bases":  "https://portaldogc.gencat.cat/utilsEADOP/PDF/8673/1908012.pdf",
                       "requisitos":  {
-                                         "beneficiarios":  "Entidades privadas sin ánimo de lucro (personas jurídicas sin actividad económica) que realicen actuaciones de fomento de la salud y apoyo a pacientes y familias",
-                                         "requisitos_entidad":  "Base 3 de la Orden SLT/119/2022 (en convocatorias anteriores: constituida al menos 2 años antes, inscrita en su registro, estatutos adaptados a la Ley 4/2008, al corriente con Hacienda y Seguridad Social). Declaración responsable del art. 92.2 sexies TRLFPC y cumplimiento de la cuota de reserva de personas con discapacidad",
-                                         "ambito_territorial":  "Cataluña (actividades realizadas en Cataluña)",
-                                         "actividades_financiables":  "Fomento de la salud y apoyo a personas enfermas, cuidadores y familias, en especial personas con discapacidad, niños y adolescentes y necesidades de salud complejas. Áreas prioritarias del Plan de salud, entre ellas las enfermedades minoritarias y las condiciones crónicas. Ejecución durante 2027",
-                                         "gastos_subvencionables":  "Base 5 de la Orden SLT/119/2022; subcontratación hasta el 70 %; auditoría imputable hasta el 3 % de lo solicitado",
-                                         "importe_max":  "Según base 4 (en función de puntuación, crédito y coste del proyecto). Dotación total 4.000.000 € (3,2 M€ en 2027 y 0,8 M€ en 2028)",
-                                         "cofinanciacion":  "La subvención no puede superar el coste de la actividad; se valora tener más del 25 % de recursos propios y financiación ajena al sistema público",
-                                         "criterios_valoracion":  "Población y ámbito territorial (20), complementariedad con la cartera del SISCAT (20; 0 si reproduce un servicio incluido), viabilidad (30), perspectiva de género e interseccionalidad (10), adecuación al Plan de salud y otros planes (20). Mínimo 61 puntos",
-                                         "documentacion":  "Memoria del proyecto según modelo y previsión de presupuesto de la entidad para 2027; una solicitud por proyecto",
+                                         "beneficiarios":  "Entidades privadas sin ánimo de lucro que hagan actuaciones de fomento de la salud y apoyo a pacientes y familias (base 2.a de la Orden SLT/119/2022).",
+                                         "requisitos_entidad":  "Al menos 2 años de antigüedad e inscritas en el registro correspondiente; estatutos que incluyan la actuación subvencionable; medios humanos y materiales suficientes; asociaciones con estatutos adaptados al libro III del Código civil catalán y cuentas anuales accesibles al público; plan de igualdad o protocolo contra el acoso, política lingüística, adhesión al código ético y declaración responsable del art. 92 del TRLFPC; certificado de delitos sexuales si hay contacto con menores.",
+                                         "ambito_territorial":  "Cataluña (se puntúa la población y el ámbito territorial catalán donde se interviene).",
+                                         "actividades_financiables":  "Fomento de la salud y apoyo a personas enfermas, cuidadores y entorno familiar, en especial personas con discapacidad, niños y personas con necesidades complejas. Las enfermedades minoritarias y las condiciones crónicas son área prioritaria. Ejecución en 2027.",
+                                         "gastos_subvencionables":  "Solo gasto corriente: personal del proyecto (desglosado por horas), bienes y servicios, y costes indirectos según la base 5. No se financian inversiones ni bienes inventariables (sí su amortización).",
+                                         "importe_max":  "Dotación total 4.000.000 € (3,2 M€ en 2027 y 0,8 M€ en 2028). Por proyecto, un porcentaje de lo solicitado según la puntuación (anexo 4, solicitudes hasta 200.000 €); puede cubrir hasta el 100 % del coste.",
+                                         "cofinanciacion":  "No obligatoria, pero se valora tener más del 25 % de recursos propios y financiación ajena al sector público. Hay que justificar al menos el 50 % del presupuesto aceptado. Anticipo del 80 %.",
+                                         "criterios_valoracion":  "Sobre 100 puntos, mínimo 61: población y ámbito territorial en Cataluña (20), complementariedad con la cartera del SISCAT (20), viabilidad (30), perspectiva de género e interseccionalidad (10) y adecuación a los planes de salud (resto, base 9).",
+                                         "documentacion":  "Memoria del proyecto según modelo, previsión de presupuesto de la entidad para 2027 y declaraciones responsables. Una solicitud por proyecto.",
                                          "formulario":  [
-                                                            "Formulario de solicitud de Tràmits gencat",
+                                                            "Formulario de solicitud del trámite 9389 de Tràmits gencat",
                                                             "Memoria del proyecto (modelo)",
                                                             "Previsión de presupuesto de la entidad"
                                                         ],
-                                         "plazo_presentacion":  "15 días hábiles desde el día siguiente a la publicación en el DOGC (pendiente)",
-                                         "forma_presentacion":  "Solo telemática, con los formularios específicos de Tràmits gencat y firma con certificado de la entidad"
+                                         "plazo_presentacion":  "Del 24-11-2026 al 15-12-2026 (15 días hábiles; confirmar en el DOGC).",
+                                         "forma_presentacion":  "Solo telemática, con el formulario específico del trámite 9389 en Tràmits gencat y firma de la entidad. Otros canales se tienen por no presentados."
                                      }
                   },
                   {
@@ -4401,6 +4402,93 @@ window.BOLETIN = {
                       "url_bases":  null,
                       "requisitos":  null,
                       "primera_edicion":  "2026-11-23"
+                  },
+                  {
+                      "id":  "i2662b01b5ac0",
+                      "seccion":  "legislacion",
+                      "grupo":  "ue",
+                      "titulo":  "El Parlamento Europeo vota el 25 de noviembre la aprobación definitiva del paquete farmacéutico y de la Ley de Medicamentos Críticos",
+                      "entidad":  "Parlamento Europeo",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Debate el 24 de noviembre de 2026 y votación el 25 de noviembre, en el pleno de Estrasburgo",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "en tramitación",
+                                        "medicamentos huérfanos"
+                                    ],
+                      "resumen":  "El pleno debate hoy y vota mañana el acuerdo en segunda lectura sobre el reglamento y la directiva del paquete farmacéutico, y el acuerdo en primera lectura sobre la Ley de Medicamentos Críticos. Con esta votación se cierra el procedimiento legislativo. Los medicamentos huérfanos tendrán entre 9 y 11 años de protección frente a genéricos, según su grado de innovación y si llegan de verdad a todos los países.",
+                      "para_aspm":  "Conviene confirmar el resultado el día 25 y seguir su publicación en el DOUE: estas reglas marcarán el interés de la industria por desarrollar fármacos para el PMS.",
+                      "url":  "https://diariofarma.com/2026/11/23/la-eurocamara-afronta-este-miercoles-la-votacion-definitiva-del-paquete-farmaceutico",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-24"
+                  },
+                  {
+                      "id":  "i4d1b06224ae5",
+                      "seccion":  "sector",
+                      "grupo":  "autismo",
+                      "titulo":  "Autismo España analiza qué proponen los programas del 29-N para las personas autistas y sus familias",
+                      "entidad":  "Confederación Autismo España",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Publicado el 24 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "29-N",
+                                        "incidencia política",
+                                        "autismo"
+                                    ],
+                      "resumen":  "Revisa los programas de los principales partidos en atención temprana, educación, sanidad, empleo, vivienda, familias y dependencia, tomando como referencia la Ley de Autismo que pide la Confederación. Concluye que ninguno trata bien la financiación de la Estrategia Española en TEA, los plazos máximos de diagnóstico, la continuidad entre etapas de la vida ni las respuestas para personas con grandes necesidades de apoyo.",
+                      "para_aspm":  "Sirve de base para comentar el 29-N en redes; sus carencias (grandes necesidades de apoyo, vida adulta) coinciden con las del PMS.",
+                      "url":  "https://autismo.org.es/actualidad/noticias/analisis-programas-electorales-29n/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-24"
+                  },
+                  {
+                      "id":  "i9c252f4dfa1a",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Estudio del CERMI: criar a un hijo con discapacidad puede costar casi el doble",
+                      "entidad":  "CERMI Estatal (con Save the Children y Fundación CERMI Mujeres)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Presentado el 20 de noviembre de 2026 (Día Mundial de la Infancia)",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "familias",
+                                        "coste de la crianza",
+                                        "incidencia"
+                                    ],
+                      "resumen":  "Primer estudio en España que pone cifra al sobrecoste: criar a un menor sin discapacidad cuesta unos 835 € al mes y, con discapacidad, entre 882 y 1.662 €, sobre todo por terapias y productos de apoyo (cifras mínimas, sin contar listas de espera). El CERMI pide un complemento por discapacidad en la futura prestación universal de crianza y acceso rápido a la atención temprana.",
+                      "para_aspm":  "Aporta cifras para las memorias de subvenciones y los mensajes de campaña sobre el gasto en terapias de las familias.",
+                      "url":  "https://sid-inico.usal.es/noticias/el-cermi-alerta-de-que-la-discapacidad-puede-duplicar-el-coste-de-la-crianza-y-aumentar-el-riesgo-de-pobreza-infantil/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-24"
+                  },
+                  {
+                      "id":  "i74b6189e0e96",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Andalucía organiza dos jornadas sobre cribado neonatal para pacientes y familias en Granada",
+                      "entidad":  "Consejería de Sanidad de la Junta de Andalucía (difunde FEDER)",
+                      "estado":  null,
+                      "plazo":  "2026-12-01 (fin de inscripción)",
+                      "fecha":  "9 y 10 de diciembre de 2026, de 10:00 a 14:00, en Granada",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "cribado neonatal",
+                                        "jornada",
+                                        "Andalucía"
+                                    ],
+                      "resumen":  "Mesas redondas con profesionales sanitarios: el 9 de diciembre sobre la prueba del talón y la medicina de precisión (solo presencial) y el 10 sobre la detección precoz de la hipoacusia (también por Zoom). Son gratuitas, con inscripción hasta el 1 de diciembre.",
+                      "para_aspm":  "Puede interesar a familias socias de Andalucía para estar presentes en el debate sobre ampliar el cribado y la genómica.",
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/andalucia-impulsa-dos-jornadas-sobre-cribado-neonatal-dirigidas-pacientes-y-familiares-en-granada",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-24"
                   }
               ]
 };
