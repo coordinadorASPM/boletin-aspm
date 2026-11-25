@@ -1,6 +1,7 @@
 window.BOLETIN = {
-    "actualizado":  "2026-11-24 08:38",
+    "actualizado":  "2026-11-25 08:49",
     "ediciones":  [
+                      "2026-11-25",
                       "2026-11-24",
                       "2026-11-23",
                       "2026-11-20",
@@ -3038,26 +3039,32 @@ window.BOLETIN = {
                       "para_aspm":  "Conviene vigilar el DOGC en las próximas semanas y comprobar en las bases si la ASPM, por su actividad en Cataluña, puede presentarse; las bases de 2026 se pueden usar como referencia.",
                       "url":  "https://tramits.gencat.cat/ca/tramits/tramits-temes/Subvencions-per-al-foment-de-la-salut-i-el-suport-als-pacients-i-les-families",
                       "primera_edicion":  "2026-11-12",
+                      "url_bases":  "https://tramits.gencat.cat/web/shared/OVT/Departaments/SLT/Documents/Formularis_pdf/Text_refos_bases_reguladores_Subv_FDS_2022.pdf",
                       "estado":  "abierta",
-                      "plazo":  "2026-12-15 (15 días hábiles desde el 24-11-2026; publicada en el DOGC el 23-11-2026. Fecha calculada contando el 7 de diciembre como laborable: confirmar en el texto oficial)",
-                      "url_bases":  "https://portaldogc.gencat.cat/utilsEADOP/PDF/8673/1908012.pdf",
+                      "plazo":  "2026-12-15 (14:00 h)",
                       "requisitos":  {
-                                         "beneficiarios":  "Entidades privadas sin ánimo de lucro que hagan actuaciones de fomento de la salud y apoyo a pacientes y familias (base 2.a de la Orden SLT/119/2022).",
-                                         "requisitos_entidad":  "Al menos 2 años de antigüedad e inscritas en el registro correspondiente; estatutos que incluyan la actuación subvencionable; medios humanos y materiales suficientes; asociaciones con estatutos adaptados al libro III del Código civil catalán y cuentas anuales accesibles al público; plan de igualdad o protocolo contra el acoso, política lingüística, adhesión al código ético y declaración responsable del art. 92 del TRLFPC; certificado de delitos sexuales si hay contacto con menores.",
-                                         "ambito_territorial":  "Cataluña (se puntúa la población y el ámbito territorial catalán donde se interviene).",
-                                         "actividades_financiables":  "Fomento de la salud y apoyo a personas enfermas, cuidadores y entorno familiar, en especial personas con discapacidad, niños y personas con necesidades complejas. Las enfermedades minoritarias y las condiciones crónicas son área prioritaria. Ejecución en 2027.",
-                                         "gastos_subvencionables":  "Solo gasto corriente: personal del proyecto (desglosado por horas), bienes y servicios, y costes indirectos según la base 5. No se financian inversiones ni bienes inventariables (sí su amortización).",
-                                         "importe_max":  "Dotación total 4.000.000 € (3,2 M€ en 2027 y 0,8 M€ en 2028). Por proyecto, un porcentaje de lo solicitado según la puntuación (anexo 4, solicitudes hasta 200.000 €); puede cubrir hasta el 100 % del coste.",
-                                         "cofinanciacion":  "No obligatoria, pero se valora tener más del 25 % de recursos propios y financiación ajena al sector público. Hay que justificar al menos el 50 % del presupuesto aceptado. Anticipo del 80 %.",
-                                         "criterios_valoracion":  "Sobre 100 puntos, mínimo 61: población y ámbito territorial en Cataluña (20), complementariedad con la cartera del SISCAT (20), viabilidad (30), perspectiva de género e interseccionalidad (10) y adecuación a los planes de salud (resto, base 9).",
-                                         "documentacion":  "Memoria del proyecto según modelo, previsión de presupuesto de la entidad para 2027 y declaraciones responsables. Una solicitud por proyecto.",
+                                         "beneficiarios":  "Entidades privadas sin ánimo de lucro que actúen en el ámbito de la salud, área a): fomento de la salud y apoyo a las personas enfermas, a quienes las cuidan y a su entorno familiar. Las enfermedades minoritarias y la discapacidad figuran entre las prioridades.",
+                                         "requisitos_entidad":  "La actuación debe estar en el objeto social de los estatutos. Entidad constituida al menos 2 años antes de la publicación de la convocatoria e inscrita en el registro que corresponda, con medios humanos y materiales. Además: cumplir la Ley de política lingüística (art. 32 y 36), no estar en las prohibiciones del art. 13 de la Ley 38/2003, cuentas anuales hechas y depositadas (asociaciones) y estatutos adaptados.",
+                                         "ambito_territorial":  "Actuaciones en Cataluña, que no sustituyan prestaciones asistenciales",
+                                         "actividades_financiables":  "Proyectos de fomento de la salud y de apoyo a pacientes y familias que complementen, sin reproducirla, la cartera de servicios del SISCAT",
+                                         "gastos_subvencionables":  "Gasto corriente: personal del proyecto (desglosado por horas), materiales y servicios, y subcontratación con el límite que fije la convocatoria (máximo 70 %). Se admiten costes indirectos y amortizaciones. No se admite inversión en bienes inventariables.",
+                                         "importe_max":  "Por confirmar en la Resolución SLT/4316/2026. La cuantía se calcula aplicando un porcentaje al importe pedido según la puntuación y el tramo (anexo 4 de las bases).",
+                                         "cofinanciacion":  "Puede cubrir hasta el 100 % del coste, sin superarlo junto con otras ayudas. Hay que justificar al menos el 50 % del presupuesto aceptado; se admite una desviación del 10 %.",
+                                         "criterios_valoracion":  "Hasta 100 puntos, mínimo 61. Población y ámbito territorial en Cataluña: 20. Complementariedad con el SISCAT: 20 (0 si el servicio ya está en la cartera). Viabilidad: 30 (recursos, más del 25 % de recursos propios, experiencia, definición e indicadores). Perspectiva de género e interseccionalidad: 10. Adecuación al Pla de salut y planes estratégicos e innovación: 20.",
+                                         "documentacion":  "Formulario normalizado con la memoria del proyecto y presupuesto anual de funcionamiento de la entidad",
                                          "formulario":  [
-                                                            "Formulario de solicitud del trámite 9389 de Tràmits gencat",
-                                                            "Memoria del proyecto (modelo)",
-                                                            "Previsión de presupuesto de la entidad"
+                                                            "Área de actuación, fechas y lugares",
+                                                            "Importe pedido",
+                                                            "Objetivos",
+                                                            "Perspectiva de género e interseccional",
+                                                            "Actuaciones",
+                                                            "Población destinataria",
+                                                            "Evaluación e indicadores",
+                                                            "Recursos y experiencia",
+                                                            "Presupuesto con gastos e ingresos por fuente"
                                                         ],
-                                         "plazo_presentacion":  "Del 24-11-2026 al 15-12-2026 (15 días hábiles; confirmar en el DOGC).",
-                                         "forma_presentacion":  "Solo telemática, con el formulario específico del trámite 9389 en Tràmits gencat y firma de la entidad. Otros canales se tienen por no presentados."
+                                         "plazo_presentacion":  "Del 24-11-2026 al 15-12-2026 a las 14:00 h",
+                                         "forma_presentacion":  "Solo en línea, con certificado digital de persona jurídica o de representante, por el trámite SAL003SOLC en ovt.gencat.cat. Convocatoria: Resolución SLT/4316/2026, de 18 de noviembre, publicada el 23-11-2026 en el DOGC (https://dogc.gencat.cat/ca/document-del-dogc/?documentId=1059807)"
                                      }
                   },
                   {
@@ -4489,6 +4496,136 @@ window.BOLETIN = {
                       "url_bases":  null,
                       "requisitos":  null,
                       "primera_edicion":  "2026-11-24"
+                  },
+                  {
+                      "id":  "i0ebba1db04aa",
+                      "seccion":  "subvenciones",
+                      "grupo":  "privada",
+                      "titulo":  "Iniciativa Solidaria Accionistas BBVA 2027: 300.000 € para cuatro proyectos sociales",
+                      "entidad":  "BBVA",
+                      "estado":  "abierta",
+                      "plazo":  "2026-12-23 (22:00 h, hora peninsular)",
+                      "fecha":  "Publicada el 19-11-2026; solicitudes desde el 18-11-2026",
+                      "importe":  "300.000 € en total. Cada una de las 4 entidades ganadoras (una por ámbito) recibe 50.000 €, más un reparto proporcional de otros 100.000 € según el voto de los accionistas al ámbito",
+                      "etiquetas":  [
+                                        "salud",
+                                        "dependencia",
+                                        "discapacidad"
+                                    ],
+                      "resumen":  "BBVA financia cuatro proyectos sociales nuevos que se desarrollen en España entre el 1-1-2027 y el 30-6-2028. Hay uno por ámbito: desigualdad, educación, salud (incluye enfermedades crónicas o graves y apoyo a familiares) y dependencia (discapacidad y autonomía personal). El fallo se conoce en la Junta General de Accionistas de 2027, antes del 31-3-2027.",
+                      "para_aspm":  "Encaja en los ámbitos «salud» o «dependencia» con un proyecto de al menos 50.000 €. Ojo: las asociaciones tienen que estar declaradas de utilidad pública, así que hay que comprobar si la ASPM lo está. El marketplace no encaja bien, porque se pide un proyecto con impacto social directo en las personas beneficiarias y no una herramienta para recaudar fondos.",
+                      "url":  "https://www.bbva.com/es/sostenibilidad/bbva-repartira-300-000-euros-entre-cuatro-proyectos-sociales-con-motivo-de-su-junta-general-de-accionistas-2027/",
+                      "url_bases":  "https://accionistaseinversores.bbva.com/wp-content/uploads/2026/11/Convocatoria-Solidaria-Accionistas-BBVA-2027-Bases-y-Formulario.pdf",
+                      "requisitos":  {
+                                         "beneficiarios":  "Organizaciones privadas sin fin lucrativo acogidas a la Ley 49/2002 (fundaciones, asociaciones, federaciones…). Quedan excluidas las fundaciones de empresa, de sindicatos y de universidades, las obras sociales de cajas y las entidades gubernamentales. No pueden presentarse las ganadoras de 2025 o 2026 de esta iniciativa ni las de BBVA Futuro.",
+                                         "requisitos_entidad":  "Estar constituida e inscrita en el registro estatal o autonómico, y las asociaciones, declaradas de utilidad pública. Domicilio en España, servicios sociales de interés general en el objeto estatutario, al menos dos ejercicios completos de actividad y experiencia en el ámbito elegido.",
+                                         "ambito_territorial":  "España (una o varias localidades, provincias o comunidades autónomas)",
+                                         "actividades_financiables":  "Un único proyecto nuevo por entidad, en uno de los cuatro ámbitos: desigualdad social o económica, educación, salud o dependencia. Debe empezar no antes del 1-1-2027 y terminar antes del 30-6-2028.",
+                                         "gastos_subvencionables":  "Presupuesto según la plantilla de las bases: dirección y coordinación, otros gastos de personal, desarrollo de actividades, materiales, viajes y desplazamientos, comunicación y otras partidas detalladas",
+                                         "importe_max":  "50.000 € fijos más la parte proporcional de 100.000 € según el voto de los accionistas",
+                                         "cofinanciacion":  "El proyecto debe costar 50.000 € o más y se piden exactamente 50.000 €. Se admiten otros financiadores, que hay que declarar.",
+                                         "criterios_valoracion":  "Solidez de la organización (integridad, transparencia, gestión de riesgos), alineación con el ámbito, solidez técnica y presupuestaria, experiencia en el territorio y en el ámbito, ausencia de riesgo reputacional e impacto con sistema de evaluación y métricas. Suman los aspectos medioambientales y las acreditaciones de transparencia. Las 4 finalistas pasan además una homologación de BBVA.",
+                                         "documentacion":  "Estatutos; certificado de registro; certificado de acogida a la Ley 49/2002 emitido en 2026; composición del órgano de gobierno; memoria de actividad de 2025; cuentas anuales de 2025 (auditadas si hay auditoría); certificados de estar al corriente con Hacienda y con la Seguridad Social posteriores al 31-10-2026; presupuesto en la plantilla. Opcional: memoria del proyecto de 5 páginas como máximo.",
+                                         "formulario":  [
+                                                            "Categoría o ámbito y componente medioambiental",
+                                                            "Datos de la organización: misión, empleados, voluntarios, forma jurídica, año de constitución, acreditaciones",
+                                                            "Presupuesto operativo de 2026 y estimado de 2027",
+                                                            "Título, descripción, objetivo general y objetivos específicos",
+                                                            "Actividades, calendario, experiencia técnica y geográfica, ubicación",
+                                                            "Presupuesto total, importe pedido a BBVA y otros financiadores",
+                                                            "Impacto, métricas, número y perfil de personas beneficiarias, impacto de género y en personas en riesgo de exclusión"
+                                                        ],
+                                         "plazo_presentacion":  "Del 18-11-2026 al 23-12-2026 a las 22:00 h (hora peninsular)",
+                                         "forma_presentacion":  "Formulario en línea (Google Forms, en una sola sesión) enlazado en https://accionistaseinversores.bbva.com/accionistas/iniciativa-solidaria-jga-2027, más la documentación por correo electrónico de la iniciativa indicado en las bases, con el nombre de la entidad en el asunto"
+                                     },
+                      "primera_edicion":  "2026-11-25"
+                  },
+                  {
+                      "id":  "i0c6dd879ea5c",
+                      "seccion":  "legislacion",
+                      "grupo":  "espana",
+                      "titulo":  "RDL 42/2026: permiso por nacimiento de 20 semanas y reducción de jornada por hijo con enfermedad grave hasta los 26 años si tiene discapacidad del 65 % o más",
+                      "entidad":  "BOE / Consejo de Ministros",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "BOE 25-11-2026; en vigor el 26-11-2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "publicado",
+                                        "conciliación",
+                                        "familias"
+                                    ],
+                      "resumen":  "El Real Decreto-ley 42/2026, de 24 de noviembre, sube el permiso por nacimiento a 20 semanas por progenitor (34 en familias monoparentales) y el permiso de cuidado del menor a 3 semanas, que se puede usar hasta los 8 años. En el sector privado, la reducción de jornada para cuidar a un hijo con cáncer o enfermedad grave se amplía hasta los 23 años, y hasta los 26 si tiene una discapacidad del 65 % o más. También permite adaptar o reducir la jornada para cuidar a un familiar en cuidados paliativos.",
+                      "para_aspm":  "Conviene contarlo a los socios en el servicio de información y orientación, aclarando que el permiso por nacimiento ampliado solo se puede pedir desde el 1 de marzo de 2027.",
+                      "url":  "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-24700",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-25"
+                  },
+                  {
+                      "id":  "i03b6cd038a86",
+                      "seccion":  "legislacion",
+                      "grupo":  "espana",
+                      "titulo":  "El Gobierno aprueba el nuevo Estatuto de la AEMPS, con un Comité de Partes Interesadas en el que participan los pacientes",
+                      "entidad":  "Consejo de Ministros / AEMPS",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "24-11-2026 (Consejo de Ministros)",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "aprobado, pendiente de BOE",
+                                        "medicamentos",
+                                        "participación de pacientes"
+                                    ],
+                      "resumen":  "Un real decreto aprueba el nuevo Estatuto de la AEMPS, que sustituye al de 2011. Crea un Comité de Partes Interesadas, un espacio estable de diálogo con pacientes, profesionales e industria. Además da a la Agencia nuevas funciones sobre problemas de suministro, el listado de medicamentos estratégicos y la evaluación del beneficio clínico, también en las evaluaciones clínicas conjuntas europeas.",
+                      "para_aspm":  "Cuando se ponga en marcha el Comité de Partes Interesadas, conviene seguir cómo se elige la representación de los pacientes, por ejemplo a través de FEDER.",
+                      "url":  "https://diariofarma.com/2026/11/24/el-gobierno-aprueba-el-estatuto-de-la-aemps-para-sostener-sus-nuevas-capacidades-tecnicas",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-25"
+                  },
+                  {
+                      "id":  "i314906587656",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "III Taller Interautonómico sobre el paso de la atención pediátrica a la de adultos en enfermedades raras (3 de diciembre, Madrid)",
+                      "entidad":  "Observatorio Legislativo de Enfermedades Raras y Medicamentos Huérfanos (Universidad de Granada) / FEDER",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "2026-12-03, Colegio Oficial de Médicos de Madrid",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "transición a adultos",
+                                        "incidencia",
+                                        "FEDER"
+                                    ],
+                      "resumen":  "El Observatorio Legislativo organiza un taller interautonómico sobre la continuidad asistencial cuando las personas con enfermedades raras pasan de pediatría a la atención de adultos. FEDER presentará allí el décimo informe del Observatorio, que analiza los retos normativos y organizativos de ese paso.",
+                      "para_aspm":  "Cuando se publique, interesa conseguir el informe: el paso a la atención de adultos es un problema real para los socios con hijos adolescentes con PMS.",
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/participamos-en-el-iii-taller-interautonomico-para-impulsar-la-continuidad-asistencial-en-enfermedades-raras",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-25"
+                  },
+                  {
+                      "id":  "i5f38f7aeebfb",
+                      "seccion":  "investigacion",
+                      "grupo":  "",
+                      "titulo":  "En ratones Shank3B, ser macho o hembra cambia algunos de los efectos de la falta de Shank3",
+                      "entidad":  "Genes, Brain and Behavior (Universidad de Florencia, Italia)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Diciembre de 2026 (en PubMed desde noviembre de 2026)",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "estudio en ratones",
+                                        "investigación básica"
+                                    ],
+                      "resumen":  "Casi todos los estudios en ratones usan machos y ratones a los que les faltan las dos copias de Shank3. Este estudio incluye también hembras y ratones con una sola copia afectada, que es lo que ocurre en el PMS. El efecto del sexo depende del síntoma: en el movimiento y las conductas repetitivas, machos y hembras cambian en direcciones contrarias; con una sola copia alterada ya cuesta reconocer a un ratón desconocido.",
+                      "para_aspm":  "Sirve para explicar a las familias por qué los resultados en ratones no se pueden trasladar tal cual a cada persona con PMS, y por qué importa estudiar también a las chicas.",
+                      "url":  "https://pubmed.ncbi.nlm.nih.gov/43074168/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-25"
                   }
               ]
 };
