@@ -1704,7 +1704,7 @@
     el.innerHTML = `<section class="panel">
       <h2>Informe mensual de horas para la junta</h2>
       <p class="sub">Sube el Excel de Bixpe de cada empleada. Los archivos se leen en este ordenador y no se suben a ningún sitio: a Google solo llegan los totales de cada cargo.
-        Por día, las horas extra de ${window.HorasBixpe.UMBRAL_MIN} minutos o menos no cuentan.</p>
+        Margen diario de ${window.HorasBixpe.UMBRAL_MIN} minutos: las horas extra de ${window.HorasBixpe.UMBRAL_MIN} minutos o menos no cuentan y, si faltan ${window.HorasBixpe.UMBRAL_MIN} minutos o menos para la jornada prevista, el día cuenta completo.</p>
       <div class="error" id="errHoras" hidden></div>
       <div class="rejilla tres">
         <div class="campo"><label for="h_mes">Mes del informe</label><input type="month" id="h_mes" value="${H.mes}"></div>
@@ -1717,7 +1717,7 @@
         return `<div class="horas-cargo">
           <div><b>${esc(t)}</b>
             <span class="ayuda">${d ? esc(d.archivo) + ' · ' + esc(d.formato) + (d.empleadas > 1 ? ' · <b>trae ' + d.empleadas + ' personas: se usa la primera</b>' : '') : 'Sin archivo'}</span>
-            ${tot ? `<span class="ayuda">${tot.diasConDatos ? 'Días con horas: del ' + esc(fechaLarga(tot.primero)) + ' al ' + esc(fechaLarga(tot.ultimo)) : 'No hay horas entre esas fechas'}${tot.diasDescartados ? ' · ' + tot.diasDescartados + ' día' + (tot.diasDescartados > 1 ? 's' : '') + ' con extras de 15 min o menos (' + fmt(tot.descartadas) + ', no cuentan)' : ''}</span>` : ''}</div>
+            ${tot ? `<span class="ayuda">${tot.diasConDatos ? 'Días con horas: del ' + esc(fechaLarga(tot.primero)) + ' al ' + esc(fechaLarga(tot.ultimo)) : 'No hay horas entre esas fechas'}${tot.diasDescartados ? ' · ' + tot.diasDescartados + ' día' + (tot.diasDescartados > 1 ? 's' : '') + ' con extras de 15 min o menos (' + fmt(tot.descartadas) + ', no cuentan)' : ''}${tot.diasCompletados ? ' · ' + tot.diasCompletados + ' día' + (tot.diasCompletados > 1 ? 's' : '') + ' con 15 min o menos de falta (cuentan completos)' : ''}</span>` : ''}</div>
           <label class="btn">${d ? 'Cambiar' : 'Subir Excel'}<input type="file" accept=".xlsx,.xls" data-cargo="${k}" hidden></label>
           ${d ? `<button class="btn sutil" type="button" data-quitar="${k}">Quitar</button>` : ''}
         </div>`;

@@ -2,10 +2,14 @@
  * Los archivos no salen del ordenador: aquí solo se sacan las horas de cada día y se calculan los totales.
  * Reglas (decididas por la coordinadora):
  *   - se cuenta solo entre las fechas «desde» y «hasta»;
- *   - por día, las horas extra de 15 minutos o menos no cuentan (se anulan); las de más de 15 cuentan enteras.
+ *   - margen diario de 15 minutos, por arriba y por abajo (2026-11-25): las horas extra de 15 minutos o menos no cuentan
+ *     (las de más de 15 cuentan enteras) y, si faltan 15 minutos o menos para la jornada prevista, el día cuenta completo.
  * Formatos que entiende:
- *   A) Exportación estándar de Bixpe «Resumen horas trabajadas»: una columna por día, filas «Horas en jornada» y «Horas extras».
+ *   A) Exportación estándar de Bixpe «Resumen horas trabajadas»: una columna por día, filas «Horas en jornada» y «Horas extras»
+ *      (no trae la jornada prevista: ahí no se aplica el margen por abajo).
+ *   C) Bixpe «Horas trabajadas»: una fila por día con Fecha, T. previsto, Total trabajado y Horas extras (+/−).
  *   B) Informe diario: una fila por fichaje con columnas Fecha, Teórico y Computable (o Trabajado).
+ * Las ausencias retribuidas no cuentan como horas trabajadas.
  */
 (function () {
   const MESES = { ene: 1, feb: 2, mar: 3, abr: 4, may: 5, jun: 6, jul: 7, ago: 8, sep: 9, oct: 10, nov: 11, dic: 12 };
@@ -16,14 +20,14 @@
   const norm = s => txt(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   const iso = (a, m, d) => a + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0');
 
-  // «8 h», «7 h 51 min», «41 min», «--» → minutos
+  // «8 h», «7 h 51 min», «41 min», «-58 min», «0 min.», «--» → minutos (con signo)
   function minutosBixpe(v) {
     const t = txt(v);
     if (!t || /^-+$/.test(t)) return 0;
     if (typeof v === 'number') return Math.round(v * 1440);
     const h = /(\d+)\s*h/.exec(t), m = /(\d+)\s*min/.exec(t);
     if (!h && !m) return hhmm(t);
-    return (h ? +h[1] : 0) * 60 + (m ? +m[1] : 0);
+    return (/^[-−]/.test(t) ? -1 : 1) * ((h ? +h[1] : 0) * 60 + (m ? +m[1] : 0));
   }
   // número de Excel (fracción de día) o texto «8:00» / «-1:56» → minutos
   function hhmm(v) {
@@ -92,9 +96,25 @@
     const dias = Object.keys(porDia).sort().map(d => {
       const { comp, teor } = porDia[d];
       const extra = Math.max(0, comp - teor);
-      return { fecha: d, jornada: comp - extra, extra };
+      return { fecha: d, jornada: comp - extra, extra, falta: comp > 0 ? Math.max(0, teor - comp) : 0 };
     });
     return dias.length ? { formato: 'Informe diario (teórico y computable)', dias, empleadas: 1 } : null;
+  }
+
+  function leerC(filas) {
+    const iCab = filas.findIndex(f => f.some(c => norm(c) === 'fecha') && f.some(c => norm(c).startsWith('total trabajado')) && f.some(c => norm(c).startsWith('horas extras')));
+    if (iCab < 0) return null;
+    const cab = filas[iCab].map(norm);
+    const jF = cab.indexOf('fecha'), jW = cab.findIndex(c => c.startsWith('total trabajado')), jE = cab.findIndex(c => c.startsWith('horas extras'));
+    const dias = [];
+    for (let i = iCab + 1; i < filas.length; i++) {
+      const r = /(\d{1,2})\s+([a-z]+)\s+(\d{4})/.exec(norm(filas[i][jF]));
+      if (!r || !MESES_LARGOS[r[2]]) continue;
+      const w = minutosBixpe(filas[i][jW]), e = minutosBixpe(filas[i][jE]);
+      const extra = Math.max(0, e);
+      dias.push({ fecha: iso(+r[3], MESES_LARGOS[r[2]], +r[1]), jornada: w - extra, extra, falta: w > 0 ? Math.max(0, -e) : 0 });
+    }
+    return dias.length ? { formato: 'Bixpe «Horas trabajadas» (una fila por día)', dias, empleadas: 1 } : null;
   }
 
   // ArrayBuffer del .xlsx → { formato, dias: [{fecha, jornada, extra}] (minutos), empleadas }
@@ -110,18 +130,19 @@
         hoja['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: r.e });
       }
       const filas = XLSX.utils.sheet_to_json(libro.Sheets[nombre], { header: 1, raw: true, defval: '' });
-      const r = leerA(filas) || leerB(filas);
+      const r = leerA(filas) || leerC(filas) || leerB(filas);
       if (r) return r;
     }
     throw new Error('No reconozco este Excel: no es una exportación de Bixpe con horas por día.');
   }
 
-  // Totales entre dos fechas (AAAA-MM-DD, incluidas), aplicando la regla de los 15 minutos
+  // Totales entre dos fechas (AAAA-MM-DD, incluidas), con el margen diario de 15 minutos por arriba y por abajo
   function calcular(dias, desde, hasta) {
-    const t = { jornada: 0, extras: 0, descartadas: 0, diasDescartados: 0, diasConDatos: 0, primero: null, ultimo: null };
+    const t = { jornada: 0, extras: 0, descartadas: 0, diasDescartados: 0, diasCompletados: 0, diasConDatos: 0, primero: null, ultimo: null };
     dias.filter(d => d.fecha >= desde && d.fecha <= hasta).forEach(d => {
       if (d.jornada || d.extra) { t.diasConDatos++; t.primero = t.primero || d.fecha; t.ultimo = d.fecha; }
       t.jornada += d.jornada;
+      if (d.falta > 0 && d.falta <= UMBRAL_MIN) { t.jornada += d.falta; t.diasCompletados++; }
       if (d.extra > UMBRAL_MIN) t.extras += d.extra;
       else if (d.extra > 0) { t.descartadas += d.extra; t.diasDescartados++; }
     });

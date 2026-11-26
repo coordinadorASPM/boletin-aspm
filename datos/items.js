@@ -1,6 +1,7 @@
 window.BOLETIN = {
-    "actualizado":  "2026-11-25 09:32",
+    "actualizado":  "2026-11-26 08:53",
     "ediciones":  [
+                      "2026-11-26",
                       "2026-11-25",
                       "2026-11-24",
                       "2026-11-23",
@@ -4879,6 +4880,369 @@ window.BOLETIN = {
                                          "forma_presentacion":  "Registro en el portal de Microsoft para organizaciones sin ánimo de lucro"
                                      },
                       "primera_edicion":  "2026-11-25"
+                  },
+                  {
+                      "id":  "ib4cebbcc07f3",
+                      "seccion":  "subvenciones",
+                      "grupo":  "privada",
+                      "titulo":  "XIX Convocatoria «Euros de tu Nómina» de Banco Santander (2026-2027)",
+                      "entidad":  "Banco Santander",
+                      "estado":  "abierta",
+                      "plazo":  "2027-01-18 (23:59)",
+                      "fecha":  "Presentación del 19 de noviembre de 2026 al 18 de enero de 2027",
+                      "importe":  "20.000 € o 40.000 € por proyecto (17 ganadores; 60.000 € solo en la categoría Compromiso)",
+                      "etiquetas":  [
+                                        "discapacidad",
+                                        "salud",
+                                        "padrinazgo de empleado"
+                                    ],
+                      "resumen":  "Convocatoria interna del banco: cada proyecto lo presenta un empleado o empleada de Grupo Santander en España que aporta al fondo. Hay categorías de discapacidad y de salud; un comité elige 32 finalistas y los empleados votan los 17 ganadores. Los proyectos se hacen en 2027 y duran como mucho 12 meses.",
+                      "para_aspm":  "Solo sirve si alguien de Santander quiere apadrinar el proyecto; exige utilidad pública y que lo pedido no pase del 20 % del gasto anual, y no financia gasto corriente ni eventos (no encaja con el marketplace).",
+                      "url":  "https://www.santander.com/es/stories/xix-edicion-del-programa-euros-de-tu-nomina",
+                      "url_bases":  "https://www.santander.com/content/dam/santander-com/es/stories/contenido-stories/2026/-diversidad-e-inclusion/bases-legales-edtn-2026-27.pdf",
+                      "requisitos":  {
+                                         "beneficiarios":  "Entidades privadas sin ánimo de lucro con sede social en España, apadrinadas por un empleado en activo de Grupo Santander en España que aporte al fondo (hasta 3 proyectos por empleado).",
+                                         "requisitos_entidad":  "Al menos un ejercicio completo de actividad; las asociaciones, declaradas de utilidad pública; acogidas a la Ley 49/2002 y con compromiso de emitir certificados de donación; al corriente de obligaciones y con web propia; no haber ganado en las tres últimas ediciones.",
+                                         "ambito_territorial":  "Estatal (también cooperación internacional)",
+                                         "actividades_financiables":  "Proyectos de inclusión social, discapacidad (educación, rehabilitación, apoyo a personas y familias), salud (apoyo, prevención, tratamiento; no investigación) o cooperación, que empiecen en 2027 y duren como mucho 12 meses.",
+                                         "gastos_subvencionables":  "Costes directos del proyecto; indirectos hasta el 10 %. No cubre congresos, eventos, publicaciones ni gasto corriente de la entidad.",
+                                         "importe_max":  "40.000 € (60.000 € solo en Compromiso)",
+                                         "cofinanciacion":  "Lo pedido no puede superar el 20 % del gasto anual del último ejercicio cerrado",
+                                         "criterios_valoracion":  "Selección de 32 finalistas por un comité y votación de los empleados (el voto de quien aporta al fondo cuenta doble)",
+                                         "documentacion":  "Presupuesto (máx. una página), memoria anual, cuentas anuales completas (con auditoría si la hay), certificado de la AEAT de la Ley 49/2002 emitido en 2026 y certificado de composición del órgano de gobierno",
+                                         "formulario":  [
+                                                            "Formulario en la intranet del banco, que rellena el padrino o la madrina",
+                                                            "No hay plazo de subsanación: si falta algo, se descarta"
+                                                        ],
+                                         "plazo_presentacion":  "Del 19-11-2026 al 18-01-2027, 23:59",
+                                         "forma_presentacion":  "Por el formulario interno, a cargo del empleado o la empleada de Santander"
+                                     },
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i49907c9f960a",
+                      "seccion":  "subvenciones",
+                      "grupo":  "privada",
+                      "titulo":  "XXIII Premios ABC Solidario",
+                      "entidad":  "Diario ABC (secretaría técnica: Fundación SERES)",
+                      "estado":  "proxima",
+                      "plazo":  null,
+                      "fecha":  "Suele abrir en noviembre y cerrar a finales de enero, según la edición 2025-2026 (cerró el 29-01-2026). La web ya anuncia la XXIII edición, sin fechas.",
+                      "importe":  "Referencia XXII edición: proyectos de 30.000 €, 20.000 € y 10.000 €; entidad solidaria, 10.000 €",
+                      "etiquetas":  [
+                                        "premio con dotación",
+                                        "proyectos sociales"
+                                    ],
+                      "resumen":  "Premios estatales a proyectos y entidades sociales que mejoran la vida de personas desfavorecidas o en riesgo de exclusión, con modalidad de proyecto solidario y de entidad solidaria.",
+                      "para_aspm":  "Conviene ir preparando un proyecto de apoyo a familias y vigilar la web estas semanas: si se repite el calendario, cerraría a finales de enero de 2027.",
+                      "url":  "https://www.abcsolidario.com/",
+                      "url_bases":  null,
+                      "requisitos":  {
+                                         "beneficiarios":  "Entidades sociales (y voluntariado universitario en otra modalidad)",
+                                         "requisitos_entidad":  "Por confirmar en las bases de la XXIII edición",
+                                         "ambito_territorial":  "Estatal",
+                                         "actividades_financiables":  "Proyectos que mejoren las condiciones de vida de personas desfavorecidas o en riesgo de exclusión",
+                                         "gastos_subvencionables":  null,
+                                         "importe_max":  "30.000 € (primer premio a proyecto, XXII edición)",
+                                         "cofinanciacion":  null,
+                                         "criterios_valoracion":  null,
+                                         "documentacion":  null,
+                                         "formulario":  [
+                                                            "Inscripción en línea desde abcsolidario.com"
+                                                        ],
+                                         "plazo_presentacion":  "Por confirmar",
+                                         "forma_presentacion":  "En línea"
+                                     },
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "icd618f0dd50b",
+                      "seccion":  "subvenciones",
+                      "grupo":  "privada",
+                      "titulo":  "B-Value 2027: programa de innovación y fortalecimiento para entidades sociales",
+                      "entidad":  "Fundació Ship2B y Fundación Banco Sabadell",
+                      "estado":  "proxima",
+                      "plazo":  null,
+                      "fecha":  "Suele abrir en enero, según la edición 2026 (inscripción del 8 de enero al 15 de febrero de 2026)",
+                      "importe":  "Última edición: 1,2 M€ en total entre premios y apoyo pro bono para los finalistas (sin importe por premio publicado)",
+                      "etiquetas":  [
+                                        "fortalecimiento",
+                                        "innovación social",
+                                        "transformación digital"
+                                    ],
+                      "resumen":  "Programa anual que elige hasta 40 entidades para formación en línea en innovación social; después, 10 finalistas trabajan su proyecto con mentores de marzo a noviembre y optan a premios en metálico. Prioriza accesibilidad, cuidado de familias e inclusión sociolaboral.",
+                      "para_aspm":  "No es una subvención directa, pero se podría presentar el marketplace de recaudación como idea innovadora para desarrollarla con mentores en 2027.",
+                      "url":  "https://ship2b.org/en/?p=8389",
+                      "url_bases":  null,
+                      "requisitos":  {
+                                         "beneficiarios":  "Asociaciones, fundaciones, centros especiales de empleo sin ánimo de lucro, empresas de inserción y cooperativas de iniciativa social",
+                                         "requisitos_entidad":  "Sede en España; trabajar con colectivos vulnerables; tener una idea o proyecto en marcha; un pequeño equipo dedicado y apoyo expreso de la dirección",
+                                         "ambito_territorial":  "Estatal",
+                                         "actividades_financiables":  "Diseño y desarrollo de proyectos de innovación social",
+                                         "gastos_subvencionables":  null,
+                                         "importe_max":  null,
+                                         "cofinanciacion":  null,
+                                         "criterios_valoracion":  null,
+                                         "documentacion":  null,
+                                         "formulario":  [
+                                                            "Inscripción en la web de Ship2B o de Fundación Banco Sabadell"
+                                                        ],
+                                         "plazo_presentacion":  "Por confirmar (2026: del 08-01 al 15-02)",
+                                         "forma_presentacion":  "En línea"
+                                     },
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "ie0abe8dc4401",
+                      "seccion":  "subvenciones",
+                      "grupo":  "privada",
+                      "titulo":  "Premios Dependencia y Sociedad de Fundación Caser, edición 2027",
+                      "entidad":  "Fundación Caser",
+                      "estado":  "proxima",
+                      "plazo":  null,
+                      "fecha":  "Suele abrir en febrero, según la edición 2026 (candidaturas del 11 de febrero al 25 de marzo de 2026)",
+                      "importe":  "Referencia 2026: 20.000 € y una obra de arte en cada una de las 3 categorías",
+                      "etiquetas":  [
+                                        "discapacidad",
+                                        "premio con dotación",
+                                        "familias"
+                                    ],
+                      "resumen":  "Premio estatal anual a proyectos ya terminados que mejoran la calidad de vida de las personas con discapacidad o dependencia y de sus familias, en tres categorías: Transformación social, I+D+i y Emprendimiento.",
+                      "para_aspm":  "Conviene preparar una candidatura a «Transformación social» con un proyecto ya cerrado, por ejemplo el servicio de información y orientación a familias.",
+                      "url":  "https://www.fundacioncaser.org/premios",
+                      "url_bases":  "https://www.fundacioncaser.org/sites/default/files/premios/dependencia-y-sociedad/bases-dys-2026.pdf",
+                      "requisitos":  {
+                                         "beneficiarios":  "Personas físicas y jurídicas (bases de 2026)",
+                                         "requisitos_entidad":  "Proyecto terminado antes de la convocatoria; no premiado antes por Fundación Caser; una sola categoría",
+                                         "ambito_territorial":  "Estatal",
+                                         "actividades_financiables":  "Premia trayectorias o proyectos de autonomía personal, discapacidad o dependencia",
+                                         "gastos_subvencionables":  null,
+                                         "importe_max":  "20.000 € por categoría (2026)",
+                                         "cofinanciacion":  null,
+                                         "criterios_valoracion":  "Enfoque diferenciador e innovador y aplicable en cualquier parte de España",
+                                         "documentacion":  "Formulario en línea; se puede añadir material y enlaces a vídeo",
+                                         "formulario":  [
+                                                            "Formulario en línea en fundacioncaser.org"
+                                                        ],
+                                         "plazo_presentacion":  "Por confirmar (2026: del 11-02 al 25-03, 17:00)",
+                                         "forma_presentacion":  "Telemática"
+                                     },
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i5112d8b47a17",
+                      "seccion":  "legislacion",
+                      "grupo":  "ue",
+                      "titulo":  "El Parlamento Europeo aprueba definitivamente el paquete farmacéutico y la Ley de Medicamentos Críticos",
+                      "entidad":  "Parlamento Europeo",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "25 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "en tramitación",
+                                        "pendiente de DOUE",
+                                        "medicamentos"
+                                    ],
+                      "resumen":  "El pleno aprobó en segunda lectura la reforma de la legislación farmacéutica de la UE (reglamento y directiva) y la Ley de Medicamentos Críticos (592 votos a favor). La reforma fija hasta 11 años de protección para los medicamentos nuevos, refuerza la prevención del desabastecimiento y permite compras conjuntas de medicamentos críticos entre cinco o más Estados.",
+                      "para_aspm":  "Cierra el proceso europeo: conviene seguir su publicación en el DOUE y el análisis de FEDER y EURORDIS sobre los medicamentos huérfanos.",
+                      "url":  "https://www.europarl.europa.eu/news/es/press-room/20261119IPR48970/nuevas-normas-para-el-sector-farmaceutico-de-la-ue",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i17df74d630a7",
+                      "seccion":  "legislacion",
+                      "grupo":  "espana",
+                      "titulo":  "Nuevas ratios escolares: el alumnado con necesidades educativas especiales contará como dos plazas en las aulas ordinarias",
+                      "entidad":  "Consejo de Ministros (Ministerio de Educación, Formación Profesional y Deportes)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Aprobado el 24 de noviembre de 2026; en vigor el 2 de enero de 2027",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "aprobado, pendiente de BOE",
+                                        "educación"
+                                    ],
+                      "resumen":  "El Gobierno aprobó el real decreto que modifica los requisitos mínimos de los centros: baja las ratios de 0-3 años, deja el segundo ciclo de Infantil en 20 alumnos y Bachillerato en 30. Desde el curso 2027-2028, cada alumno con necesidades educativas especiales computará como dos plazas, y las administraciones deberán poner más personal si un centro no puede cumplir las ratios.",
+                      "para_aspm":  "Dato útil para orientar a las familias con hijos escolarizados en aula ordinaria a partir del curso 2027-2028.",
+                      "url":  "https://www.lamoncloa.gob.es/consejodeministros/referencias/paginas/2026/20261124-referencia-rueda-de-prensa-ministros.aspx",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "id9e2ac73e79c",
+                      "seccion":  "legislacion",
+                      "grupo":  "espana",
+                      "titulo":  "RD 1012/2026: nuevo certificado profesional en apoyos y cuidados a personas con discapacidad o en situación de dependencia",
+                      "entidad":  "Ministerio de Educación, Formación Profesional y Deportes (BOE)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "BOE del 24 de noviembre de 2026; en vigor a los 20 días",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "publicado",
+                                        "formación profesional",
+                                        "cuidados"
+                                    ],
+                      "resumen":  "El BOE publica un certificado profesional de nivel 2 y 420 horas en apoyos y cuidados para la promoción de la autonomía personal, que incluye sistemas aumentativos de comunicación y accesibilidad cognitiva.",
+                      "para_aspm":  "Referencia de formación para los profesionales de apoyo y cuidadores con los que trabajan las familias.",
+                      "url":  "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-24616",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i2da49d1351be",
+                      "seccion":  "legislacion",
+                      "grupo":  "autonomica",
+                      "titulo":  "Comunitat Valenciana: el futuro Plan Autonómico de Enfermedades Raras sigue en elaboración",
+                      "entidad":  "Generalitat Valenciana / FEDER",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Foro del 24 de noviembre de 2026 en València",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "en tramitación",
+                                        "plan autonómico",
+                                        "enfermedades raras"
+                                    ],
+                      "resumen":  "En el foro de FEDER en València se explicó que la comisión interdepartamental creada en abril (Sanidad, Servicios Sociales, Educación y Empleo) ya prepara el plan, aún sin fecha de aprobación. FEDER pidió que incluya los cuidados, la transición de pediatría a adultos y la participación del movimiento asociativo.",
+                      "para_aspm":  "Buen momento para pedir participar en la elaboración del plan, por ejemplo a través de FEDER.",
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/el-futuro-plan-autonomico-de-enfermedades-raras-protagonista-del-foro-de-feder-en-la-comunidad-valenciana",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i7fc611f74666",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "La Plataforma del Tercer Sector compara cómo recogen los programas del 29-N sus 48 propuestas sociales",
+                      "entidad":  "Plataforma del Tercer Sector",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "24 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "incidencia",
+                                        "elecciones 29-N",
+                                        "tercer sector"
+                                    ],
+                      "resumen":  "La Plataforma analiza cuánto recogen los programas de las principales fuerzas políticas 48 propuestas sobre derechos sociales, sostenibilidad de las entidades y vivienda. Hay más coincidencias en vivienda y contratación pública responsable y más diferencias en el reconocimiento y la financiación del tercer sector.",
+                      "para_aspm":  null,
+                      "url":  "https://www.plataformatercersector.es/la-plataforma-del-tercer-sector-analiza-el-grado-de-incorporacion-de-48-propuestas-sociales-y-de-acceso-a-la-vivienda-en-los-programas-electorales-de-las-principales-fuerzas-politicas/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i04bbb1ee1834",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Directivos sanitarios y FEDER abren un ciclo de webinars sobre coproducción con pacientes en enfermedades raras",
+                      "entidad":  "FEDER / SEDISA",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "20 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "participación de pacientes",
+                                        "gestión sanitaria"
+                                    ],
+                      "resumen":  "Primer webinar del grupo de enfermedades raras de SEDISA, dirigido a gestores sanitarios, sobre el papel de pacientes y asociaciones en las decisiones: acordar con los pacientes qué resultados importan, crear plazas de enfermera gestora de casos e incluir a las asociaciones en el diseño de los servicios.",
+                      "para_aspm":  "Argumentos para pedir a los hospitales de referencia que cuenten con la asociación al diseñar la atención al PMS.",
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/de-escuchar-al-paciente-decidir-con-el-la-coproduccion-se-abre-paso-en-la-gestion-de-las-enfermedades-raras",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i496146d06ff8",
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Plena inclusión publica un seminario sobre cómo prevenir la violencia en los servicios de Atención Temprana",
+                      "entidad":  "Plena inclusión España",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "24 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "atención temprana",
+                                        "protección de la infancia"
+                                    ],
+                      "resumen":  "Seminario en línea sobre cómo aplicar la ley de protección de la infancia frente a la violencia (LOPIVI) en Atención Temprana: protocolos, formación de equipos, mapa de riesgos y canales accesibles para niños y familias. El vídeo está disponible en la web.",
+                      "para_aspm":  "Recurso que se puede recomendar a familias y profesionales de atención temprana.",
+                      "url":  "https://www.plenainclusion.org/noticias/plena-inclusion-impulsa-la-prevencion-de-la-violencia-en-los-servicios-de-atencion-temprana/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i7cb16a55e1bb",
+                      "seccion":  "sociedades",
+                      "grupo":  "",
+                      "titulo":  "XIV Seminario INICO sobre discapacidad (marzo de 2027): «pensando en las discapacidades más significativas»",
+                      "entidad":  "INICO (Universidad de Salamanca), difundido por la AEGH",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "11 y 12 de marzo de 2027",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "investigación en discapacidad",
+                                        "calidad de vida",
+                                        "inscripción abierta"
+                                    ],
+                      "resumen":  "La AEGH difunde el XIV Seminario de Actualización en Investigación sobre Discapacidad del INICO, centrado en calidad de vida, apoyos y derechos de las personas con grandes necesidades de apoyo. La inscripción ya está abierta.",
+                      "para_aspm":  "Interesante para la trabajadora social: trata de apoyos a personas con grandes necesidades, como muchas personas con PMS.",
+                      "url":  "https://aegh.org/xiv-seminario-de-actualizacion-en-investigacion-sobre-discapacidad-inico-2027/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "i1439fde2a266",
+                      "seccion":  "investigacion",
+                      "grupo":  "",
+                      "titulo":  "En ratones sin Shank3, más contacto social con los compañeros conocidos y respuestas distintas ante los desconocidos",
+                      "entidad":  "bioRxiv y Research Square (prepublicaciones)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "24 y 25 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "estudio en ratones",
+                                        "prepublicación sin revisar"
+                                    ],
+                      "resumen":  "Durante cuatro semanas se grabó a ratones sin Shank3 que convivían con sus hermanos: buscaban más contacto con ellos, pero ante desconocidos tenían menos contacto cara a cara y más persecuciones, diferencias que las pruebas sociales habituales no detectaban. Otra prepublicación de la misma semana asocia, en ratones macho, la falta de Shank3 en los vasos sanguíneos a cambios en la estructura del corazón.",
+                      "para_aspm":  "Trabajos básicos aún sin revisar: sugieren que la conducta social en el PMS depende mucho del contexto, sin aplicación clínica inmediata.",
+                      "url":  "https://www.biorxiv.org/content/10.64898/2026.11.23.768613v1",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
+                  },
+                  {
+                      "id":  "ic8b9255fa9f5",
+                      "seccion":  "investigacion",
+                      "grupo":  "",
+                      "titulo":  "Caso clínico: PMS por un cromosoma 22 en anillo en una niña de 4 años",
+                      "entidad":  "Revista Diseases (MDPI)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "18 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "caso clínico aislado",
+                                        "diagnóstico genético"
+                                    ],
+                      "resumen":  "Se describe un caso de PMS causado por un cromosoma 22 en anillo, con discapacidad intelectual y retraso grave del habla; la pérdida de SHANK3 variaba según el tejido analizado. Los autores subrayan que el diagnóstico genético temprano ayuda a vigilar otros problemas de salud y a empezar antes la rehabilitación.",
+                      "para_aspm":  "Recuerda que el PMS también puede deberse a un cromosoma 22 en anillo, causa menos frecuente que la deleción simple.",
+                      "url":  "https://pubmed.ncbi.nlm.nih.gov/43082610/",
+                      "url_bases":  null,
+                      "requisitos":  null,
+                      "primera_edicion":  "2026-11-26"
                   }
               ]
 };
