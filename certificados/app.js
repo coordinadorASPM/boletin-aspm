@@ -1698,54 +1698,83 @@
     if (!S.horas) {
       const h = new Date(); if (h.getDate() < 15) h.setMonth(h.getMonth() - 1);
       const mes = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0');
-      S.horas = { mes, desde: mes + '-01', hasta: finDeMes(mes), datos: {} };
+      S.horas = { mes, desde: mes + '-01', hasta: finDeMes(mes), datos: {}, junta: null, tabla: null };
     }
-    const H = S.horas, fmt = window.HorasBixpe.fmt;
+    const H = S.horas, fmt = window.HorasBixpe.fmt, U = window.HorasBixpe.UMBRAL_MIN;
+    // Días de junta guardados en el script de Google (los usa también el informe automático)
+    if (H.junta === null && S.ajustes.apps_script_url) {
+      H.junta = '';
+      google('horas_junta', { mes: H.mes }).then(r => { H.junta = (r.dias || []).join(', '); if (S.vista === 'horas') pintar(); }).catch(() => {});
+    }
+    const COLS = [['jornada', 'Horas en jornada'], ['prol', 'Extras por alargar la jornada'], ['act', 'Extras por actividades'], ['junta', 'Extras en junta directiva'],
+      ['anterior', 'Pendiente del mes anterior'], ['comp', 'Compensadas'], ['pendiente', 'Pendiente de compensar'], ['deber', 'Horas de menos'], ['total', 'Total horas']];
     el.innerHTML = `<section class="panel">
       <h2>Informe mensual de horas para la junta</h2>
-      <p class="sub">Sube el Excel de Bixpe de cada empleada. Los archivos se leen en este ordenador y no se suben a ningún sitio: a Google solo llegan los totales de cada cargo.
-        Margen diario de ${window.HorasBixpe.UMBRAL_MIN} minutos: las horas extra de ${window.HorasBixpe.UMBRAL_MIN} minutos o menos no cuentan y, si faltan ${window.HorasBixpe.UMBRAL_MIN} minutos o menos para la jornada prevista, el día cuenta completo.</p>
+      <p class="sub">Sube el Excel de Bixpe de cada empleada. El archivo se lee en este ordenador: a Google solo llegan, para cada día, las horas trabajadas,
+        la diferencia con la jornada prevista y la hora de fin, sin nombres. El informe se guarda en tu carpeta de horas de Drive.</p>
+      <details class="reglas"><summary>Reglas que se aplican</summary><ul>
+        <li>Margen diario de ${U} minutos: si faltan ${U} minutos o menos para la jornada prevista, el día cuenta completo.</li>
+        <li>Extras en junta directiva: todas las de los días de junta. Por actividades: otros días en que se termina a las 19:00 o más tarde. Ambas cuentan enteras.</li>
+        <li>Extras por alargar la jornada: el resto, descontando siempre ${U} minutos (30 minutos de más cuentan 15).</li>
+        <li>Compensación: un día con más de ${U} minutos de menos compensa lo que falta menos ${U} minutos, contra las extras de días anteriores (también de meses anteriores).
+          Si no hay extras pendientes, va a «Horas de menos», que las extras posteriores cubren primero.</li>
+        <li>Los días sin fichaje (festivos, vacaciones, ausencias) no cuentan.</li></ul></details>
       <div class="error" id="errHoras" hidden></div>
       <div class="rejilla tres">
         <div class="campo"><label for="h_mes">Mes del informe</label><input type="month" id="h_mes" value="${H.mes}"></div>
         <div class="campo"><label for="h_desde">Contar desde</label><input type="date" id="h_desde" value="${H.desde}"></div>
         <div class="campo"><label for="h_hasta">Hasta</label><input type="date" id="h_hasta" value="${H.hasta}"></div>
+        <div class="campo ancho"><label for="h_junta">Días de junta directiva del mes</label>
+          <div style="display:flex;gap:8px"><input type="text" id="h_junta" value="${esc(H.junta || '')}" placeholder="Por ejemplo: 4 (o 4, 18 si hubo dos)">
+          <button class="btn" type="button" id="btnJunta">Guardar</button></div>
+          <span class="ayuda">Bixpe no lo indica. Se guarda y lo usa también el informe automático de fin de mes. Vacío: no hubo junta.</span></div>
       </div>
       <div class="horas-cargos">${CARGOS_HORAS.map(([k, t]) => {
-        const d = H.datos[k];
-        const tot = d && window.HorasBixpe.calcular(d.dias, H.desde, H.hasta);
+        const d = H.datos[k], rs = d && window.HorasBixpe.resumen(d.dias, H.desde, H.hasta);
         return `<div class="horas-cargo">
           <div><b>${esc(t)}</b>
             <span class="ayuda">${d ? esc(d.archivo) + ' · ' + esc(d.formato) + (d.empleadas > 1 ? ' · <b>trae ' + d.empleadas + ' personas: se usa la primera</b>' : '') : 'Sin archivo'}</span>
-            ${tot ? `<span class="ayuda">${tot.diasConDatos ? 'Días con horas: del ' + esc(fechaLarga(tot.primero)) + ' al ' + esc(fechaLarga(tot.ultimo)) : 'No hay horas entre esas fechas'}${tot.diasDescartados ? ' · ' + tot.diasDescartados + ' día' + (tot.diasDescartados > 1 ? 's' : '') + ' con extras de 15 min o menos (' + fmt(tot.descartadas) + ', no cuentan)' : ''}${tot.diasCompletados ? ' · ' + tot.diasCompletados + ' día' + (tot.diasCompletados > 1 ? 's' : '') + ' con 15 min o menos de falta (cuentan completos)' : ''}</span>` : ''}</div>
+            ${rs ? `<span class="ayuda">${rs.dias ? rs.dias + ' días con horas, del ' + esc(fechaLarga(rs.primero)) + ' al ' + esc(fechaLarga(rs.ultimo)) : 'No hay horas entre esas fechas'}</span>` : ''}</div>
           <label class="btn">${d ? 'Cambiar' : 'Subir Excel'}<input type="file" accept=".xlsx,.xls" data-cargo="${k}" hidden></label>
           ${d ? `<button class="btn sutil" type="button" data-quitar="${k}">Quitar</button>` : ''}
         </div>`;
       }).join('')}</div>
-      <table class="tabla-horas">
-        <thead><tr><th>Cargo</th><th>Horas en jornada</th><th>Horas extras computables</th><th>Total horas</th></tr></thead>
-        <tbody>${CARGOS_HORAS.map(([k, t]) => {
-          const d = H.datos[k], x = d && window.HorasBixpe.calcular(d.dias, H.desde, H.hasta);
-          return `<tr><td>${esc(t)}</td>${x ? `<td>${fmt(x.jornada)}</td><td>${fmt(x.extras)}</td><td>${fmt(x.jornada + x.extras)}</td>` : '<td colspan="3" class="sin">Sin datos</td>'}</tr>`;
-        }).join('')}</tbody>
-      </table>
       <div class="acciones">
         <button class="btn primario grande" type="button" id="btnHoras">Generar informe en Drive</button>
         <span class="ayuda">Crea o rehace la pestaña del mes en la hoja «Horas equipo ${H.mes.slice(0, 4)}» y guarda el informe en Excel y PDF.</span>
       </div>
-      <div id="resHoras"></div>
+      <div id="resHoras">${H.tabla ? `<div class="tabla-scroll"><table class="tabla-horas">
+        <thead><tr><th>Cargo</th>${COLS.map(c => `<th>${c[1]}</th>`).join('')}</tr></thead>
+        <tbody>${H.tabla.filas.map(f => `<tr><td>${esc(f.cargo)}</td>${f.sin ? `<td colspan="${COLS.length}" class="sin">Sin datos</td>` : COLS.map(c => `<td>${fmt(f[c[0]])}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>
+      <div class="aviso verde" style="margin-top:12px">Informe guardado en Drive:
+        <a href="${esc(H.tabla.pdf)}" target="_blank" rel="noopener">PDF</a> · <a href="${esc(H.tabla.xlsx)}" target="_blank" rel="noopener">Excel</a> ·
+        <a href="${esc(H.tabla.hoja)}" target="_blank" rel="noopener">hoja del año</a></div>` : ''}</div>
     </section>`;
     const err = m => { const e = $('#errHoras'); e.textContent = m; e.hidden = !m; };
-    $('#h_mes').onchange = e => { if (!e.target.value) return; H.mes = e.target.value; H.desde = H.mes + '-01'; H.hasta = finDeMes(H.mes); pintar(); };
-    $('#h_desde').onchange = e => { H.desde = e.target.value || H.mes + '-01'; pintar(); };
-    $('#h_hasta').onchange = e => { H.hasta = e.target.value || finDeMes(H.mes); pintar(); };
-    el.querySelectorAll('[data-quitar]').forEach(b => b.onclick = () => { delete H.datos[b.dataset.quitar]; pintar(); });
+    const diasJunta = () => {
+      const v = $('#h_junta').value.trim(); if (!v) return [];
+      const n = v.split(/[\s,;y]+/).filter(Boolean).map(Number);
+      const fin = Number(finDeMes(H.mes).slice(8, 10));
+      if (n.some(x => !Number.isInteger(x) || x < 1 || x > fin)) throw new Error('Días de junta: escribe solo números de día del mes, separados por comas.');
+      return [...new Set(n)].sort((a, b) => a - b);
+    };
+    $('#h_mes').onchange = e => { if (!e.target.value) return; H.mes = e.target.value; H.desde = H.mes + '-01'; H.hasta = finDeMes(H.mes); H.junta = null; H.tabla = null; pintar(); };
+    $('#h_desde').onchange = e => { H.desde = e.target.value || H.mes + '-01'; H.tabla = null; pintar(); };
+    $('#h_hasta').onchange = e => { H.hasta = e.target.value || finDeMes(H.mes); H.tabla = null; pintar(); };
+    $('#h_junta').oninput = e => { H.junta = e.target.value; };
+    $('#btnJunta').onclick = async () => {
+      err('');
+      try { const dias = diasJunta(); await google('horas_junta', { mes: H.mes, dias }); aviso(dias.length ? 'Días de junta guardados.' : 'Guardado: este mes no hubo junta.'); }
+      catch (e) { err(e.message); }
+    };
+    el.querySelectorAll('[data-quitar]').forEach(b => b.onclick = () => { delete H.datos[b.dataset.quitar]; H.tabla = null; pintar(); });
     el.querySelectorAll('input[type=file][data-cargo]').forEach(inp => inp.onchange = async () => {
       const f = inp.files[0]; if (!f) return;
       try {
         if (!window.XLSX) await cargarScript('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js');
         const r = window.HorasBixpe.leer(await f.arrayBuffer());
-        H.datos[inp.dataset.cargo] = Object.assign(r, { archivo: f.name });
+        H.datos[inp.dataset.cargo] = Object.assign(r, { archivo: f.name }); H.tabla = null;
         pintar();
       } catch (e) { err(f.name + ': ' + e.message); }
     });
@@ -1753,21 +1782,15 @@
       err('');
       if (H.desde > H.hasta) return err('La fecha «desde» es posterior a «hasta».');
       if (H.desde.slice(0, 7) !== H.mes || H.hasta.slice(0, 7) !== H.mes) return err('Las fechas tienen que estar dentro del mes del informe.');
-      const filas = CARGOS_HORAS.map(([k, t]) => {
-        const d = H.datos[k], x = d && window.HorasBixpe.calcular(d.dias, H.desde, H.hasta);
-        return { cargo: t, jornada: x ? x.jornada : null, extras: x ? x.extras : null };
-      });
-      if (!filas.some(f => f.jornada != null)) return err('Sube al menos un Excel de Bixpe.');
+      let junta; try { junta = diasJunta(); } catch (e) { return err(e.message); }
+      // Solo los datos por día, sin nombres
+      const filas = CARGOS_HORAS.map(([k, t]) => ({ clave: k, cargo: t, dias: H.datos[k] ? H.datos[k].dias.map(d => ({ fecha: d.fecha, w: d.w, e: d.e, fin: d.fin })) : null }));
+      if (!filas.some(f => f.dias)) return err('Sube al menos un Excel de Bixpe.');
       const btn = $('#btnHoras'); btn.disabled = true; btn.textContent = 'Generando…';
       try {
-        const r = await google('horas_informe', { mes: H.mes, desde: H.desde, hasta: H.hasta,
-          periodo: 'Periodo computado: del ' + fechaLarga(H.desde) + ' al ' + fechaLarga(H.hasta) + ' (exportaciones de Bixpe).', filas });
-        $('#resHoras').innerHTML = `<div class="aviso verde">Informe guardado en Drive:
-          <a href="${esc(r.pdf)}" target="_blank" rel="noopener">PDF</a> ·
-          <a href="${esc(r.xlsx)}" target="_blank" rel="noopener">Excel</a> ·
-          <a href="${esc(r.hoja)}" target="_blank" rel="noopener">hoja del año</a></div>`;
-      } catch (e) { err('No se ha podido generar: ' + e.message); }
-      btn.disabled = false; btn.textContent = 'Generar informe en Drive';
+        const r = await google('horas_informe', { mes: H.mes, desde: H.desde, hasta: H.hasta, junta, filas });
+        H.tabla = r; pintar();
+      } catch (e) { err('No se ha podido generar: ' + e.message); btn.disabled = false; btn.textContent = 'Generar informe en Drive'; }
     };
   }
 
