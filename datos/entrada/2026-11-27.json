@@ -1,0 +1,182 @@
+{
+    "items":  [
+                  {
+                      "seccion":  "subvenciones",
+                      "grupo":  "privada",
+                      "titulo":  "PayPal: tarifa reducida para organizaciones benéficas (1,90 % + 0,35 € en vez de 2,90 % + 0,35 €)",
+                      "entidad":  "PayPal (Europe)",
+                      "estado":  "abierta",
+                      "plazo":  "Sin plazo: se solicita en cualquier momento",
+                      "fecha":  "Tabla de tarifas para vendedores en España vigente desde el 04-nov-2026",
+                      "importe":  "Ahorro de 1 punto porcentual por cobro: 1,90 % + 0,35 € (tarifa estándar: 2,90 % + 0,35 €)",
+                      "etiquetas":  [
+                                        "transformación digital",
+                                        "donaciones",
+                                        "tienda solidaria"
+                                    ],
+                      "resumen":  "PayPal aplica a las organizaciones benéficas aprobadas una tarifa de 1,90 % + 0,35 € por cobro nacional, frente al 2,90 % + 0,35 € estándar. Una vez aprobada, se aplica tanto a los donativos como a todos los pagos comerciales (ventas) que reciba la cuenta. Los donativos desde el EEE no pagan recargo internacional.",
+                      "para_aspm":  "Encaja de lleno con el marketplace: si la tienda solidaria y el botón de donar cobran con PayPal, conviene pedir la tarifa benéfica antes de lanzarlo (unos 1 € menos por cada 100 € cobrados).",
+                      "url":  "https://www.paypalobjects.com/marketing/ua/pdf/ES/es/es-merchant-fees-04-nov-2026.pdf",
+                      "url_bases":  "https://www.paypalobjects.com/marketing/ua/pdf/ES/es/es-merchant-fees-04-nov-2026.pdf",
+                      "requisitos":  {
+                                         "beneficiarios":  "Organizaciones benéficas o sin ánimo de lucro registradas con cuenta PayPal empresa",
+                                         "requisitos_entidad":  "Estar registrada como entidad sin ánimo de lucro; cuenta PayPal de tipo empresa con la categoría «organización sin ánimo de lucro»; superar la verificación de PayPal",
+                                         "ambito_territorial":  "España (tarifa nacional); cobros internacionales con recargo adicional fuera del EEE",
+                                         "actividades_financiables":  "No es una ayuda: es una rebaja de comisiones sobre donativos y ventas cobrados con PayPal",
+                                         "gastos_subvencionables":  null,
+                                         "importe_max":  null,
+                                         "cofinanciacion":  null,
+                                         "criterios_valoracion":  "Sujeta a solicitud y aprobación previa de PayPal",
+                                         "documentacion":  "Documentos que acrediten el registro como entidad sin ánimo de lucro (detalle concreto por confirmar con PayPal)",
+                                         "formulario":  [
+                                                            "Crear o convertir la cuenta en cuenta empresa",
+                                                            "Elegir categoría «organización sin ánimo de lucro»",
+                                                            "Verificar la entidad con la documentación de registro",
+                                                            "Solicitar la tarifa para organizaciones benéficas"
+                                                        ],
+                                         "plazo_presentacion":  "Abierto todo el año",
+                                         "forma_presentacion":  "En línea, desde la cuenta PayPal (página de organizaciones benéficas / soporte de PayPal España)"
+                                     }
+                  },
+                  {
+                      "seccion":  "subvenciones",
+                      "grupo":  "privada",
+                      "titulo":  "Canva para ONG: Canva Pro gratis para entidades sin ánimo de lucro",
+                      "entidad":  "Canva",
+                      "estado":  "abierta",
+                      "plazo":  "Sin plazo: solicitud abierta todo el año",
+                      "fecha":  null,
+                      "importe":  "Canva Pro gratuito para hasta 50 personas del equipo; miembros adicionales con 50 % de descuento",
+                      "etiquetas":  [
+                                        "transformación digital",
+                                        "comunicación",
+                                        "merchandising"
+                                    ],
+                      "resumen":  "Canva da acceso gratuito a todas las funciones de Canva Pro y al trabajo en equipo (hasta 50 personas) a organizaciones sin ánimo de lucro registradas. La verificación la hace Goodstack y la admisión no está garantizada: Canva revisa cada solicitud.",
+                      "para_aspm":  "Útil para el marketplace: diseño de fichas de producto, mockups de merchandising, banners de la tienda y campañas (Run Like a Hero, día mundial) sin pagar licencia; lo usaría sobre todo la gerente de comunicación.",
+                      "url":  "https://www.canva.com/es_es/canva-para-ongs/",
+                      "url_bases":  null,
+                      "requisitos":  {
+                                         "beneficiarios":  "Organizaciones sin ánimo de lucro, ONG y entidades de economía social y solidaria registradas con fines benéficos claramente definidos",
+                                         "requisitos_entidad":  "Registro oficial como entidad sin ánimo de lucro; quedan excluidos organismos públicos, organizaciones políticas, centros educativos y empresas con ánimo de lucro, entre otros",
+                                         "ambito_territorial":  "Internacional (España incluida)",
+                                         "actividades_financiables":  "No es una ayuda económica: licencia gratuita de software de diseño",
+                                         "gastos_subvencionables":  null,
+                                         "importe_max":  "Canva Pro para hasta 50 usuarios",
+                                         "cofinanciacion":  null,
+                                         "criterios_valoracion":  "Verificación de elegibilidad; aceptación a criterio de Canva",
+                                         "documentacion":  "Prueba del registro oficial como entidad sin ánimo de lucro y documentos constitutivos (estatutos) que muestren la finalidad benéfica; requisitos por país según la guía de Goodstack",
+                                         "formulario":  [
+                                                            "Crear cuenta de Canva",
+                                                            "Rellenar el formulario de solicitud para ONG",
+                                                            "Verificación por Goodstack",
+                                                            "Correo de confirmación"
+                                                        ],
+                                         "plazo_presentacion":  "Abierto todo el año",
+                                         "forma_presentacion":  "En línea, desde la página de Canva para ONG"
+                                     }
+                  },
+                  {
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "AELMHU y FEDER lanzan FollowER, un modelo para el paso de la atención pediátrica a la de adultos en enfermedades raras",
+                      "entidad":  "FEDER y AELMHU",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "26 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "transición a adultos",
+                                        "continuidad asistencial",
+                                        "incidencia"
+                                    ],
+                      "resumen":  "FEDER y la patronal de medicamentos huérfanos ponen en marcha FollowER para elaborar un modelo integral de transición de la atención pediátrica a la adulta en enfermedades raras, con análisis de necesidades, entrevistas, encuestas y un comité técnico multidisciplinar. Participan el Ministerio de Sanidad y sociedades científicas (AEP, SEMI, SEFH, semFYC, SEMERGEN, SEMG, entre otras) y la Plataforma de Organizaciones de Pacientes.",
+                      "para_aspm":  "La transición a adultos es un problema real en PMS: conviene ofrecerse a FEDER para aportar la experiencia de las familias en las encuestas o entrevistas del proyecto.",
+                      "url":  "https://www.enfermedades-raras.org/actualidad/noticias/aelmhu-y-feder-impulsan-follower-para-mejorar-la-transicion-de-la-atencion-pediatrica-la-adulta-en-enfermedades-raras",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "IMPaCT-Genómica: más de 2.500 pacientes con sospecha de enfermedad rara estudiados y un 30 % de diagnósticos",
+                      "entidad":  "ISCIII y CIBER (con participación de FEDER)",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "25 de noviembre de 2026 (IV Jornada IMPaCT-Genómica, en el ISCIII)",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "diagnóstico genómico",
+                                        "medicina de precisión"
+                                    ],
+                      "resumen":  "En su cuarta jornada, el programa IMPaCT-Genómica hizo balance: más de 2.500 pacientes con sospecha de enfermedad rara o cáncer hereditario han accedido a estudios genómicos complejos, con una tasa diagnóstica cercana al 30 %, muchos tras más de una década de espera. La red reúne más de 100 hospitales de todas las comunidades; FEDER participa para trasladar el programa al Sistema Nacional de Salud.",
+                      "para_aspm":  "Dato útil para la incidencia sobre el diagnóstico genético (las deleciones 22q13 pequeñas y las variantes de SHANK3 necesitan estas pruebas): se puede citar al pedir que la genómica llegue a todo el SNS.",
+                      "url":  "https://gacetamedica.com/investigacion/jornada-impact-genomica-como-trabajo-red-acercando-diagnosticos-anos-imposibles/",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "sector",
+                      "grupo":  "federaciones",
+                      "titulo":  "Plena inclusión difunde manuales en lectura fácil para quienes formen parte de una mesa electoral el 29-N",
+                      "entidad":  "Plena inclusión España",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "27 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "29-N",
+                                        "lectura fácil",
+                                        "accesibilidad cognitiva"
+                                    ],
+                      "resumen":  "Plena inclusión publica cinco manuales en lectura fácil (castellano, catalán, euskera, gallego y valenciano), elaborados por el Ministerio del Interior y el Centro Español de Accesibilidad Cognitiva, que explican qué supone formar parte de una mesa electoral, junto con ocho vídeos de sensibilización. Están en la web de su campaña «Mi Voto Cuenta».",
+                      "para_aspm":  "Se pueden compartir hoy y mañana en redes con las familias, por si a algún socio o a un adulto con PMS le toca mesa o quiere entender cómo funciona.",
+                      "url":  "https://www.plenainclusion.org/noticias/plena-inclusion-impulsa-manuales-en-lectura-facil-para-participar-en-las-mesas-electorales-del-29-n/",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "sector",
+                      "grupo":  "asociaciones",
+                      "titulo":  "18 asociaciones de Zamora se alían para una semana del 3 de diciembre con marcha, batucada y 400 paraguas blancos",
+                      "entidad":  "Alianza de 18 asociaciones y colectivos de Zamora, con el Ayuntamiento y Fundación Caja Rural",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "Publicado el 24 de noviembre de 2026; actos del 29 de noviembre al 8 de diciembre",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "3 de diciembre",
+                                        "sensibilización",
+                                        "alianza local"
+                                    ],
+                      "resumen":  "Entidades de discapacidad de Zamora organizan juntas la Semana Internacional de la Diversidad Funcional: concierto «sin barreras» con entrada libre, espectáculo inclusivo, y el 3 de diciembre una marcha con batucada por el centro en la que se reparten 400 paraguas blancos con el logo común, seguida de una gala. Cuentan con el ayuntamiento y una fundación bancaria local como promotores.",
+                      "para_aspm":  "Idea para el Día Mundial o el 3-D: sumarse a una alianza local de entidades con un objeto visual compartido (paraguas, globos) y un patrocinador local, en vez de organizar en solitario.",
+                      "url":  "https://sid-inico.usal.es/noticias/cuatrocientos-paraguas-blancos-fruto-de-la-alianza-de-18-asociaciones-de-zamora-musica-ocio-y-reivindicacion-en-la-semana-de-la-diversidad-funcional/",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  },
+                  {
+                      "seccion":  "investigacion",
+                      "grupo":  null,
+                      "titulo":  "Neuren: el ensayo fase 3 «Koala» de NNZ-2591 en PMS avanza bien y dará fecha de resultados a principios de 2027",
+                      "entidad":  "Neuren Pharmaceuticals",
+                      "estado":  null,
+                      "plazo":  null,
+                      "fecha":  "27 de noviembre de 2026",
+                      "importe":  null,
+                      "etiquetas":  [
+                                        "ensayo clínico fase 3",
+                                        "comunicado de la empresa",
+                                        "NNZ-2591"
+                                    ],
+                      "resumen":  "En un comunicado a la bolsa australiana centrado en otro síndrome (Pitt-Hopkins), la empresa dice que el reclutamiento del ensayo fase 3 en niños de 3 a 12 años con PMS va bien y que es su prioridad. Anunciará a principios de 2027 cuándo espera tener los primeros resultados. No da cifras de participantes ni fechas concretas.",
+                      "para_aspm":  "Útil para responder a las familias que preguntan por el ensayo: aún no hay resultados ni fecha, y conviene esperar al anuncio de 2027.",
+                      "url":  "https://stockwirex.com/asx-stock-news/biotech-health/neu-neuren-pharmaceuticals-pitt-hopkins-fda-meeting-november-2026",
+                      "url_bases":  null,
+                      "requisitos":  null
+                  }
+              ],
+    "actualizaciones":  [
+
+                        ]
+}
